@@ -20,7 +20,10 @@
               <div class="header-breadcrumb">
                 <el-breadcrumb separator="/">
                   <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                  <el-breadcrumb-item>人才查询</el-breadcrumb-item>
+                  <span v-if="$route.path !== '/home'">
+                    <el-breadcrumb-item>{{ $route.meta.title }}列表</el-breadcrumb-item>
+                  </span>
+
                 </el-breadcrumb>
               </div>
             </el-col>
@@ -32,7 +35,7 @@
                     <i class="el-icon-arrow-down el-icon--right"></i>
                   </span>
                   <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item icon="el-icon-edit">修改密码</el-dropdown-item>
+                    <el-dropdown-item icon="el-icon-lock">修改密码</el-dropdown-item>
                     <el-dropdown-item icon="el-icon-error">退出登录</el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
@@ -40,8 +43,16 @@
             </el-col>
           </el-row>
         </el-header>
-        <el-main>
-
+        <el-main style="padding: 0">
+          <VueScrollx scrolling-y>
+            <transition :enter-active-class="enterTraName">
+              <div style="padding: 10px">
+                <div style="padding: 10px;background: #fff;min-height: 600px">
+                  <router-view/>
+                </div>
+              </div>
+            </transition>
+          </VueScrollx>
         </el-main>
       </el-container>
     </el-container>
@@ -49,21 +60,27 @@
 </template>
 <script>
 import Sidebar from "../components/Sidebar";
+import VueScrollx from "../components/vue-scrollx/VueScrollx";
 
 export default {
-  components: {Sidebar},
+  components: {VueScrollx, Sidebar},
   data() {
     return {
       isCollapse: false,
-
+      enterTraName: "animate__animated animate__fadeIn",
     }
   },
   computed: {},
+  mouted() {
+    const body = window.document.getElementsByTagName('body')[0];
+    body.style.overflow = 'hidden';
+  },
   methods: {}
 }
 </script>
 <style scoped lang="less">
 .el-header, .el-footer {
+  z-index: 1000;
   background-color: #fff;
   color: #333;
   height: 46px;
@@ -71,17 +88,15 @@ export default {
 }
 
 .el-aside {
-  transition: 0.5s;
-  //overflow-x: hidden;
-  //height: 100%;
-  box-shadow: 0 10px 20px darkgrey;
+  background: #eee;
+  transition: .5s;
 }
 
 .el-main {
-  background-color: #E9EEF3;
-  color: #333;
-  text-align: center;
-  line-height: 160px;
+  z-index: 900;
+  max-height: 700px;
+  height: 700px;
+  background: #eee;
 }
 
 body > .el-container {

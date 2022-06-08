@@ -7,81 +7,38 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../store/index'
 
+import basicDataRoutes from "./modules/basic-data";
+import achievementRoutes from "./modules/management-achievement";
+import businessRoutes from "./modules/management-business";
+import entryRoutes from "./modules/management-entry";
+import logisticsRoutes from "./modules/management-logistics";
+import orderRoutes from "./modules/management-order";
+import resourcesRoutes from "./modules/management-resources";
+import stockRoutes from "./modules/management-stock";
+import systemRoutes from "./modules/management-system";
+import transferRoutes from "./modules/management-transfer";
+import statisticsRoutes from "./modules/statistical-analysis";
+
 Vue.use(Router)
 
 const routes = [
+    ...basicDataRoutes,
+    ...achievementRoutes,
+    ...businessRoutes,
+    ...entryRoutes,
+    ...logisticsRoutes,
+    ...orderRoutes,
+    ...resourcesRoutes,
+    ...stockRoutes,
+    ...systemRoutes,
+    ...transferRoutes,
+    ...statisticsRoutes,
     // 首页
     {
         path: '/home',
         name: 'home',
         component: () => import('../views/home/Home')
     },
-    // 商品管理
-    // {
-    //     path: '/goods-management',
-    //     meta: {
-    //         title: '商品管理',
-    //     },
-    //     component: () => import('../views/goods-management/GoodsManagement'),
-    //     children: [
-    //         {
-    //             path: 'goods-list',
-    //             name: 'goods-list',
-    //             meta: {
-    //                 title: '商品列表',
-    //             },
-    //             component: () => import('../views/goods-management/goods-list/GoodsList')
-    //         },
-    //         {
-    //             path: 'goods-category',
-    //             name: 'goods-category',
-    //             meta: {
-    //                 title: '商品分类',
-    //             },
-    //             component: () => import('../views/goods-management/goods-category/GoodsCategory')
-    //         },
-    //         {
-    //             path: 'goods-carousel',
-    //             name: 'goods-carousel',
-    //             meta: {
-    //                 title: '首页轮播图',
-    //             },
-    //             component: () => import('../views/goods-management/goods-carousel/GoodsCarousel')
-    //         },
-    //         {
-    //             path: 'goods-evaluate',
-    //             name: 'goods-evaluate',
-    //             meta: {
-    //                 title: '商品评价',
-    //             },
-    //             component: () => import('../views/goods-management/goods-evaluate/GoodsEvaluate')
-    //         },
-    //         {
-    //             path: 'goods-brand',
-    //             name: 'goods-brand',
-    //             meta: {
-    //                 title: '商品品牌',
-    //             },
-    //             component: () => import('../views/goods-management/goods-brand/GoodsBrand')
-    //         },
-    //         {
-    //             path: 'goods-stock',
-    //             name: 'goods-stock',
-    //             meta: {
-    //                 title: '商品库存',
-    //             },
-    //             component: () => import('../views/goods-management/goods-stock/GoodsStock')
-    //         },
-    //         {
-    //             path: 'goods-examine',
-    //             name: 'goods-examine',
-    //             meta: {
-    //                 title: '商品审核',
-    //             },
-    //             component: () => import('../views/goods-management/goods-examine/GoodsExamine')
-    //         },
-    //     ]
-    // },
     // 登录
     {
         path: '/login',

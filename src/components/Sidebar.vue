@@ -4,10 +4,10 @@
 */
 <template>
   <div class="sidebar">
-<!--    <div style=" margin: auto;text-align: center;background: #515a6e">-->
-<!--      <img height="120" :src="require('../assets/images/logo.png')" alt="">-->
-<!--    </div>-->
-    <el-scrollbar style="height: 100%">
+    <!--    <div style=" margin: auto;text-align: center;background: #515a6e">-->
+    <!--      <img height="120" :src="require('../assets/images/logo.png')" alt="">-->
+    <!--    </div>-->
+    <el-scrollbar wrap-style="overflow-x:hidden;" style="height: 100%">
       <el-menu
           background-color="#515a6e"
           text-color="#fff"
@@ -16,7 +16,7 @@
           class="el-menu-vertical-demo"
           router
           :collapse="isCollapse">
-        <el-menu-item index="/home">
+        <el-menu-item index="home">
           <i class="el-icon-setting"></i>
           <span slot="title">首页</span>
         </el-menu-item>
@@ -219,13 +219,13 @@ export default {
               id: '4-5',
               level2_title: '企业资源汇总',
               icon: 'el-icon-location',
-              route: '/goods-enterprise-resources',
+              route: '/summary-enterprise-resources',
             },
             {
               id: '4-6',
               level2_title: '共享企业资源',
               icon: 'el-icon-location',
-              route: '/summary-brand',
+              route: '/share-enterprise-resources',
             },
           ]
         },
@@ -305,7 +305,7 @@ export default {
               id: '6-3',
               level2_title: '资质转让入账',
               icon: 'el-icon-location',
-              route: '/entry-qualification-agency',
+              route: '/entry-qualification-transfer',
             },
             {
               id: '6-4',
@@ -465,18 +465,17 @@ export default {
   min-height: 400px;
 }
 
-//
-//.is-collapse-block-bottom {
-//  height: 50px;
-//  cursor: pointer;
-//  text-align: center;
-//
-//  .icon {
-//    width: 26px;
-//    height: 26px;
-//    margin-top: 12px;
-//  }
-//}
-//
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    //display: none;
+  }
+}
+
 </style>
 
