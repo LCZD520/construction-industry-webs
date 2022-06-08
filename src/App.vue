@@ -17,6 +17,11 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="less">
+/deep/ .el-range-editor--small.el-input__inner{
+  width: 216px;
+}
+/deep/ .el-form-item__content .el-input__inner{
+  width: 216px;
+}
 </style>

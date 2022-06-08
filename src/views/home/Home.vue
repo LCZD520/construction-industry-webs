@@ -1,13 +1,183 @@
 <template>
   <div class="home">
-      系统公告
-      人才订单公示确认
-      资质转让订单确认
-      合同即将到期
-      证书继续教育提醒
-      三类人员继续教育提醒
+    <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tab-pane label="系统公告" name="one">
+        <div v-if="activeName === 'one'">
+          <el-table
+              :data="tableData"
+              stripe
+              border
+              highlight-current-row
+              :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
+              :cell-style="{textAlign:'center'}"
+              style="width: 100%"
+              :row-class-name="tableRowClassName">
+            <el-table-column
+                prop="date"
+                label="标题">
+            </el-table-column>
+            <el-table-column
+                prop="name"
+                label="发布时间">
+            </el-table-column>
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button
+                    size="mini"
+                    @click="handleEdit(scope.$index, scope.row)">编辑
+                </el-button>
+                <el-button
+                    size="mini"
+                    type="danger"
+                    @click="handleDelete(scope.$index, scope.row)">删除
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="人才订单公示确认" name="two">
+        <div v-if="activeName === 'two'">
+          <el-table
+              :data="tableData"
+              stripe
+              border
+              highlight-current-row
+              :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
+              :cell-style="{textAlign:'center'}"
+              style="width: 100%"
+              :row-class-name="tableRowClassName">
+            <el-table-column
+                v-for="item in columns2"
+                :key="item.key"
+                :prop="item.key"
+                :label="item.title">
+            </el-table-column>
+            <el-table-column label="操作" width="200">
+              <template slot-scope="scope">
+                <el-button
+                    size="mini"
+                    @click="handleEdit(scope.$index, scope.row)">编辑
+                </el-button>
+                <el-button
+                    size="mini"
+                    type="danger"
+                    @click="handleDelete(scope.$index, scope.row)">删除
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="资质转让订单确认" name="three">
+        <div v-if="activeName === 'three'">
+          <el-table
+              :data="tableData"
+              stripe
+              border
+              highlight-current-row
+              :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
+              :cell-style="{textAlign:'center'}"
+              style="width: 100%"
+              :row-class-name="tableRowClassName">
+            <el-table-column
+                v-for="item in columns3"
+                :key="item.key"
+                :prop="item.key"
+                :label="item.title">
+            </el-table-column>
+            <el-table-column label="操作" width="200">
+              <template slot-scope="scope">
+                <el-button
+                    size="mini"
+                    @click="handleEdit(scope.$index, scope.row)">编辑
+                </el-button>
+                <el-button
+                    size="mini"
+                    type="danger"
+                    @click="handleDelete(scope.$index, scope.row)">删除
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="合同即将到期" name="four">
+        <div v-if="activeName === 'four'">
+          <el-table
+              :data="tableData"
+              stripe
+              border
+              highlight-current-row
+              :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
+              :cell-style="{textAlign:'center'}"
+              style="width: 100%"
+              :row-class-name="tableRowClassName">
+            <el-table-column
+                v-for="item in columns4"
+                :key="item.key"
+                :prop="item.key"
+                :label="item.title">
+            </el-table-column>
+          </el-table>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="证书继续教育提醒" name="five">
+        <div v-if="activeName === 'five'">
+          <el-table
+              :data="tableData"
+              stripe
+              border
+              highlight-current-row
+              :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
+              :cell-style="{textAlign:'center'}"
+              style="width: 100%"
+              :row-class-name="tableRowClassName">
+            <el-table-column
+                v-for="item in columns5"
+                :key="item.key"
+                :prop="item.key"
+                :label="item.title">
+            </el-table-column>
+          </el-table>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="三类人员继续教育提醒" name="six">
+        <div v-if="activeName === 'six'">
+          <el-table
+              :data="tableData"
+              stripe
+              border
+              highlight-current-row
+              :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
+              :cell-style="{textAlign:'center'}"
+              style="width: 100%"
+              :row-class-name="tableRowClassName">
+            <el-table-column
+                v-for="item in columns6"
+                :key="item.key"
+                :prop="item.key"
+                :label="item.title">
+            </el-table-column>
+          </el-table>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
     <div class="pagination">
-
+      <div class="pagination-total">共<span class="total"> {{ pageInfo.total }} </span>条</div>
+      <div class="pagination-right">
+        <el-pagination
+            ref="pagination"
+            :page-sizes="[10, 20, 30, 50]"
+            :page-size="pageInfo.pageSize"
+            :current-page.sync="pageInfo.currentPage"
+            @current-change="handleCurrentChange"
+            @size-change="handleSizeChange"
+            background
+            layout="sizes, prev, pager, next, jumper"
+            :total="pageInfo.total">
+        </el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -18,8 +188,15 @@ export default {
   name: 'Home',
   components: {},
   data() {
-    return {
+    let homeTempStr = localStorage.getItem("homeTemp")
+    let homeTempObj = homeTempStr ? JSON.parse(homeTempStr) : {}
+    return Object.assign({
       activeName: 'one',
+      pageInfo: {
+        pageSize: 10,
+        total: 0,
+        currentPage: 1,
+      },
       columns1: [
         {
           title: '标题',
@@ -29,63 +206,6 @@ export default {
           title: '发布时间',
           key: 'address'
         },
-        {
-          title: '操作',
-          key: 'action',
-          width: 150,
-          align: 'center',
-          // eslint-disable-next-line no-unused-vars
-          render: (h, params) => {
-            return h('div', [
-              h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
-                on: {
-                  click: () => {
-                    console.log('我触发了')
-                  }
-                }
-              }, '查看'),
-              h('Button', {
-                props: {
-                  type: 'error',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
-                on: {
-                  click: () => {
-                    console.log('我触发了')
-                  }
-                }
-              }, '删除')
-            ]);
-          }
-        }
-      ],
-      data1: [
-        {
-          name: '王小明',
-          address: '北京市朝阳区芍药居'
-        },
-        {
-          name: '张小刚',
-          address: '北京市海淀区西二旗'
-        },
-        {
-          name: '李小红',
-          address: '上海市浦东新区世纪大道'
-        },
-        {
-          name: '周小伟',
-          address: '深圳市南山区深南大道'
-        }
       ],
       columns2: [
         {
@@ -128,49 +248,6 @@ export default {
           title: '企业录入人',
           key: 'address'
         },
-        {
-          title: '操作',
-          key: 'action',
-          width: 150,
-          align: 'center',
-          // eslint-disable-next-line no-unused-vars
-          render: (h, params) => {
-            return h('div', [
-              h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
-                on: {
-                  click: () => {
-                    console.log('我触发了')
-                  }
-                }
-              }, '确认'),
-            ]);
-          }
-        }
-      ],
-      data2: [
-        {
-          name: '王小明',
-          address: '1111'
-        },
-        {
-          name: '张小刚',
-          address: '1111'
-        },
-        {
-          name: '李小红',
-          address: '1111'
-        },
-        {
-          name: '周小伟',
-          address: '1111'
-        }
       ],
       columns3: [
         {
@@ -213,49 +290,6 @@ export default {
           title: '资质转让录入人',
           key: 'address'
         },
-        {
-          title: '操作',
-          key: 'action',
-          width: 150,
-          align: 'center',
-          // eslint-disable-next-line no-unused-vars
-          render: (h, params) => {
-            return h('div', [
-              h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
-                on: {
-                  click: () => {
-                    console.log('我触发了')
-                  }
-                }
-              }, '确认'),
-            ]);
-          }
-        }
-      ],
-      data3: [
-        {
-          name: '王小明',
-          address: '1111'
-        },
-        {
-          name: '张小刚',
-          address: '1111'
-        },
-        {
-          name: '李小红',
-          address: '1111'
-        },
-        {
-          name: '周小伟',
-          address: '1111'
-        }
       ],
       columns4: [
         {
@@ -283,24 +317,6 @@ export default {
           key: 'address'
         },
       ],
-      data4: [
-        {
-          name: '王小明',
-          address: '1111'
-        },
-        {
-          name: '张小刚',
-          address: '1111'
-        },
-        {
-          name: '李小红',
-          address: '1111'
-        },
-        {
-          name: '周小伟',
-          address: '1111'
-        }
-      ],
       columns5: [
         {
           title: '人才名称',
@@ -322,24 +338,6 @@ export default {
           title: '继续教育时间',
           key: 'address'
         },
-      ],
-      data5: [
-        {
-          name: '王小明',
-          address: '1111'
-        },
-        {
-          name: '张小刚',
-          address: '1111'
-        },
-        {
-          name: '李小红',
-          address: '1111'
-        },
-        {
-          name: '周小伟',
-          address: '1111'
-        }
       ],
       columns6: [
         {
@@ -363,52 +361,66 @@ export default {
           key: 'address'
         },
       ],
-      data6: [
+      tableData: [
         {
-          name: '王小明',
-          address: '1111'
-        },
-        {
-          name: '张小刚',
-          address: '1111'
-        },
-        {
-          name: '李小红',
-          address: '1111'
-        },
-        {
-          name: '周小伟',
-          address: '1111'
-        }
-      ],
-    }
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区',
+        }, {
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区'
+        }, {
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区',
+        }, {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区'
+        }],
+    }, homeTempObj)
   },
   mounted() {
   },
   methods: {
+    tableRowClassName({rowIndex}) {
+      if (rowIndex === 1) {
+        return 'warning-row';
+      } else if (rowIndex === 3) {
+        return 'success-row';
+      }
+      return '';
+    },
+    handleEdit(_index, _row) {
+      console.log(_index, _row)
+    },
+    handleDelete(_index, _row) {
+      console.log(_index, _row)
+    },
     handleClick() {
 
     },
-    show (index) {
-      this.$Modal.info({
-        title: '用户信息',
-        content: `姓名：${this.data1[index].name}<br>年龄：${this.data1[index].age}<br>地址：${this.data1[index].address}`
-      })
+    /**
+     * 表格翻页
+     */
+    handleCurrentChange() {
+
     },
-    remove (index) {
-      this.data1.splice(index, 1);
+    /**
+     * 改变页数
+     */
+    handleSizeChange(_pageSize) {
+      console.log(_pageSize)
     }
+  },
+  destroyed() {
+    localStorage.setItem("homeTemp", JSON.stringify(this.$data))
+    console.log(this.$data)
   }
 }
 </script>
 
 <style scoped lang="less">
-//.welcome{
-//  font:bold 50px/2 "KaiTi";
-//  color: #409EFF;
-//}
-.pagination{
-  margin-top: 10px;
-  text-align: center;
-}
+@import "../../assets/css/common-table-pagination";
 </style>
