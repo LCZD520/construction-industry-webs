@@ -4,7 +4,119 @@
 */
 <template>
   <div class="management-organization">
-    组织管理
+    <el-row :gutter="10">
+      <el-col :span="4">
+        <div class="content-left">
+          <div class="content-left-header">
+            <el-button size="mini" type="primary">添加</el-button>
+            <el-button size="mini">编辑</el-button>
+            <el-button size="mini" type="danger">删除</el-button>
+          </div>
+          <div class="content-left-content">
+            <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+          </div>
+        </div>
+      </el-col>
+      <el-col :span="20">
+        <div class="content-right" style="height: 500px">
+          <el-form
+              ref="formData"
+              inline
+              :model="form">
+            <el-row gutter="20">
+              <el-col span="7">
+                <el-form-item label=" " label-width="100px">
+                  <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
+                  <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-form>
+          <div class="split-line">
+            <div class="split-line-left">
+              <el-button icon="el-icon-plus" size="small" type="primary">添加</el-button>
+            </div>
+            <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
+          </div>
+          <el-table
+              :data="tableData"
+              stripe
+              border
+              highlight-current-row
+              :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
+              :cell-style="{textAlign:'center'}"
+              style="width: 100%"
+              :row-class-name="tableRowClassName">
+            <el-table-column
+                min-width="180"
+                prop="username"
+                label="角色名称">
+            </el-table-column>
+            <el-table-column
+                min-width="180"
+                label="是否启用">
+              <template slot-scope="scope">
+                <el-tag
+                    size="small"
+                    :type="scope.row.enabled ? 'success' : 'danger'"
+                    effect="dark"
+                    disable-transitions>{{ scope.row.enabled ? '是' : '否' }}
+                </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column
+                min-width="200"
+                prop="username"
+                label="角色描述">
+            </el-table-column>
+            <el-table-column fixed="right" label="操作" width="300">
+              <template slot-scope="scope">
+                <el-button
+                    size="mini"
+                    type="primary"
+                    plain
+                    @click="handleEdit(scope.$index, scope.row)">查看
+                </el-button>
+                <el-button
+                    size="mini"
+                    type="primary"
+                    plain
+                    @click="handleEdit(scope.$index, scope.row)">编辑
+                </el-button>
+                <el-button
+                    size="mini"
+                    type="danger"
+                    plain
+                    @click="handleEdit(scope.$index, scope.row)">删除
+                </el-button>
+                <el-button
+                    size="mini"
+                    type="primary"
+                    plain
+                    @click="handleEdit(scope.$index, scope.row)">重置密码
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <div class="pagination">
+            <div class="pagination-total">共<span class="total"> {{ pageInfo.total }} </span>条</div>
+            <div class="pagination-right">
+              <el-pagination
+                  ref="pagination"
+                  :page-sizes="[10, 20, 30, 50]"
+                  :page-size="pageInfo.pageSize"
+                  :current-page.sync="pageInfo.currentPage"
+                  @current-change="handleCurrentChange"
+                  @size-change="handleSizeChange"
+                  background
+                  layout="sizes, prev, pager, next, jumper"
+                  :total="pageInfo.total">
+              </el-pagination>
+            </div>
+          </div>
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -13,12 +125,143 @@ export default {
   name: 'ManagementOrganization',
   components: {},
   data() {
-    return {}
+    return {
+      tableData: [
+        {
+          date: '2016-05-02',
+          username: '王小虎',
+          address: '上海市普陀区',
+          enabled: true
+        },
+        {
+          date: '2016-05-02',
+          username: '王小',
+          address: '上海市普陀区',
+          enabled: false
+        },
+      ],
+      pageInfo: {
+        pageSize: 10,
+        total: 0,
+        currentPage: 1,
+      },
+      form: {
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+      },
+      pickerOptions: {
+        shortcuts: [
+          {
+            text: '今天',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              picker.$emit('pick', [start, end]);
+            }
+          },
+          {
+            text: '一周内',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          },
+          {
+            text: '一个月内',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          },
+          {
+            text: '三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }
+        ]
+      },
+      data: [
+        {
+          label: '一级 1',
+          children: [
+            {
+              label: '二级 1-1',
+              children: [
+                {
+                  label: '三级 1-1-1'
+                }
+              ]
+            }
+          ]
+        },
+        {
+          label: '一级 2',
+          children: [
+            {
+              label: '二级 2-1',
+              children: [
+                {
+                  label: '三级 2-1-1'
+                }
+              ]
+            },
+            {
+              label: '二级 2-2',
+              children: [
+                {
+                  label: '三级 2-2-1'
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      }
+    }
   },
-  methods: {}
+  methods: {
+    tableRowClassName({rowIndex}) {
+      if (rowIndex === 1) {
+        return 'warning-row';
+      } else if (rowIndex === 3) {
+        return 'success-row';
+      }
+      return '';
+    },
+  }
 }
 </script>
 
 <style scoped lang="less">
+@import "../../../assets/css/common-table-pagination";
+@import "../../../assets/css/common-el-table-scrollbar";
+@import "../../../assets/css/split-line";
 
+.management-organization {
+  margin: -10px;
+
+  .content-left {
+    text-align: center;
+
+    .content-left-header {
+      padding: 10px;
+    }
+    .content-left-content{
+      padding: 10px;
+    }
+  }
+}
 </style>
+

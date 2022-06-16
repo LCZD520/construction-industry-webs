@@ -5,28 +5,29 @@
 <template>
   <div class="login">
     <div class="content">
-      <h3>手机商城后台管理系统</h3>
+      <h3>广西恒筑系统</h3>
       <div class="inner-box">
         <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="120px" label-position="right">
           <el-form-item label="用户名" prop="username">
             <el-input v-model="ruleForm.username"
+                      placeholder="请输入用户名"
                       autocomplete="off">
-              <svg slot="prefix" aria-hidden="true" width="32" height="60" style="margin: auto 10px;">
+              <svg slot="prefix" aria-hidden="true" width="20" height="40" style="margin: auto 10px;">
                 <use xlink:href="#icon-yonghuming"></use>
               </svg>
             </el-input>
           </el-form-item>
           <el-form-item label="密码" prop="password">
-            <el-input show-password type="password" v-model="ruleForm.password"
+            <el-input show-password type="password" placeholder="请输入密码" v-model="ruleForm.password"
                       autocomplete="off">
-              <svg slot="prefix" aria-hidden="true" width="32" height="60" style="margin: auto 10px;">
+              <svg slot="prefix" aria-hidden="true" width="20" height="40" style="margin: auto 10px;">
                 <use xlink:href="#icon-mima"></use>
               </svg>
             </el-input>
           </el-form-item>
           <el-form-item label="验证码" prop="captcha">
-            <el-input :maxLength="4" v-model.trim="ruleForm.captcha">
-              <svg slot="prefix" aria-hidden="true" width="32" height="60" style="margin: auto 10px;">
+            <el-input placeholder="验证码" :maxLength="4" v-model.trim="ruleForm.captcha">
+              <svg slot="prefix" aria-hidden="true" width="20" height="40" style="margin: auto 10px;">
                 <use xlink:href="#icon-yanzhengma-yiyanzheng"></use>
               </svg>
               <img
@@ -39,9 +40,8 @@
                   :src="captcha">
             </el-input>
           </el-form-item>
-          <el-form-item>
-            <el-button style="width: 100%;height: 60px"
-                       size="medium" type="primary" @click="submitForm('ruleForm')">
+          <el-form-item label-width="0">
+            <el-button style="width: 100%;" type="primary" @click="submitForm('ruleForm')">
               登 录
             </el-button>
           </el-form-item>
@@ -54,6 +54,7 @@
 <script>
 
 import axios from "axios";
+
 export default {
   name: 'Login',
   components: {},
@@ -80,30 +81,13 @@ export default {
   },
   mounted() {
     this.getCaptcha()
-    document.addEventListener('keydown', function (event) {
-      if ((event.ctrlKey === true || event.metaKey === true)
-          && (event.keyCode === 61 || event.keyCode === 107
-              || event.keyCode === 173 || event.keyCode === 109
-              || event.keyCode === 187 || event.keyCode === 189)) {
-        event.preventDefault();
-      }
-    }, false)
-    document.addEventListener('mousewheel', function (e) {
-      e = e || window.event;
-      if ((e.wheelDelta && event.ctrlKey) || e.detail) {
-        event.preventDefault();
-      }
-    }, {
-      capture: false,
-      passive: false
-    });
   },
   methods: {
     // loadImgError(){
     //   this.$refs.captcha.src = require('../../assets/images/backgroud.jpg')
     // },
     getCaptcha() {
-      this.$axios('/api/captcha').then(res => {
+      this.$axios('/api/captcha/login').then(res => {
         // console.log(res)
         this.$refs.captcha.src = res.data
       })
@@ -138,35 +122,37 @@ export default {
 .login {
   width: 100%;
   height: 100vh;
-  background: url("../../assets/images/backgroud.jpg") no-repeat 0 0;
+  background: url("../../assets/images/background.png") no-repeat 0 0;
   background-size: 100% 100%;
 
   .content {
-    width: 40%;
-    height: 500px;
-    position: absolute;
-    left: 30%;
-    top: 20%;
-    background: #fff;
+    width: 500px;
+    height: 400px;
+    min-height: 400px;
+    margin: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, .7);
     border-radius: 8px;
     box-shadow: 0 0 20px #45c0f6;
     background-size: 50% 50%;
     text-align: center;
     box-sizing: border-box;
-    padding: 40px 65px 40px 40px;
+    padding: 20px 40px 0 40px;
 
     h3 {
-      font: 900 30px/2 "KaiTi";
+      font: 600 30px/2 "KaiTi";
     }
 
     .inner-box {
       margin-top: 20px;
-      max-height: 60%;
-      max-width: 100%;
 
       .captcha {
-        width: 200px;
-        height: 50px;
+        width: 140px;
+        height: 30px;
         position: absolute;
         right: 0;
         margin-top: 5px;
@@ -178,20 +164,13 @@ export default {
 }
 
 /deep/ .el-input__inner {
-  height: 60px;
-  font: 900 20px/3 "KaiTi";
-  padding: 0 60px;
+  height: 40px;
+  font:  20px/2 "Microsoft Yahei";
+  padding: 0 40px;
 }
 
 /deep/ .el-form-item__label {
-  font: 900 20px/3 "KaiTi";
-  //display: flex;
-  //align-items: center;
+  font:  20px/2 "Microsoft Yahei";
 }
 
-
-/deep/ .el-input__icon:before {
-  font-size: 20px;
-  line-height: 60px;
-}
 </style>

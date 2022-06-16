@@ -4,81 +4,81 @@
 */
 <template>
   <div class="talent-query">
-<!--    <el-upload-->
-<!--        ref="upload"-->
-<!--        action=""-->
-<!--        :auto-upload="false"-->
-<!--        :file-list="fileList"-->
-<!--        :on-change="handleChange"-->
-<!--        multiple-->
-<!--        :show-file-list="false"-->
-<!--    >-->
-<!--      <el-button type="primary">批量导入</el-button>-->
-<!--    </el-upload>-->
-<!--    <br>-->
-<!--    <el-button type="primary">导出Excel</el-button>-->
-<!--    <el-table-->
-<!--        :data="list"-->
-<!--        stripe-->
-<!--        highlight-current-row-->
-<!--        :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"-->
-<!--        :cell-style="{textAlign:'center'}"-->
-<!--        style="width: 100%"-->
-<!--        :row-class-name="tableRowClassName">-->
-<!--      <el-table-column-->
-<!--          prop="name"-->
-<!--          label="姓名">-->
-<!--      </el-table-column>-->
-<!--      <el-table-column-->
-<!--          prop="name"-->
-<!--          label="性别">-->
-<!--      </el-table-column>-->
-<!--      <el-table-column-->
-<!--          prop="name"-->
-<!--          label="身份证">-->
-<!--      </el-table-column>-->
-<!--      <el-table-column-->
-<!--          prop="name"-->
-<!--          label="联系电话">-->
-<!--      </el-table-column>-->
-<!--      <el-table-column-->
-<!--          prop="originalEducation"-->
-<!--          label="原始学历">-->
-<!--      </el-table-column>-->
-<!--      <el-table-column-->
-<!--          prop="applicationSchool"-->
-<!--          label="申报学校">-->
-<!--      </el-table-column>-->
-<!--      <el-table-column-->
-<!--          prop="educationalSystem"-->
-<!--          label="学制">-->
-<!--      </el-table-column>-->
-<!--      <el-table-column-->
-<!--          prop="major"-->
-<!--          label="专业">-->
-<!--      </el-table-column>-->
-<!--      <el-table-column-->
-<!--          prop="improveEducation"-->
-<!--          label="提升学历">-->
-<!--      </el-table-column>-->
-<!--      <el-table-column-->
-<!--          prop="agencyAmount"-->
-<!--          label="代办金额">-->
-<!--      </el-table-column>-->
-<!--      <el-table-column width="200" label="操作">-->
-<!--        <template slot-scope="scope">-->
-<!--          <el-button-->
-<!--              size="mini"-->
-<!--              @click="handleEdit(scope.$index, scope.row)">编辑-->
-<!--          </el-button>-->
-<!--          <el-button-->
-<!--              size="mini"-->
-<!--              type="danger"-->
-<!--              @click="handleDelete(scope.$index, scope.row)">删除-->
-<!--          </el-button>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--    </el-table>-->
+    <!--    <el-upload-->
+    <!--        ref="upload"-->
+    <!--        action=""-->
+    <!--        :auto-upload="false"-->
+    <!--        :file-list="fileList"-->
+    <!--        :on-change="handleChange"-->
+    <!--        multiple-->
+    <!--        :show-file-list="false"-->
+    <!--    >-->
+    <!--      <el-button type="primary">批量导入</el-button>-->
+    <!--    </el-upload>-->
+    <!--    <br>-->
+    <!--    <el-button type="primary">导出Excel</el-button>-->
+    <!--    <el-table-->
+    <!--        :data="list"-->
+    <!--        stripe-->
+    <!--        highlight-current-row-->
+    <!--        :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"-->
+    <!--        :cell-style="{textAlign:'center'}"-->
+    <!--        style="width: 100%"-->
+    <!--        :row-class-name="tableRowClassName">-->
+    <!--      <el-table-column-->
+    <!--          prop="name"-->
+    <!--          label="姓名">-->
+    <!--      </el-table-column>-->
+    <!--      <el-table-column-->
+    <!--          prop="name"-->
+    <!--          label="性别">-->
+    <!--      </el-table-column>-->
+    <!--      <el-table-column-->
+    <!--          prop="name"-->
+    <!--          label="身份证">-->
+    <!--      </el-table-column>-->
+    <!--      <el-table-column-->
+    <!--          prop="name"-->
+    <!--          label="联系电话">-->
+    <!--      </el-table-column>-->
+    <!--      <el-table-column-->
+    <!--          prop="originalEducation"-->
+    <!--          label="原始学历">-->
+    <!--      </el-table-column>-->
+    <!--      <el-table-column-->
+    <!--          prop="applicationSchool"-->
+    <!--          label="申报学校">-->
+    <!--      </el-table-column>-->
+    <!--      <el-table-column-->
+    <!--          prop="educationalSystem"-->
+    <!--          label="学制">-->
+    <!--      </el-table-column>-->
+    <!--      <el-table-column-->
+    <!--          prop="major"-->
+    <!--          label="专业">-->
+    <!--      </el-table-column>-->
+    <!--      <el-table-column-->
+    <!--          prop="improveEducation"-->
+    <!--          label="提升学历">-->
+    <!--      </el-table-column>-->
+    <!--      <el-table-column-->
+    <!--          prop="agencyAmount"-->
+    <!--          label="代办金额">-->
+    <!--      </el-table-column>-->
+    <!--      <el-table-column width="200" label="操作">-->
+    <!--        <template slot-scope="scope">-->
+    <!--          <el-button-->
+    <!--              size="mini"-->
+    <!--              @click="handleEdit(scope.$index, scope.row)">编辑-->
+    <!--          </el-button>-->
+    <!--          <el-button-->
+    <!--              size="mini"-->
+    <!--              type="danger"-->
+    <!--              @click="handleDelete(scope.$index, scope.row)">删除-->
+    <!--          </el-button>-->
+    <!--        </template>-->
+    <!--      </el-table-column>-->
+    <!--    </el-table>-->
     <el-form
         ref="formData"
         inline
@@ -155,7 +155,7 @@
     </el-form>
     <div class="split-line">
       <div class="split-line-left">
-        <el-button icon="el-icon-plus" size="small" type="primary">录入人才</el-button>
+        <el-button icon="el-icon-plus" size="small" type="primary" @click="$router.push('/talent-query-add')">录入人才</el-button>
       </div>
       <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
     </div>
@@ -181,45 +181,51 @@
           :prop="item.key"
           :label="item.title">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="400">
+      <el-table-column fixed="right" label="操作" width="220">
         <template slot-scope="scope">
           <el-button
-              v-if="false"
-              size="mini"
-              type="primary"
-              plain
-              @click="handleEdit(scope.$index, scope.row)">完成
-          </el-button>
-          <el-button
-              size="mini"
-              type="primary"
-              plain
-              @click="handleEdit(scope.$index, scope.row)">订单
-          </el-button>
-          <el-button
+              style="padding: 5px"
               size="mini"
               type="primary"
               plain
               @click="handleEdit(scope.$index, scope.row)">图片
           </el-button>
           <el-button
+              style="padding: 5px"
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">查看
+              @click="handleEdit(scope.$index, scope.row)">证件
           </el-button>
           <el-button
               size="mini"
+              style="padding: 5px"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">编辑
+              @click="$router.push('/talent-query-view')">查看
           </el-button>
+          <p style="height: 10px"></p>
           <el-button
+              size="mini"
               v-if="true"
-              size="mini"
-              type="danger"
+              style="padding: 5px"
+              type="primary"
               plain
-              @click="handleDelete(scope.$index, scope.row)">删除
+              @click="handleEdit(scope.$index, scope.row)">转账
+          </el-button>
+          <el-button
+              style="padding: 5px"
+              size="mini"
+              type="primary"
+              plain
+              @click="handleEdit(scope.$index, scope.row)">人才回访
+          </el-button>
+          <el-button
+              style="padding: 5px"
+              size="mini"
+              type="primary"
+              plain
+              @click="handleEdit(scope.$index, scope.row)">后勤申请
           </el-button>
         </template>
       </el-table-column>
@@ -446,6 +452,9 @@ export default {
         ]
       },
     }
+  },
+  mounted() {
+
   },
   methods: {
     tableRowClassName({rowIndex}) {

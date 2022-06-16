@@ -46,14 +46,14 @@
           </el-row>
         </el-header>
         <el-main style="padding: 0">
-          <VueScrollx scrolling-y>
-            <transition :enter-active-class="enterTraName">
-              <div style="padding: 10px">
-                <div style="padding: 10px;background: #fff;min-height: 600px">
+          <VueScrollx>
+            <div style="padding: 10px">
+              <div style="padding: 10px;background: #fff;min-height: 600px">
+                <transition :enter-active-class="enterTraName">
                   <router-view/>
-                </div>
+                </transition>
               </div>
-            </transition>
+            </div>
           </VueScrollx>
         </el-main>
         <el-dialog
@@ -153,7 +153,7 @@ export default {
         this.visible = true
       }
     },
-    beforeClose(){
+    beforeClose() {
       this.visible = false
       this.$refs['formData'].resetFields();
     }

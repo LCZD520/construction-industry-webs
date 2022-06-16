@@ -13,6 +13,24 @@ const businessRoutes = [
         component: () => import('../../../views/management-business/talent-query/TalentQuery'),
     },
     {
+        path: '/talent-query-view',
+        name: 'talent-query-view',
+        meta: {
+            title: '人才查询查看',
+            path: '/talent-query',
+        },
+        component: () => import('../../../views/management-business/talent-query/TalentQueryView'),
+    },
+    {
+        path: '/talent-query-add',
+        name: 'talent-query-add',
+        meta: {
+            title: '人才查询添加',
+            path: '/talent-query',
+        },
+        component: () => import('../../../views/management-business/talent-query/TalentQueryAdd'),
+    },
+    {
         path: '/enterprise-query',
         name: 'enterprise-query',
         meta: {

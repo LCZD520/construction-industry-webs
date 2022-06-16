@@ -100,22 +100,17 @@
           :prop="item.key"
           :label="item.title">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="400">
+      <el-table-column fixed="right" label="操作" width="280">
         <template slot-scope="scope">
           <el-button
-              v-if="false"
-              size="mini"
-              type="primary"
-              plain
-              @click="handleEdit(scope.$index, scope.row)">完成
-          </el-button>
-          <el-button
+              style="padding: 5px"
               size="mini"
               type="primary"
               plain
               @click="handleEdit(scope.$index, scope.row)">订单
           </el-button>
           <el-button
+              style="padding: 5px"
               size="mini"
               type="primary"
               plain
@@ -123,22 +118,40 @@
           </el-button>
           <el-button
               size="mini"
-              type="primary"
-              plain
-              @click="handleEdit(scope.$index, scope.row)">查看
-          </el-button>
-          <el-button
-              size="mini"
+              style="padding: 5px"
               type="primary"
               plain
               @click="handleEdit(scope.$index, scope.row)">编辑
           </el-button>
+          <p style="height: 10px"></p>
           <el-button
+              size="mini"
               v-if="true"
+              style="padding: 5px"
+              type="primary"
+              plain
+              @click="handleEdit(scope.$index, scope.row)">企业回访
+          </el-button>
+          <el-button
+              style="padding: 5px"
+              size="mini"
+              type="primary"
+              plain
+              @click="handleEdit(scope.$index, scope.row)">后勤申请
+          </el-button>
+          <el-button
+              style="padding: 5px"
+              size="mini"
+              type="primary"
+              plain
+              @click="handleEdit(scope.$index, scope.row)">完成确认
+          </el-button>
+          <el-button
+              style="padding: 5px"
               size="mini"
               type="danger"
               plain
-              @click="handleDelete(scope.$index, scope.row)">删除
+              @click="handleEdit(scope.$index, scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
@@ -166,6 +179,7 @@
 // 省市区数据源
 // eslint-disable-next-line no-unused-vars
 import {provinceAndCityData, CodeToText} from 'element-china-area-data'
+
 export default {
   name: 'EnterpriseQuery',
   components: {},

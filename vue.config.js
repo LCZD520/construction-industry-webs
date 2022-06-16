@@ -1,13 +1,10 @@
 module.exports = {
     publicPath: '/',
     devServer: {
-        //open: true,
-        //host:'localhost',
         port: 8888,
-        //https: false,
         proxy: {
             '/api': {
-                target: 'http://localhost:8848/',
+                target: 'http://localhost:8849/',
                 changOrigin: true,
                 pathRewrite: {
                     '^/api': ''

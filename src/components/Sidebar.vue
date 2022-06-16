@@ -4,32 +4,36 @@
 */
 <template>
   <div class="sidebar">
-    <!--    <div style=" margin: auto;text-align: center;background: #515a6e">-->
-    <!--      <img height="120" :src="require('../assets/images/logo.png')" alt="">-->
-    <!--    </div>-->
+    <div class="logo-container" v-if="isCollapse">
+      <img style="transition: .5s" width="54" height="54" :src="require('../assets/images/small-logo.png')" alt="">
+    </div>
+    <div class="logo-container" v-else>
+      <img style="transition: .5s" width="190" height="120" :src="require('../assets/images/img.png')" alt="">
+    </div>
     <el-scrollbar wrap-style="overflow-x:hidden;" style="height: 100%">
       <el-menu
+          :default-active="$route.path"
           background-color="#515a6e"
           text-color="#fff"
-          active-text-color="#ffd04b"
+          active-text-color="#fff"
           unique-opened
-          class="el-menu-vertical-demo"
+          :class="isCollapse ? 'el-menu-vertical-collapse' : 'el-menu-vertical-demo'"
           router
           :collapse="isCollapse">
         <el-menu-item index="home">
-          <i class="el-icon-setting"></i>
+          <i style="color: #fff" class="el-icon-s-home"></i>
           <span slot="title">首页</span>
         </el-menu-item>
         <el-submenu v-for="item in menuList" :key="item.id" :index="item.id">
           <template slot="title">
-            <i class="el-icon-circle-plus"></i>
-            <span slot="title">
+            <i style="color: #fff" class="el-icon-circle-plus"></i>
+            <span style="transition: .5s" slot="title">
               {{ item.level1_title }}
             </span>
           </template>
-          <el-menu-item v-for="subItem in item.subMenuItems" :key="subItem.id" :route="subItem.route"
-                        :index="subItem.id">
-            <i class="el-icon-setting"></i>
+          <el-menu-item v-for="subItem in item.subMenuItems" :key="subItem.id"
+                        :index="subItem.route">
+            <i :class="subItem.icon"></i>
             {{ subItem.level2_title }}
           </el-menu-item>
         </el-submenu>
@@ -59,49 +63,49 @@ export default {
             {
               id: '1-1',
               level2_title: '人才查询',
-              icon: 'el-icon-location',
+              icon: 'el-icon-collection-tag',
               route: '/talent-query',
             },
             {
               id: '1-2',
               level2_title: '企业查询',
-              icon: 'el-icon-location',
+              icon: 'el-icon-collection-tag',
               route: '/enterprise-query',
             },
             {
               id: '1-3',
               level2_title: '资质收购',
-              icon: 'el-icon-location',
+              icon: 'el-icon-collection-tag',
               route: '/qualification-acquisition',
             },
             {
               id: '1-4',
               level2_title: '资质转让',
-              icon: 'el-icon-location',
+              icon: 'el-icon-collection-tag',
               route: '/qualification-transfer',
             },
             {
               id: '1-5',
               level2_title: '资质代办',
-              icon: 'el-icon-location',
+              icon: 'el-icon-collection-tag',
               route: '/qualification-agency',
             },
             {
               id: '1-6',
               level2_title: '职称评审',
-              icon: 'el-icon-location',
+              icon: 'el-icon-collection-tag',
               route: '/title-evaluation',
             },
             {
               id: '1-7',
               level2_title: '三类人员',
-              icon: 'el-icon-location',
+              icon: 'el-icon-collection-tag',
               route: '/class-three-personnel',
             },
             {
               id: '1-8',
               level2_title: '学历提升',
-              icon: 'el-icon-location',
+              icon: 'el-icon-collection-tag',
               route: '/education-promotion',
             },
           ]
@@ -110,35 +114,36 @@ export default {
           id: '2',
           level1_title: '订单管理',
           route: '',
+          icon:'el-icon-s-ticket',
           subMenuItems: [
             {
               id: '2-1',
               level2_title: '人才订单',
-              icon: 'el-icon-location',
+              icon: 'el-icon-s-ticket',
               route: '/order-talent',
             },
             {
               id: '2-2',
               level2_title: '资质转让订单',
-              icon: 'el-icon-location',
+              icon: 'el-icon-s-ticket',
               route: '/order-qualification-transfer',
             },
             {
               id: '2-3',
               level2_title: '职称评审订单',
-              icon: 'el-icon-location',
+              icon: 'el-icon-s-ticket',
               route: '/order-title-evaluation',
             },
             {
               id: '2-4',
               level2_title: '三类人员订单',
-              icon: 'el-icon-location',
+              icon: 'el-icon-s-ticket',
               route: '/order-class-three-personnel',
             },
             {
               id: '2-5',
               level2_title: '学历提升订单',
-              icon: 'el-icon-location',
+              icon: 'el-icon-s-ticket',
               route: '/order-education-promotion',
             },
           ]
@@ -151,37 +156,37 @@ export default {
             {
               id: '3-1',
               level2_title: '人才业绩',
-              icon: 'el-icon-location',
+              icon: 'el-icon-orange',
               route: '/achievement-talent',
             },
             {
               id: '3-2',
               level2_title: '资质转让业绩',
-              icon: 'el-icon-location',
+              icon: 'el-icon-orange',
               route: '/achievement-qualification-transfer',
             },
             {
               id: '3-3',
               level2_title: '资质代办业绩',
-              icon: 'el-icon-location',
+              icon: 'el-icon-orange',
               route: '/achievement-qualification-agency',
             },
             {
               id: '3-4',
               level2_title: '职称评审业绩',
-              icon: 'el-icon-location',
+              icon: 'el-icon-orange',
               route: '/achievement-title-evaluation',
             },
             {
               id: '3-5',
               level2_title: '三类人员业绩',
-              icon: 'el-icon-location',
+              icon: 'el-icon-orange',
               route: '/achievement-class-three-personnel',
             },
             {
               id: '3-6',
               level2_title: '学历提升业绩',
-              icon: 'el-icon-location',
+              icon: 'el-icon-orange',
               route: '/achievement-education-promotion',
             },
           ]
@@ -194,37 +199,37 @@ export default {
             {
               id: '4-1',
               level2_title: '我的人才资源',
-              icon: 'el-icon-location',
+              icon: 'el-icon-s-grid',
               route: '/my-talent-resources',
             },
             {
               id: '4-2',
               level2_title: '人才资源汇总',
-              icon: 'el-icon-location',
+              icon: 'el-icon-s-grid',
               route: '/summary-talent-resources',
             },
             {
               id: '4-3',
               level2_title: '共享人才资源',
-              icon: 'el-icon-location',
+              icon: 'el-icon-s-grid',
               route: '/sharing-talent-resources',
             },
             {
               id: '4-4',
               level2_title: '我的企业资源',
-              icon: 'el-icon-location',
+              icon: 'el-icon-s-grid',
               route: '/my-enterprise-resources',
             },
             {
               id: '4-5',
               level2_title: '企业资源汇总',
-              icon: 'el-icon-location',
+              icon: 'el-icon-s-grid',
               route: '/summary-enterprise-resources',
             },
             {
               id: '4-6',
               level2_title: '共享企业资源',
-              icon: 'el-icon-location',
+              icon: 'el-icon-s-grid',
               route: '/share-enterprise-resources',
             },
           ]
@@ -460,6 +465,15 @@ export default {
 </script>
 
 <style scoped lang="less">
+.el-menu-vertical-demo {
+  margin-top: 135px;
+}
+
+.el-menu-vertical-collapse {
+  transition: .5s;
+  margin-top: 68px;
+}
+
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
   min-height: 400px;
@@ -470,11 +484,31 @@ export default {
   top: 0;
   bottom: 0;
   left: 0;
+  transition: .5s;
+  background: #515a6e;
   overflow-y: auto;
 
   &::-webkit-scrollbar {
     //display: none;
   }
+
+  .logo-container {
+    z-index: 10000;
+    padding: 5px;
+    text-align: center;
+    background: #515a6e;
+    position: fixed;
+    top: 0;
+    left: 0
+  }
+}
+
+/deep/ .el-menu-item.is-active {
+  background: #409EFF !important;
+}
+/deep/ .el-submenu__title:hover{
+  background: #409EFF !important;
+  color: #fff;
 }
 
 </style>
