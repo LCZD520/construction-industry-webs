@@ -208,7 +208,9 @@
           </el-table-column>
         </el-table>
       </el-tab-pane>
-      <el-tab-pane label="图片上传" name="second">图片上传</el-tab-pane>
+      <el-tab-pane label="图片上传" name="second">
+        <ImagesUpload/>
+      </el-tab-pane>
       <el-tab-pane label="申请转账" name="third">
         <el-button type="primary" size="small">
           申请转账
@@ -375,12 +377,14 @@
 </template>
 
 <script>
+import ImagesUpload from "./talent-query-view/ImagesUpload";
 export default {
   name: 'TalentQueryView',
-  components: {},
+  components: {ImagesUpload},
   data() {
     return {
-      activeName: 'first',
+      // activeName: 'first',
+      activeName: 'second',
       isShowDetail: false,
       form: {
         name: ''
@@ -422,10 +426,9 @@ export default {
         },
       ],
       tableData: [
-        {
-
-        }
+        {}
       ],
+
     }
   },
   methods: {
@@ -439,7 +442,7 @@ export default {
     },
     handleClick() {
 
-    }
+    },
   }
 }
 </script>
