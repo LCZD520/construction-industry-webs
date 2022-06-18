@@ -5,7 +5,7 @@
 
 import Vue from 'vue'
 import Router from 'vue-router'
-import store from '../store/index'
+// import store from '../store/index'
 
 import basicDataRoutes from "./modules/basic-data";
 import achievementRoutes from "./modules/management-achievement";
@@ -65,18 +65,18 @@ const router = new Router({
 })
 
 // 全局路由拦截
-router.beforeEach((to, from, next) => {
-    // console.log(to, from)
-    // console.log(store.state.loginStatus);
-    if (to.path === '/login') {
-        next()
-    } else {
-        if (store.state.loginStatus) {
-            next()
-        } else {
-            router.push("/login")
-        }
-    }
-})
+// router.beforeEach((to, from, next) => {
+//     // console.log(to, from)
+//     // console.log(store.state.loginStatus);
+//     if (to.path === '/login') {
+//         next()
+//     } else {
+//         if (store.state.loginStatus) {
+//             next()
+//         } else {
+//             router.push("/login")
+//         }
+//     }
+// })
 
 export default router
