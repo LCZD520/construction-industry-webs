@@ -26,7 +26,7 @@
           :before-upload="beforeUpload"
           :auto-upload="false">
         <i class="el-icon-upload"></i>
-        <div class="el-upload__text">将一个或多个文件拖拽到此处，或<em>点击上传</em></div>
+        <div class="el-upload__text">可将一个或多个文件拖拽到此处，或<em>点击上传</em></div>
         <!--        <div slot="tip" class="el-upload__tip">只能上传jpg/jpeg/png文件，且不超过2M</div>-->
         <div slot="file" slot-scope="{file}">
           <img
