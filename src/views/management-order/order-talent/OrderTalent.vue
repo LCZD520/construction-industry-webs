@@ -8,43 +8,51 @@
         ref="formData"
         inline
         :model="form">
-      <el-row :gutter="20">
-        <el-col span="7">
-          <el-form-item label="级别专业" label-width="100px">
-            <el-select size="small" v-model="form.oldPassword" placeholder="请选择级别专业">
-              <el-option-group
-                  v-for="group in options"
-                  :key="group.label"
-                  :label="group.label">
-                <el-option
-                    v-for="item in group.options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-              </el-option-group>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col span="7">
-          <el-form-item label="初始转注" label-width="100px">
-            <el-select size="small" v-model="form.newPassword" placeholder="请选择初始转注">
-              <el-option
-                  v-for="item in options2"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col span="8">
-          <el-form-item>
-            <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
-            <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
-          </el-form-item>
-        </el-col>
-      </el-row>
+      <el-form-item label="订单编号" label-width="100px">
+        <el-input size="small" v-model="form.newPassword" placeholder="请输入订单编号">
+        </el-input>
+      </el-form-item>
+      <el-form-item label="企业名称" label-width="100px">
+        <el-input size="small" v-model="form.newPassword" placeholder="请输入企业名称">
+        </el-input>
+      </el-form-item>
+      <el-form-item label="人才名称" label-width="100px">
+        <el-input size="small" v-model="form.newPassword" placeholder="请输入人才名称">
+        </el-input>
+      </el-form-item>
+      <el-form-item v-if="enableAdvancedSearch" label="订单状态" label-width="100px">
+        <el-select size="small" v-model="form.oldPassword" placeholder="请选择初始转注">
+          <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="enableAdvancedSearch" label="订单日期" label-width="100px">
+        <el-date-picker
+            v-model="form.oldPassword"
+            size="small"
+            type="daterange"
+            align="right"
+            unlink-panels
+            range-separator="-"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :picker-options="pickerOptions">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item v-if="enableAdvancedSearch" label="企业录入人" label-width="100px">
+        <el-input size="small" v-model="form.newPassword" placeholder="请选择录入人">
+        </el-input>
+      </el-form-item>
+      <el-form-item label=" " label-width="100px">
+        <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
+        <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
+        <el-button v-if="enableAdvancedSearch" type="text" @click="enableAdvancedSearch = false">收起</el-button>
+        <el-button v-else type="text" @click="enableAdvancedSearch = true">高级搜索</el-button>
+      </el-form-item>
     </el-form>
     <el-table
         :data="tableData"
@@ -104,6 +112,7 @@ export default {
   components: {},
   data() {
     return {
+      enableAdvancedSearch: false,
       columns: [
         {
           title: '订单编号',
@@ -203,4 +212,5 @@ export default {
 <style scoped lang="less">
 @import "../../../assets/css/common-table-pagination";
 @import "../../../assets/css/common-el-table-scrollbar";
+@import "../../../assets/css/common-el-input-inner-width";
 </style>

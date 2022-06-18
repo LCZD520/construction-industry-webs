@@ -8,50 +8,40 @@
         ref="formData"
         inline
         :model="form">
-      <el-row :gutter="10">
-        <el-col span="7">
-          <el-form-item label="日期" label-width="100px">
-            <el-date-picker
-                v-model="form.oldPassword"
-                size="small"
-                type="daterange"
-                align="right"
-                unlink-panels
-                range-separator="-"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                :picker-options="pickerOptions">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col span="6">
-          <el-form-item label="排序" label-width="60px">
-            <el-select size="small" v-model="form.newPassword" placeholder="请选择排序">
-              <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col span="4">
-          <el-form-item>
-            <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
-            <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item>
-            <el-button-group>
-              <el-button size="small" plain type="primary" icon="el-icon-s-grid"></el-button>
-              <el-button size="small" plain type="primary" icon="el-icon-pie-chart"></el-button>
-              <el-button size="small" plain type="primary" icon="el-icon-s-data"></el-button>
-            </el-button-group>
-          </el-form-item>
-        </el-col>
-      </el-row>
+      <el-form-item label="日期" label-width="100px">
+        <el-date-picker
+            v-model="form.oldPassword"
+            size="small"
+            type="daterange"
+            align="right"
+            unlink-panels
+            range-separator="-"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :picker-options="pickerOptions">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="排序" label-width="60px">
+        <el-select size="small" v-model="form.newPassword" placeholder="请选择排序">
+          <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label=" " label-width="120px">
+        <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
+        <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button-group>
+          <el-button size="small" plain type="primary" icon="el-icon-s-grid"></el-button>
+          <el-button size="small" plain type="primary" icon="el-icon-pie-chart"></el-button>
+          <el-button size="small" plain type="primary" icon="el-icon-s-data"></el-button>
+        </el-button-group>
+      </el-form-item>
     </el-form>
     <el-table
         :data="tableData"
@@ -282,4 +272,5 @@ export default {
 <style scoped lang="less">
 @import "../../../assets/css/common-table-pagination";
 @import "../../../assets/css/common-el-table-scrollbar";
+@import "../../../assets/css/common-el-input-inner-width";
 </style>

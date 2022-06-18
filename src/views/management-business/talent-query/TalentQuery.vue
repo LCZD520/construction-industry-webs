@@ -83,79 +83,124 @@
         ref="formData"
         inline
         :model="form">
-      <el-row :gutter="20">
-        <el-col span="7">
-          <el-form-item label="收购意向客户" label-width="100px">
-            <el-input size="small" v-model="form.newPassword" placeholder="请输入企业意向客户">
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col span="7">
-          <el-form-item label="资质需求" label-width="100px">
-            <el-cascader
-                size="small"
-                clearable
-                placeholder="请选择资质需求"
-                :options="regionData"
-                v-model="form.newPassword"
-                @change="handleChange">
-            </el-cascader>
-          </el-form-item>
-        </el-col>
-        <el-col span="7">
-          <el-form-item label="所在地区" label-width="100px">
-            <el-cascader
-                size="small"
-                clearable
-                placeholder="请输入所在地区"
-                :options="regionData"
-                v-model="form.newPassword"
-                @change="handleChange">
-            </el-cascader>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col span="7">
-          <el-form-item label="状态" label-width="100px">
-            <el-input size="small" v-model="form.newPassword" placeholder="请选择转让状态">
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col span="7">
-          <el-form-item label="录入人" label-width="100px">
-            <el-input size="small" v-model="form.newPassword" placeholder="请输入录入人名称">
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col span="7">
-          <el-form-item label="录入日期" label-width="100px">
-            <el-date-picker
-                v-model="form.oldPassword"
-                size="small"
-                type="daterange"
-                align="right"
-                unlink-panels
-                range-separator="-"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                :picker-options="pickerOptions">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row gutter="20">
-        <el-col span="7">
-          <el-form-item label=" " label-width="100px">
-            <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
-            <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
-          </el-form-item>
-        </el-col>
-      </el-row>
+      <el-form-item label="姓名" label-width="120px">
+        <el-input size="small" v-model="form.newPassword" placeholder="请输入姓名">
+        </el-input>
+      </el-form-item>
+      <el-form-item v-if="enableAdvancedSearch" label="地区" label-width="120px">
+        <el-cascader
+            size="small"
+            clearable
+            placeholder="请选择地区"
+            :options="regionData"
+            v-model="form.newPassword"
+            @change="handleChange">
+        </el-cascader>
+      </el-form-item>
+      <el-form-item label="级别专业" label-width="120px">
+        <el-cascader
+            size="small"
+            clearable
+            placeholder="请选择级别专业"
+            :options="regionData"
+            v-model="form.newPassword"
+            @change="handleChange">
+        </el-cascader>
+      </el-form-item>
+      <el-form-item label="初始转注" label-width="120px">
+        <el-select size="small" v-model="form.oldPassword" placeholder="请选择初始转注">
+          <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="enableAdvancedSearch" label="职称" label-width="120px">
+        <el-select size="small" v-model="form.oldPassword" placeholder="请选择初始转注">
+          <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="enableAdvancedSearch" label="社保" label-width="120px">
+        <el-cascader
+            size="small"
+            clearable
+            placeholder="请选择社保"
+            :options="regionData"
+            v-model="form.newPassword"
+            @change="handleChange">
+        </el-cascader>
+      </el-form-item>
+      <el-form-item v-if="enableAdvancedSearch" label="三类人员" label-width="120px">
+        <el-select size="small" v-model="form.oldPassword" placeholder="请选择三类人员">
+          <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="招标出场" label-width="120px">
+        <el-select size="small" v-model="form.oldPassword" placeholder="请选择招标出场">
+          <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="人才状态" label-width="120px">
+        <el-select size="small" v-model="form.oldPassword" placeholder="请选择人才状态">
+          <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="enableAdvancedSearch" label="录入人" label-width="120px">
+        <el-select size="small" v-model="form.oldPassword" placeholder="请选择录入人">
+          <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="enableAdvancedSearch" label="录入日期" label-width="120px">
+        <el-date-picker
+            v-model="form.oldPassword"
+            size="small"
+            type="daterange"
+            align="right"
+            unlink-panels
+            range-separator="-"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :picker-options="pickerOptions">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label=" " label-width="120px">
+        <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
+        <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
+        <el-button v-if="enableAdvancedSearch" type="text" @click="enableAdvancedSearch = false">收起</el-button>
+        <el-button v-else type="text" @click="enableAdvancedSearch = true">高级搜索</el-button>
+      </el-form-item>
     </el-form>
     <div class="split-line">
       <div class="split-line-left">
-        <el-button icon="el-icon-plus" size="small" type="primary" @click="$router.push('/talent-query-add')">录入人才</el-button>
+        <el-button icon="el-icon-plus" size="small" type="primary" @click="$router.push('/talent-query-add')">录入人才
+        </el-button>
       </div>
       <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
     </div>
@@ -257,6 +302,7 @@ export default {
   components: {},
   data() {
     return {
+      enableAdvancedSearch: false,
       fileList: [],
       file: "",
       list: [],
@@ -503,4 +549,5 @@ export default {
 @import "../../../assets/css/common-table-pagination";
 @import "../../../assets/css/common-el-table-scrollbar";
 @import "../../../assets/css/split-line";
+@import "../../../assets/css/common-el-input-inner-width";
 </style>

@@ -8,18 +8,22 @@
         ref="formData"
         inline
         :model="form">
-      <el-row gutter="20">
-        <el-col span="7">
-          <el-form-item label=" " label-width="100px">
-            <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
-            <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
-          </el-form-item>
-        </el-col>
-      </el-row>
+      <el-form-item label="名称" label-width="120px">
+        <el-input size="small" v-model="form.newPassword" placeholder="请输入名称">
+        </el-input>
+      </el-form-item>
+      <el-form-item label="代码" label-width="120px">
+        <el-input size="small" v-model="form.newPassword" placeholder="请输入配置项代码">
+        </el-input>
+      </el-form-item>
+      <el-form-item label=" " label-width="120px">
+        <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
+        <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
+      </el-form-item>
     </el-form>
     <div class="split-line">
       <div class="split-line-left">
-        <el-button icon="el-icon-plus" size="small" type="primary">新建</el-button>
+        <el-button icon="el-icon-plus" size="small" type="primary">添加</el-button>
       </div>
       <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
     </div>
@@ -34,18 +38,37 @@
         :row-class-name="tableRowClassName">
       <el-table-column
           min-width="180"
-          v-for="item in columns"
-          :key="item.key"
-          :prop="item.key"
-          :label="item.title">
+          prop="address"
+          label="名称">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="90">
+      <el-table-column
+          min-width="180"
+          prop="address"
+          label="代码">
+      </el-table-column>
+      <el-table-column
+          min-width="180"
+          prop="address"
+          label="值">
+      </el-table-column>
+      <el-table-column
+          min-width="180"
+          prop="address"
+          label="描述">
+      </el-table-column>
+      <el-table-column fixed="right" label="操作" width="180">
         <template slot-scope="scope">
           <el-button
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">查看
+              @click="handleEdit(scope.$index, scope.row)">编辑
+          </el-button>
+          <el-button
+              size="mini"
+              type="danger"
+              plain
+              @click="handleEdit(scope.$index, scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
@@ -75,52 +98,6 @@ export default {
   components: {},
   data() {
     return {
-      columns: [
-        {
-          title: '订单编号',
-          key: 'address'
-        },
-        {
-          title: '企业名称',
-          key: 'address'
-        },
-        {
-          title: '人才名称',
-          key: 'address'
-        },
-        {
-          title: '企业合同价',
-          key: 'address'
-        },
-        {
-          title: '人才价格',
-          key: 'address'
-        },
-        {
-          title: '人才业绩',
-          key: 'address'
-        },
-        {
-          title: '企业业绩',
-          key: 'address'
-        },
-        {
-          title: '业绩生成时间',
-          key: 'address'
-        },
-        {
-          title: '业绩状态',
-          key: 'address'
-        },
-        {
-          title: '人才录入人',
-          key: 'address'
-        },
-        {
-          title: '企业录入人',
-          key: 'address'
-        },
-      ],
       tableData: [
         {
           date: '2016-05-02',
@@ -195,4 +172,5 @@ export default {
 @import "../../../assets/css/common-table-pagination";
 @import "../../../assets/css/common-el-table-scrollbar";
 @import "../../../assets/css/split-line";
+@import "../../../assets/css/common-el-input-inner-width";
 </style>

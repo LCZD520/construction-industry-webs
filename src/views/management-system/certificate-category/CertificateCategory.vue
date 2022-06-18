@@ -100,6 +100,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+@import "../../../assets/css/common-el-input-inner-width";
 .el-divider--horizontal {
   margin: 12px 0;
 }

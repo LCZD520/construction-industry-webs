@@ -14,55 +14,96 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="姓名">
-            <el-input size="small" v-model="form.name"/>
+            <el-input class="width328" placeholder="请输入姓名" size="small" v-model="form.name"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="性别">
-            <el-input size="small" v-model="form.name"/>
+            <el-radio-group v-model="form.name">
+              <el-radio :label="1">男</el-radio>
+              <el-radio :label="2">女</el-radio>
+              <el-radio :label="3">未知</el-radio>
+            </el-radio-group>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="地区">
-            <el-input size="small" v-model="form.name"/>
+            <el-cascader
+                class="width328"
+                size="small"
+                clearable
+                placeholder="请选择地区"
+                :options="regionData"
+                v-model="form.newPassword"
+                @change="handleChange">
+            </el-cascader>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="社保">
-            <el-input size="small" v-model="form.name"/>
+            <el-cascader
+                class="width328"
+                size="small"
+                clearable
+                placeholder="请选择地区"
+                :options="regionData"
+                v-model="form.newPassword"
+                @change="handleChange">
+            </el-cascader>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="电话号码">
-            <el-input size="small" v-model="form.name"/>
+            <el-input class="width328" size="small" v-model="form.name"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="QQ">
-            <el-input size="small" placeholder="请输入QQ" v-model="form.name"/>
+            <el-input class="width328" size="small" placeholder="请输入QQ" v-model="form.name"/>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="学历">
-            <el-input size="small" v-model="form.name"/>
+            <el-select class="width328" size="small" v-model="form.name" placeholder="请选择学历">
+              <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="职称">
-            <el-input size="small" v-model="form.name"/>
+            <el-select class="width328" size="small" v-model="form.name" placeholder="请选择职称">
+              <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="招标出场">
-            <el-input size="small" v-model="form.name"/>
+            <el-select class="width328" size="small" v-model="form.name" placeholder="请选择招标出场">
+              <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -70,21 +111,40 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="三类人员">
-            <el-input size="small" v-model="form.name"/>
+            <el-select class="full-width" size="small" v-model="form.name" placeholder="请选择三类人员">
+              <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
           <el-form-item label="发证时间">
-            <el-input size="small" v-model="form.name"/>
+            <el-date-picker
+                class="full-width"
+                size="small"
+                v-model="value"
+                type="date"
+                placeholder="请选择三类人员发证日期">
+            </el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
           <el-form-item label="继续教育时间">
-            <el-input size="small" v-model="form.name"/>
+            <el-date-picker
+                class="full-width"
+                size="small"
+                v-model="value"
+                type="date"
+                placeholder="请选择继续教育日期">
+            </el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
@@ -107,29 +167,29 @@
                 style="width: 100%"
                 :row-class-name="tableRowClassName">
               <el-table-column
-                  prop="name"
-                  label="姓名"
-                  width="120">
+                  min-width="200"
+                  v-for="item in columns"
+                  :key="item.key"
+                  :prop="item.key"
+                  :label="item.title">
               </el-table-column>
-              <el-table-column
-                  prop="province"
-                  label="省份"
-                  width="120">
-              </el-table-column>
-              <el-table-column
-                  prop="city"
-                  label="市区"
-                  width="120">
-              </el-table-column>
-              <el-table-column
-                  prop="address"
-                  label="地址"
-                  width="300">
-              </el-table-column>
-              <el-table-column
-                  prop="zip"
-                  label="邮编"
-                  width="120">
+              <el-table-column fixed="right" label="操作" width="120">
+                <template slot-scope="scope">
+                  <el-button
+                      style="padding: 5px"
+                      size="mini"
+                      type="primary"
+                      plain
+                      @click="handleEdit(scope.$index, scope.row)">编辑
+                  </el-button>
+                  <el-button
+                      style="padding: 5px"
+                      size="mini"
+                      type="danger"
+                      plain
+                      @click="handleEdit(scope.$index, scope.row)">删除
+                  </el-button>
+                </template>
               </el-table-column>
             </el-table>
           </el-form-item>
@@ -138,12 +198,26 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="证书状态">
-            <el-input size="small" v-model="form.name"/>
+            <el-select class="width328" size="small" v-model="form.name" placeholder="请选择证书状态">
+              <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="人才状态">
-            <el-input size="small" v-model="form.name"/>
+            <el-select disabled class="width328" size="small" v-model="form.name">
+              <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -192,7 +266,25 @@ export default {
       form: {
         name: ''
       },
-      tableData: []
+      columns: [
+        {
+          title: '级别专业',
+          key: 'address'
+        },
+        {
+          title: '初始转注',
+          key: 'address'
+        },
+        {
+          title: '发证时间',
+          key: 'address'
+        },
+        {
+          title: '继续教育时间（默认3年）',
+          key: 'address'
+        },
+      ],
+      tableData: [{}]
     }
   },
   methods: {
@@ -210,7 +302,15 @@ export default {
 
 <style scoped lang="less">
 @import "../../../assets/css/common-el-table-scrollbar";
+
 .talent-query-add {
-  margin: 0 200px;
+  margin: 0 100px;
+
+  .width328 {
+    width: 328px;
+  }
+  .full-width{
+    width: 100%;
+  }
 }
 </style>

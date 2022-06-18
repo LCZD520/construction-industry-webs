@@ -21,12 +21,12 @@
           router
           :collapse="isCollapse">
         <el-menu-item index="home">
-          <i style="color: #fff" class="el-icon-s-home"></i>
+          <i style="color: #fff" :class=" isCollapse ? 'el-icon-s-promotion' : 'el-icon-s-home'"></i>
           <span slot="title">首页</span>
         </el-menu-item>
         <el-submenu v-for="item in menuList" :key="item.id" :index="item.id">
           <template slot="title">
-            <i style="color: #fff" class="el-icon-circle-plus"></i>
+            <i style="color: #fff" class="el-icon-ship"></i>
             <span style="transition: .5s" slot="title">
               {{ item.level1_title }}
             </span>
@@ -114,7 +114,7 @@ export default {
           id: '2',
           level1_title: '订单管理',
           route: '',
-          icon:'el-icon-s-ticket',
+          icon: 'el-icon-s-ticket',
           subMenuItems: [
             {
               id: '2-1',
@@ -506,7 +506,8 @@ export default {
 /deep/ .el-menu-item.is-active {
   background: #409EFF !important;
 }
-/deep/ .el-submenu__title:hover{
+
+/deep/ .el-submenu__title:hover {
   background: #409EFF !important;
   color: #fff;
 }

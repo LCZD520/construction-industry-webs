@@ -8,43 +8,42 @@
         ref="formData"
         inline
         :model="form">
-      <el-row :gutter="20">
-        <el-col span="7">
-          <el-form-item label="级别专业" label-width="100px">
-            <el-select size="small" v-model="form.oldPassword" placeholder="请选择级别专业">
-              <el-option-group
-                  v-for="group in options"
-                  :key="group.label"
-                  :label="group.label">
-                <el-option
-                    v-for="item in group.options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-              </el-option-group>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col span="7">
-          <el-form-item label="初始转注" label-width="100px">
-            <el-select size="small" v-model="form.newPassword" placeholder="请选择初始转注">
-              <el-option
-                  v-for="item in options2"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col span="8">
-          <el-form-item>
-            <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
-            <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
-          </el-form-item>
-        </el-col>
-      </el-row>
+      <el-form-item label="级别专业" label-width="100px">
+        <el-select size="small" v-model="form.oldPassword" placeholder="请选择级别专业">
+          <el-option-group
+              v-for="group in options"
+              :key="group.label"
+              :label="group.label">
+            <el-option
+                v-for="item in group.options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+            </el-option>
+          </el-option-group>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="初始转注" label-width="100px">
+        <el-select size="small" v-model="form.newPassword" placeholder="请选择初始转注">
+          <el-option
+              v-for="item in options2"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label=" " label-width="120px">
+        <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
+        <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button-group>
+          <el-button size="small" plain type="primary" icon="el-icon-s-grid"></el-button>
+          <el-button size="small" plain type="primary" icon="el-icon-pie-chart"></el-button>
+          <el-button size="small" plain type="primary" icon="el-icon-s-data"></el-button>
+        </el-button-group>
+      </el-form-item>
     </el-form>
     <el-table
         :data="tableData"

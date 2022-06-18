@@ -79,4 +79,18 @@ const router = new Router({
 //     }
 // })
 
+import NProgress from 'nprogress'
+// eslint-disable-next-line no-unused-vars
+router.beforeEach((to, from, next) => {
+    next()
+    NProgress.start()
+
+});
+
+router.afterEach(() => {
+    setTimeout(()=>{
+        NProgress.done()
+    },0)
+
+});
 export default router

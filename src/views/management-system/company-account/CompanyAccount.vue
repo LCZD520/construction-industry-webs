@@ -4,22 +4,9 @@
 */
 <template>
   <div class="company-account">
-    <el-form
-        ref="formData"
-        inline
-        :model="form">
-      <el-row gutter="20">
-        <el-col span="7">
-          <el-form-item label=" " label-width="100px">
-            <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
-            <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-form>
     <div class="split-line">
       <div class="split-line-left">
-        <el-button icon="el-icon-plus" size="small" type="primary">新建</el-button>
+        <el-button icon="el-icon-plus" size="small" type="primary">添加</el-button>
       </div>
       <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
     </div>

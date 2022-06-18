@@ -1,19 +1,19 @@
 /**
-* Created by Lv Cheng on 2022/6/16
-* Notes 人才查询查看
+* Created by Lv Cheng on 2022/6/19
+* Notes 企业查询查看
 */
 <template>
-  <div class="talent-query-view">
+  <div class="enterprise-query-view">
     <el-form v-show="isShowDetail" label-position="right" label-width="100px">
       <el-row>
         <el-col :span="8">
-          <el-form-item label="姓名">
+          <el-form-item label="企业名称">
             <el-input disabled size="small" v-model="form.name"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="性别">
-            <el-select size="small" v-model="value" placeholder="请选择">
+          <el-form-item label="资质">
+            <el-select size="small" disabled v-model="value">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -31,8 +31,39 @@
       </el-row>
       <el-row>
         <el-col :span="8">
-          <el-form-item label="社保">
+          <el-form-item label="联系地址">
             <el-input disabled size="small" v-model="form.name"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="企业状态">
+            <el-select size="small" v-model="value" placeholder="请选择">
+              <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="联系人">
+            <el-input disabled size="small" v-model="form.name"/>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="8">
+          <el-form-item label="性别">
+            <el-select size="small" v-model="value" placeholder="请选择">
+              <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -41,137 +72,14 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="QQ">
-            <el-input disabled size="small" v-model="form.name"/>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="8">
-          <el-form-item label="学历">
-            <el-select size="small" disabled v-model="value" placeholder="请选择">
-              <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="职称">
-            <el-select size="small" disabled v-model="value" placeholder="请选择">
-              <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="三类人员">
-            <el-select size="small" disabled v-model="value" placeholder="请选择">
-              <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="8">
-          <el-form-item label="发证日期">
-            <el-date-picker
-                disabled
-                size="small"
-                v-model="value"
-                type="date"
-                placeholder="选择日期">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="过期日期">
-            <el-date-picker
-                disabled
-                size="small"
-                v-model="value"
-                type="date"
-                placeholder="选择日期">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="招标出场">
-            <el-select size="small" disabled v-model="value" placeholder="请选择">
-              <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="8">
-          <el-form-item label="证书状态">
-            <el-select size="small" disabled v-model="value" placeholder="请选择">
-              <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="人才状态">
-            <el-select size="small" disabled v-model="value" placeholder="请选择">
-              <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="人才要价">
-            <el-input disabled size="small" v-model="form.name"/>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="8">
           <el-form-item label="录入人">
             <el-input disabled size="small" v-model="form.name"/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="录入时间">
-            <el-date-picker
-                disabled
-                size="small"
-                v-model="value"
-                type="datetime"
-                placeholder="选择日期">
-            </el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="证书">
+          <el-form-item label=" ">
             <el-table
                 size="mini"
                 :data="tableData"
@@ -223,12 +131,12 @@
       </el-col>
     </el-row>
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="人才证件" name="first">
+      <el-tab-pane label="人才订单" name="first">
         <el-button type="primary" size="small">
-          添加证件
+          下单
         </el-button>
         <el-button type="primary" size="small">
-          更新证件去向
+          合并订单
         </el-button>
         <br><br>
         <el-table
@@ -240,10 +148,6 @@
             :cell-style="{textAlign:'center'}"
             style="width: 100%"
             :row-class-name="tableRowClassName">
-          <el-table-column
-              type="selection"
-              width="55">
-          </el-table-column>
           <el-table-column
               min-width="180"
               v-for="item in columns2"
@@ -340,7 +244,7 @@
           </el-table-column>
         </el-table>
       </el-tab-pane>
-      <el-tab-pane label="人才回访" name="fourth">
+      <el-tab-pane label="企业回访" name="fourth">
         <el-button type="primary" size="small">
           添加回访记录
         </el-button>
@@ -444,58 +348,81 @@
 </template>
 
 <script>
-import ImagesUpload from "./talent-query-view/ImagesUpload";
+import ImagesUpload from "./enterprise-view/ImagesUpload";
 export default {
-  name: 'TalentQueryView',
+  name: 'EnterpriseQueryView',
   components: {ImagesUpload},
   data() {
     return {
-      // activeName: 'first',
-      activeName: 'second',
+      activeName: 'first',
+      // activeName: 'second',
       isShowDetail: false,
       form: {
         name: ''
       },
       columns: [
         {
-          title: '级别专业',
+          title: '级别-专业-转/注',
           key: 'address'
         },
         {
-          title: '初始转注',
+          title: '三类人员',
           key: 'address'
         },
         {
-          title: '发证时间',
+          title: '招标出场',
           key: 'address'
         },
         {
-          title: '继续教育时间（默认3年）',
+          title: '企业出价',
+          key: 'address'
+        },
+        {
+          title: '市场开发费',
+          key: 'address'
+        },
+        {
+          title: '职称',
+          key: 'address'
+        },
+        {
+          title: '学历',
+          key: 'address'
+        },
+        {
+          title: '人数统计',
           key: 'address'
         },
       ],
       columns2: [
         {
-          title: '所在分支',
+          title: '订单编号',
           key: 'address'
         },
         {
-          title: '证件类型',
+          title: '企业名称',
           key: 'address'
         },
         {
-          title: '证件备注',
+          title: '人才选择',
           key: 'address'
         },
         {
-          title: '当前证件去向',
+          title: '订单时间',
+          key: 'address'
+        },
+        {
+          title: '订单状态',
+          key: 'address'
+        },
+        {
+          title: '录入人',
           key: 'address'
         },
       ],
       tableData: [
         {}
       ],
-
     }
   },
   methods: {

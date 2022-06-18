@@ -8,14 +8,38 @@
         ref="formData"
         inline
         :model="form">
-      <el-row gutter="20">
-        <el-col span="7">
-          <el-form-item label=" " label-width="100px">
-            <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
-            <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
-          </el-form-item>
-        </el-col>
-      </el-row>
+      <el-form-item label="申请人" label-width="120px">
+        <el-input size="small" v-model="form.newPassword" placeholder="请输入创建人姓名">
+        </el-input>
+      </el-form-item>
+      <el-form-item label="客户名称" label-width="120px">
+        <el-input size="small" v-model="form.newPassword" placeholder="请输入客户名称">
+        </el-input>
+      </el-form-item>
+      <el-form-item label="后勤项目" label-width="120px">
+        <el-select size="small" v-model="form.oldPassword" placeholder="请选择后勤项目">
+          <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="后勤申请状态" label-width="120px">
+        <el-select size="small" v-model="form.oldPassword" placeholder="请选择后勤申请状态">
+          <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label=" " label-width="120px">
+        <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
+        <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
+      </el-form-item>
     </el-form>
     <el-table
         :data="tableData"
@@ -188,4 +212,5 @@ export default {
 <style scoped lang="less">
 @import "../../../assets/css/common-table-pagination";
 @import "../../../assets/css/common-el-table-scrollbar";
+@import "../../../assets/css/common-el-input-inner-width";
 </style>

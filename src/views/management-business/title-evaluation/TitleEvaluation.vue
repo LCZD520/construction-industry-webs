@@ -41,7 +41,7 @@
         </el-col>
         <el-col span="7">
           <el-form-item label="录入人" label-width="100px">
-            <el-select size="small" v-model="form.newPassword" placeholder="请输入录入人">
+            <el-select size="small" v-model="form.newPassword" placeholder="请选择录入人">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -343,4 +343,5 @@ export default {
 @import "../../../assets/css/common-table-pagination";
 @import "../../../assets/css/common-el-table-scrollbar";
 @import "../../../assets/css/split-line";
+@import "../../../assets/css/common-el-input-inner-width";
 </style>

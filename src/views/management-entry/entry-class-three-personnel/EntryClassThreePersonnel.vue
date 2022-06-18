@@ -8,14 +8,61 @@
         ref="formData"
         inline
         :model="form">
-      <el-row gutter="20">
-        <el-col span="7">
-          <el-form-item label=" " label-width="100px">
-            <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
-            <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
-          </el-form-item>
-        </el-col>
-      </el-row>
+      <el-form-item label="客户名称" label-width="120px">
+        <el-input size="small" v-model="form.newPassword" placeholder="请输入客户名称">
+        </el-input>
+      </el-form-item>
+      <el-form-item label="订单编号" label-width="120px">
+        <el-input size="small" v-model="form.newPassword" placeholder="请输入订单编号">
+        </el-input>
+      </el-form-item>
+      <el-form-item label="申请人" label-width="120px">
+        <el-select size="small" v-model="form.oldPassword" placeholder="请选择创建人姓名">
+          <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="申请状态" label-width="120px">
+        <el-select size="small" v-model="form.oldPassword" placeholder="请选择申请状态">
+          <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="申请日期" label-width="120px">
+        <el-date-picker
+            v-model="form.oldPassword"
+            size="small"
+            type="daterange"
+            align="right"
+            unlink-panels
+            range-separator="-"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :picker-options="pickerOptions">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="录入人" label-width="120px">
+        <el-select size="small" v-model="form.oldPassword" placeholder="请选择三类人员录入人">
+          <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label=" " label-width="120px">
+        <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
+        <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
+      </el-form-item>
     </el-form>
     <el-table
         :data="tableData"
@@ -210,4 +257,5 @@ export default {
 <style scoped lang="less">
 @import "../../../assets/css/common-table-pagination";
 @import "../../../assets/css/common-el-table-scrollbar";
+@import "../../../assets/css/common-el-input-inner-width";
 </style>

@@ -39,6 +39,30 @@ const businessRoutes = [
         component: () => import('../../../views/management-business/enterprise-query/EnterpriseQuery'),
     },
     {
+        path: '/enterprise-add',
+        name: 'enterprise-add',
+        meta: {
+            title: '企业添加',
+        },
+        component: () => import('../../../views/management-business/enterprise-query/EnterpriseAdd'),
+    },
+    {
+        path: '/enterprise-edit',
+        name: 'enterprise-edit',
+        meta: {
+            title: '企业添加',
+        },
+        component: () => import('../../../views/management-business/enterprise-query/EnterpriseEdit'),
+    },
+    {
+        path: '/enterprise-query-view',
+        name: 'enterprise-query-view',
+        meta: {
+            title: '企业查询查看',
+        },
+        component: () => import('../../../views/management-business/enterprise-query/EnterpriseQueryView'),
+    },
+    {
         path: '/qualification-acquisition',
         name: 'qualification-acquisition',
         meta: {

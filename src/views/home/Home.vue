@@ -24,10 +24,13 @@
               <template slot-scope="scope">
                 <el-button
                     size="mini"
+                    icon="el-icon-edit"
+                    type="primary"
                     @click="handleEdit(scope.$index, scope.row)">编辑
                 </el-button>
                 <el-button
                     size="mini"
+                    icon="el-icon-delete"
                     type="danger"
                     @click="handleDelete(scope.$index, scope.row)">删除
                 </el-button>
@@ -48,6 +51,7 @@
               style="width: 100%"
               :row-class-name="tableRowClassName">
             <el-table-column
+                min-width="200px"
                 v-for="item in columns2"
                 :key="item.key"
                 :prop="item.key"
@@ -57,10 +61,13 @@
               <template slot-scope="scope">
                 <el-button
                     size="mini"
+                    icon="el-icon-edit"
+                    type="primary"
                     @click="handleEdit(scope.$index, scope.row)">编辑
                 </el-button>
                 <el-button
                     size="mini"
+                    icon="el-icon-delete"
                     type="danger"
                     @click="handleDelete(scope.$index, scope.row)">删除
                 </el-button>
@@ -81,19 +88,23 @@
               style="width: 100%"
               :row-class-name="tableRowClassName">
             <el-table-column
+                min-width="200px"
                 v-for="item in columns3"
                 :key="item.key"
                 :prop="item.key"
                 :label="item.title">
             </el-table-column>
-            <el-table-column label="操作" width="200">
+            <el-table-column fixed="right" label="操作" width="200">
               <template slot-scope="scope">
                 <el-button
                     size="mini"
+                    icon="el-icon-edit"
+                    type="primary"
                     @click="handleEdit(scope.$index, scope.row)">编辑
                 </el-button>
                 <el-button
                     size="mini"
+                    icon="el-icon-delete"
                     type="danger"
                     @click="handleDelete(scope.$index, scope.row)">删除
                 </el-button>
@@ -423,4 +434,5 @@ export default {
 
 <style scoped lang="less">
 @import "../../assets/css/common-table-pagination";
+@import "../../assets/css/common-el-table-scrollbar";
 </style>

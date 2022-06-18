@@ -8,14 +8,24 @@
         ref="formData"
         inline
         :model="form">
-      <el-row gutter="20">
-        <el-col span="7">
-          <el-form-item label=" " label-width="100px">
-            <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
-            <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
-          </el-form-item>
-        </el-col>
-      </el-row>
+      <el-form-item label="标题" label-width="120px">
+        <el-input size="small" v-model="form.newPassword" placeholder="请输入标题">
+        </el-input>
+      </el-form-item>
+      <el-form-item label="状态" label-width="120px">
+        <el-select size="small" v-model="form.oldPassword" placeholder="请选择状态">
+          <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label=" " label-width="120px">
+        <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
+        <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
+      </el-form-item>
     </el-form>
     <div class="split-line">
       <div class="split-line-left">

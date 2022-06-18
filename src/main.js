@@ -15,6 +15,8 @@ import * as echarts from "echarts";
 // ElementUI 组件库
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+// import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 
 Vue.use(animated)
 Vue.use(Viewer)
