@@ -255,7 +255,7 @@ export default {
               id: '5-3',
               level2_title: '资质收购转账',
               icon: 'el-icon-location',
-              route: '/transfer-qualification-acquisition-view',
+              route: '/transfer-qualification-acquisition',
             },
             {
               id: '5-4',

@@ -30,7 +30,7 @@
           <el-button icon="el-icon-plus" type="primary" size="mini">
             添加
           </el-button>
-          <el-button icon="el-icon-document" type="primary" size="mini">
+          <el-button icon="el-icon-paperclip" type="primary" size="mini">
             批量导入
           </el-button>
           <el-button icon="el-icon-download" type="primary" size="mini">

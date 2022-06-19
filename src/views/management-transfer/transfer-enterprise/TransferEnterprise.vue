@@ -72,7 +72,7 @@
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">详情
+              @click="handleView(scope.$index, scope.row)">详情
           </el-button>
         </template>
       </el-table-column>
@@ -193,6 +193,10 @@ export default {
         return 'success-row';
       }
       return '';
+    },
+    handleView(_index,_row){
+      console.log(_index,_row)
+      this.$router.push('/transfer-enterprise-view')
     },
     handleChange(file, fileList) {
       this.fileList = [fileList[fileList.length - 1]]; // 只能上传一个Excel，重复上传会覆盖之前的

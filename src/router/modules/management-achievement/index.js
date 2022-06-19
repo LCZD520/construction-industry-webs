@@ -13,12 +13,28 @@ const achievementRoutes = [
         component: () => import('../../../views/management-achievement/achievement-talent/AchievementTalent'),
     },
     {
+        path: '/achievement-talent-view',
+        name: 'achievement-talent-view',
+        meta: {
+            title: '人才业绩查看',
+        },
+        component: () => import('../../../views/management-achievement/achievement-talent/AchievementTalentView'),
+    },
+    {
         path: '/achievement-qualification-transfer',
         name: 'achievement-qualification-transfer',
         meta: {
             title: '资质转让业绩',
         },
         component: () => import('../../../views/management-achievement/achievement-qualification-transfer/AchievementQualificationTransfer'),
+    },
+    {
+        path: '/achievement-qualification-transfer-view',
+        name: 'achievement-qualification-transfer-view',
+        meta: {
+            title: '资质转让业绩查看',
+        },
+        component: () => import('../../../views/management-achievement/achievement-qualification-transfer/AchievementQualificationTransferView'),
     },
     {
         path: '/achievement-qualification-agency',
@@ -29,12 +45,28 @@ const achievementRoutes = [
         component: () => import('../../../views/management-achievement/achievement-qualification-agency/AchievementQualificationAgency'),
     },
     {
+        path: '/achievement-qualification-agency-view',
+        name: 'achievement-qualification-agency-view',
+        meta: {
+            title: '资质代办业绩查看',
+        },
+        component: () => import('../../../views/management-achievement/achievement-qualification-agency/AchievementQualificationAgencyView'),
+    },
+    {
         path: '/achievement-title-evaluation',
         name: 'achievement-title-evaluation',
         meta: {
             title: '职称评审业绩',
         },
         component: () => import('../../../views/management-achievement/achievement-title-evaluation/AchievementTitleEvaluation'),
+    },
+    {
+        path: '/achievement-title-evaluation-view',
+        name: 'achievement-title-evaluation-view',
+        meta: {
+            title: '职称评审业绩',
+        },
+        component: () => import('../../../views/management-achievement/achievement-title-evaluation/AchievementTitleEvaluationView'),
     },
     {
         path: '/achievement-class-three-personnel',
@@ -45,12 +77,28 @@ const achievementRoutes = [
         component: () => import('../../../views/management-achievement/achievement-class-three-personnel/AchievementClassThreePersonnel'),
     },
     {
+        path: '/achievement-class-three-personnel-view',
+        name: 'achievement-class-three-personnel-view',
+        meta: {
+            title: '三类人员业绩',
+        },
+        component: () => import('../../../views/management-achievement/achievement-class-three-personnel/AchievementClassThreePersonnelView'),
+    },
+    {
         path: '/achievement-education-promotion',
         name: 'achievement-education-promotion',
         meta: {
             title: '学历提升业绩',
         },
         component: () => import('../../../views/management-achievement/achievement-education-promotion/AchievementEducationPromotion'),
+    },
+    {
+        path: '/achievement-education-promotion-view',
+        name: 'achievement-education-promotion-view',
+        meta: {
+            title: '学历提升业绩',
+        },
+        component: () => import('../../../views/management-achievement/achievement-education-promotion/AchievementEducationPromotionView'),
     }
 ]
 

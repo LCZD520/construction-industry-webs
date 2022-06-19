@@ -1,71 +1,58 @@
 /**
 * Created by Lv Cheng on 2022/6/19
-* Notes 资质转让订单查看
+* Notes 资质转让业绩查看
 */
 <template>
-  <div class="order-qualification-transfer-view">
-    <el-form label-position="right" label-width="150px">
+  <div class="achievement-qualification-transfer-view">
+    <el-form label-position="right" label-width="130px">
       <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="订单编号">
             <el-input disabled size="small" v-model="form.name"/>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="收购意向客户">
+        <el-col :span="8">
+          <el-form-item label="收购意向企业">
+            <el-input disabled size="small" v-model="form.name"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="转让意向企业">
             <el-input disabled size="small" v-model="form.name"/>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-form-item label="收购意向客户资质需求">
-        <el-input disabled placeholder="备注......" :rows="3" type="textarea">
-        </el-input>
-      </el-form-item>
       <el-row>
-        <el-col :span="12">
-          <el-form-item label="转让意向客户">
-            <el-input disabled size="small" v-model="form.name"/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="收购金额">
             <el-input disabled size="small" v-model="form.name"/>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="资质收购录入人">
-            <el-input disabled size="small" v-model="form.name"/>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-form-item label="转让意向客户资质">
-        <el-input disabled placeholder="备注......" :rows="3" type="textarea">
-        </el-input>
-      </el-form-item>
-      <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="成交金额">
             <el-input disabled size="small" v-model="form.name"/>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
-          <el-form-item label="付款方式">
+        <el-col :span="8">
+          <el-form-item label="资质转让业绩">
             <el-input disabled size="small" v-model="form.name"/>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="12">
-          <el-form-item label="资质转让录入人">
-            <el-input disabled size="small" v-model="form.name"/>
+        <el-col :span="8">
+          <el-form-item label="业绩生成时间">
+            <el-date-picker
+                disabled
+                class="width-full"
+                size="small"
+                v-model="form.name"
+                type="datetime">
+            </el-date-picker>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
-          <el-form-item label="状态">
+        <el-col :span="8">
+          <el-form-item label="审核状态">
             <el-select disabled class="width-full" size="small" v-model="value">
               <el-option
                   v-for="item in options"
@@ -76,29 +63,15 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="订单时间">
-            <el-date-picker
-                disabled
-                class="width-full"
-                size="small"
-                v-model="form.name"
-                type="date"
-                placeholder="选择日期">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="合同余额">
+        <el-col :span="8">
+          <el-form-item label="资质收购录入人">
             <el-input disabled size="small" v-model="form.name"/>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="12">
-          <el-form-item label="已转金额">
+        <el-col :span="8">
+          <el-form-item label="资质转让录入人">
             <el-input disabled size="small" v-model="form.name"/>
           </el-form-item>
         </el-col>
@@ -115,10 +88,11 @@
             style="width: 100%"
             :row-class-name="tableRowClassName">
           <el-table-column
-              min-width="180"
+              min-width="100"
               v-for="item in columns"
               :key="item.key"
               :prop="item.key"
+              :fixed="item.fixed"
               :label="item.title">
           </el-table-column>
         </el-table>
@@ -136,14 +110,14 @@
             :row-class-name="tableRowClassName">
           <el-table-column
               min-width="180"
-              v-for="item in columns"
+              v-for="item in columns2"
               :key="item.key"
               :prop="item.key"
               :label="item.title">
           </el-table-column>
         </el-table>
       </el-form-item>
-      <el-form-item label="工商费用转账">
+      <el-form-item label="资质转让转账">
         <el-table
             size="mini"
             :data="tableData"
@@ -156,15 +130,21 @@
             :row-class-name="tableRowClassName">
           <el-table-column
               min-width="180"
-              v-for="item in columns"
+              v-for="item in columns2"
               :key="item.key"
               :prop="item.key"
               :label="item.title">
           </el-table-column>
         </el-table>
       </el-form-item>
+      <el-form-item label="审核意见">
+        <el-input disabled :rows="5" type="textarea">
+
+        </el-input>
+      </el-form-item>
+      <br>
       <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label=" ">
             <el-button icon="el-icon-back" @click="$router.back()" size="small">
               返回
@@ -178,7 +158,7 @@
 
 <script>
 export default {
-  name: 'OrderQualificationTransferView',
+  name: 'AchievementQualificationTransferView',
   components: {},
   data() {
     return {
@@ -207,7 +187,29 @@ export default {
           key: 'address'
         },
       ],
-      tableData:[]
+      columns2: [
+        {
+          title: '申请转账时间',
+          key: 'address'
+        },
+        {
+          title: '申请人',
+          key: 'address'
+        },
+        {
+          title: '申请转账金额',
+          key: 'address'
+        },
+        {
+          title: '款项用途',
+          key: 'address'
+        },
+        {
+          title: '申请状态',
+          key: 'address'
+        },
+      ],
+      tableData: [{}]
     }
   },
   methods: {
@@ -219,6 +221,9 @@ export default {
       }
       return '';
     },
+    handleEdit(_index, _row) {
+      console.log(_index, _row)
+    },
     handleClick() {
 
     }
@@ -228,7 +233,8 @@ export default {
 
 <style scoped lang="less">
 @import "../../../assets/css/common-el-table-scrollbar";
-.order-qualification-transfer-view {
+
+.achievement-qualification-transfer-view {
   margin: 0 100px;
 }
 

@@ -61,7 +61,7 @@
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">查看
+              @click="handleView(scope.$index, scope.row)">查看
           </el-button>
         </template>
       </el-table-column>
@@ -166,6 +166,14 @@ export default {
         return 'success-row';
       }
       return '';
+    },
+    handleView(_index,_row){
+      console.log(_index,_row)
+      this.$router.push('/order-class-three-personnel-view')
+    },
+    handleEdit(_index,_row){
+      console.log(_index,_row)
+      this.$router.push('/order-class-three-personnel-edit')
     },
     /**
      * 表格翻页
