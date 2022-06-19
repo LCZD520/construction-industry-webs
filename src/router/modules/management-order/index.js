@@ -13,12 +13,28 @@ const orderRoutes = [
         component: () => import('../../../views/management-order/order-talent/OrderTalent'),
     },
     {
+        path: '/order-talent-view',
+        name: 'order-talent-view',
+        meta: {
+            title: '人才订单查看',
+        },
+        component: () => import('../../../views/management-order/order-talent/OrderTalentView'),
+    },
+    {
         path: '/order-qualification-transfer',
         name: 'order-qualification-transfer',
         meta: {
             title: '资质转让订单',
         },
         component: () => import('../../../views/management-order/order-qualification-transfer/OrderQualificationTransfer'),
+    },
+    {
+        path: '/order-qualification-transfer-view',
+        name: 'order-qualification-transfer-view',
+        meta: {
+            title: '资质转让订单',
+        },
+        component: () => import('../../../views/management-order/order-qualification-transfer/OrderQualificationTransferView'),
     },
     {
         path: '/order-title-evaluation',

@@ -111,7 +111,7 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="三类人员">
-            <el-select class="full-width" size="small" v-model="form.name" placeholder="请选择三类人员">
+            <el-select class="width-full" size="small" v-model="form.name" placeholder="请选择三类人员">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -126,7 +126,7 @@
         <el-col :span="24">
           <el-form-item label="发证时间">
             <el-date-picker
-                class="full-width"
+                class="width-full"
                 size="small"
                 v-model="value"
                 type="date"
@@ -139,7 +139,7 @@
         <el-col :span="24">
           <el-form-item label="继续教育时间">
             <el-date-picker
-                class="full-width"
+                class="width-full"
                 size="small"
                 v-model="value"
                 type="date"
@@ -309,7 +309,7 @@ export default {
   .width328 {
     width: 328px;
   }
-  .full-width{
+  .width-full{
     width: 100%;
   }
 }

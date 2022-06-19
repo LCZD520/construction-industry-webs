@@ -222,7 +222,7 @@
         </el-form>
       </el-col>
     </el-row>
-    <el-tabs v-model="activeName" @tab-click="handleClick">
+    <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="人才证件" name="first">
         <el-button type="primary" size="small">
           添加证件

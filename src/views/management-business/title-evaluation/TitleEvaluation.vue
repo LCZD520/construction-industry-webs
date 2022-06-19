@@ -76,7 +76,8 @@
     </el-form>
     <div class="split-line">
       <div class="split-line-left">
-        <el-button icon="el-icon-plus" size="small" type="primary">添加</el-button>
+        <el-button icon="el-icon-plus" size="small" type="primary"
+        @click="$router.push('/title-evaluation-add')">添加</el-button>
       </div>
       <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
     </div>
@@ -121,7 +122,7 @@
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">查看
+              @click="handleView(scope.$index, scope.row)">查看
           </el-button>
           <el-button
               size="mini"
@@ -329,8 +330,13 @@ export default {
     handleSizeChange(_pageSize) {
       console.log(_pageSize)
     },
+    handleView(_index, _row) {
+      console.log(_index, _row)
+      this.$router.push('/title-evaluation-view')
+    },
     handleEdit(_index, _row) {
       console.log(_index, _row)
+      this.$router.push('/title-evaluation-edit')
     },
     handleDelete(_index, _row) {
       console.log(_index, _row)

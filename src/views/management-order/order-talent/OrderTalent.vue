@@ -76,7 +76,7 @@
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">查看
+              @click="handleView(scope.$index, scope.row)">查看
           </el-button>
           <el-button
               size="mini"
@@ -192,6 +192,13 @@ export default {
         return 'success-row';
       }
       return '';
+    },
+    handleView(_index, _row) {
+      console.log(_index, _row)
+      this.$router.push('/order-talent-view')
+    },
+    handleEdit(_index, _row) {
+      console.log(_index, _row)
     },
     /**
      * 表格翻页

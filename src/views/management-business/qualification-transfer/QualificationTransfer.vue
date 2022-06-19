@@ -50,7 +50,8 @@
               :label="item.label"
               :value="item.value">
           </el-option>
-        </el-select>      </el-form-item>
+        </el-select>
+      </el-form-item>
       <el-form-item label="录入日期" label-width="100px">
         <el-date-picker
             v-model="form.oldPassword"
@@ -72,7 +73,9 @@
     </el-form>
     <div class="split-line">
       <div class="split-line-left">
-        <el-button icon="el-icon-plus" size="small" type="primary">添加</el-button>
+        <el-button icon="el-icon-plus" size="small" type="primary"
+                   @click="$router.push('/qualification-transfer-add')">添加
+        </el-button>
       </div>
       <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
     </div>
@@ -365,6 +368,7 @@ export default {
     },
     handleEdit(_index, _row) {
       console.log(_index, _row)
+      this.$router.push('/qualification-transfer-view')
     },
     handleDelete(_index, _row) {
       console.log(_index, _row)

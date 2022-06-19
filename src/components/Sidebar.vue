@@ -114,36 +114,36 @@ export default {
           id: '2',
           level1_title: '订单管理',
           route: '',
-          icon: 'el-icon-s-ticket',
+          icon: 'el-icon-s-order',
           subMenuItems: [
             {
               id: '2-1',
               level2_title: '人才订单',
-              icon: 'el-icon-s-ticket',
+              icon: 'el-icon-s-order',
               route: '/order-talent',
             },
             {
               id: '2-2',
               level2_title: '资质转让订单',
-              icon: 'el-icon-s-ticket',
+              icon: 'el-icon-s-order',
               route: '/order-qualification-transfer',
             },
             {
               id: '2-3',
               level2_title: '职称评审订单',
-              icon: 'el-icon-s-ticket',
+              icon: 'el-icon-s-order',
               route: '/order-title-evaluation',
             },
             {
               id: '2-4',
               level2_title: '三类人员订单',
-              icon: 'el-icon-s-ticket',
+              icon: 'el-icon-s-order',
               route: '/order-class-three-personnel',
             },
             {
               id: '2-5',
               level2_title: '学历提升订单',
-              icon: 'el-icon-s-ticket',
+              icon: 'el-icon-s-order',
               route: '/order-education-promotion',
             },
           ]
@@ -255,7 +255,7 @@ export default {
               id: '5-3',
               level2_title: '资质收购转账',
               icon: 'el-icon-location',
-              route: '/transfer-qualification-acquisition',
+              route: '/transfer-qualification-acquisition-view',
             },
             {
               id: '5-4',

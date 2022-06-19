@@ -21,7 +21,7 @@ const transferRoutes = [
         component: () => import('../../../views/management-transfer/transfer-enterprise/TransferEnterprise'),
     },
     {
-        path: '/transfer-qualification-acquisition',
+        path: '/transfer-qualification-acquisition-view',
         name: 'transfer-qualification-acquisition',
         meta: {
             title: '资质收购转账',
