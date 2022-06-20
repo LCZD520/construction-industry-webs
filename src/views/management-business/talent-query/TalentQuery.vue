@@ -368,11 +368,13 @@ export default {
       ],
       options: [
         {
-          value: '选项1',
+          id: "xxxx",
+          value: 1,
           label: '录入企业数'
         },
         {
-          value: '选项2',
+          id: "xxxxx",
+          value: 2,
           label: '录入人才数'
         },
         {

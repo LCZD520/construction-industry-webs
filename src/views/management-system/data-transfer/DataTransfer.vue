@@ -52,16 +52,6 @@
           :prop="item.key"
           :label="item.title">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="90">
-        <template slot-scope="scope">
-          <el-button
-              size="mini"
-              type="primary"
-              plain
-              @click="handleEdit(scope.$index, scope.row)">查看
-          </el-button>
-        </template>
-      </el-table-column>
     </el-table>
     <div class="pagination">
       <div class="pagination-total">共<span class="total"> {{ pageInfo.total }} </span>条</div>
@@ -90,56 +80,23 @@ export default {
     return {
       columns: [
         {
-          title: '订单编号',
+          title: '原录入人',
           key: 'address'
         },
         {
-          title: '企业名称',
+          title: '交接人',
           key: 'address'
         },
         {
-          title: '人才名称',
+          title: '备注转移',
           key: 'address'
         },
         {
-          title: '企业合同价',
-          key: 'address'
-        },
-        {
-          title: '人才价格',
-          key: 'address'
-        },
-        {
-          title: '人才业绩',
-          key: 'address'
-        },
-        {
-          title: '企业业绩',
-          key: 'address'
-        },
-        {
-          title: '业绩生成时间',
-          key: 'address'
-        },
-        {
-          title: '业绩状态',
-          key: 'address'
-        },
-        {
-          title: '人才录入人',
-          key: 'address'
-        },
-        {
-          title: '企业录入人',
+          title: '转移时间',
           key: 'address'
         },
       ],
-      tableData: [
-        {
-          date: '2016-05-02',
-          username: '王小虎',
-          address: '上海市普陀区',
-        },],
+      tableData: [],
       pageInfo: {
         pageSize: 10,
         total: 0,

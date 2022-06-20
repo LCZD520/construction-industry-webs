@@ -57,13 +57,19 @@
           :prop="item.key"
           :label="item.title">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="90">
+      <el-table-column fixed="right" label="操作" width="180">
         <template slot-scope="scope">
           <el-button
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">查看
+              @click="handleConfirm(scope.$index, scope.row)">确认
+          </el-button>
+          <el-button
+              size="mini"
+              type="primary"
+              plain
+              @click="handleView(scope.$index, scope.row)">查看
           </el-button>
         </template>
       </el-table-column>
@@ -205,6 +211,12 @@ export default {
       }
       return '';
     },
+    handleConfirm(_index, _row) {
+      console.log(_index, _row)
+    },
+    handleView(_index, _row) {
+      console.log(_index, _row)
+    }
   }
 }
 </script>

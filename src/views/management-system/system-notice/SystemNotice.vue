@@ -29,7 +29,9 @@
     </el-form>
     <div class="split-line">
       <div class="split-line-left">
-        <el-button icon="el-icon-plus" size="small" type="primary">新建</el-button>
+        <el-button icon="el-icon-plus" size="small" type="primary"
+                   @click="$router.push('/system-notice-add')">新建
+        </el-button>
       </div>
       <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
     </div>
@@ -43,19 +45,49 @@
         style="width: 100%"
         :row-class-name="tableRowClassName">
       <el-table-column
-          min-width="180"
-          v-for="item in columns"
-          :key="item.key"
-          :prop="item.key"
-          :label="item.title">
+          min-width="300"
+          prop="username"
+          label="标题">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="90">
+      <el-table-column
+          min-width="180"
+          prop="date"
+          label="发布时间">
+      </el-table-column>
+      <el-table-column
+          min-width="180"
+          prop="username"
+          label="发布人">
+      </el-table-column>
+      <el-table-column
+          min-width="180"
+          label="状态">
+        <template slot-scope="scope">
+          <el-tag disable-transitions effect="dark" size="small"
+                  :type="scope.row.enabled ? 'success' : 'danger'">
+            {{ scope.row.enabled ? '启用' : '禁用' }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column fixed="right" label="操作" width="240">
         <template slot-scope="scope">
           <el-button
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">查看
+              @click="handleView(scope.$index, scope.row)">查看
+          </el-button>
+          <el-button
+              size="mini"
+              type="primary"
+              plain
+              @click="handleEdit(scope.$index, scope.row)">编辑
+          </el-button>
+          <el-button
+              size="mini"
+              type="danger"
+              plain
+              @click="handleDelete(scope.$index, scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
@@ -85,63 +117,26 @@ export default {
   components: {},
   data() {
     return {
-      columns: [
-        {
-          title: '订单编号',
-          key: 'address'
-        },
-        {
-          title: '企业名称',
-          key: 'address'
-        },
-        {
-          title: '人才名称',
-          key: 'address'
-        },
-        {
-          title: '企业合同价',
-          key: 'address'
-        },
-        {
-          title: '人才价格',
-          key: 'address'
-        },
-        {
-          title: '人才业绩',
-          key: 'address'
-        },
-        {
-          title: '企业业绩',
-          key: 'address'
-        },
-        {
-          title: '业绩生成时间',
-          key: 'address'
-        },
-        {
-          title: '业绩状态',
-          key: 'address'
-        },
-        {
-          title: '人才录入人',
-          key: 'address'
-        },
-        {
-          title: '企业录入人',
-          key: 'address'
-        },
-      ],
       tableData: [
         {
           date: '2016-05-02',
           username: '王小虎',
           address: '上海市普陀区',
-        },],
+          enabled: true
+        },
+        {
+          date: '2016-05-02',
+          username: '王小虎',
+          address: '上海市普陀区',
+          enabled: false
+        },
+      ],
       pageInfo: {
         pageSize: 10,
         total: 0,
         currentPage: 1,
       },
+      options: [],
       form: {
         oldPassword: '',
         newPassword: '',
@@ -196,6 +191,14 @@ export default {
         return 'success-row';
       }
       return '';
+    },
+    handleView(_index, _row) {
+      this.$router.push('/system-notice-view')
+      console.log(_index, _row)
+    },
+    handleEdit(_index, _row) {
+      this.$router.push('/system-notice-edit')
+      console.log(_index, _row)
     },
   }
 }

@@ -14,11 +14,10 @@
         :data="tableData"
         stripe
         border
-        @select="handleSelect"
+        @selection-change="selectionChange"
         :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
         :cell-style="{textAlign:'center'}"
         style="width: 100%"
-        @select-all="selectAll"
         :row-class-name="tableRowClassName">
       <el-table-column
           type="selection"
@@ -112,29 +111,15 @@ export default {
     }
   },
   methods: {
-    handleSelect(selection, row) {
-      if (row.className === "highlight") {
-        row.className = "normal";
-      } else {
-        row.className = "highlight";
-      }
-    },
-
     tableRowClassName({row}) {
       return row.className;
     },
-    selectAll(selection) {
-      console.log(selection)
-      selection.forEach(k => k.className = 'highlight')
-    },
     handleRowClick(row) {
-      console.log(row)
-      this.$refs.table.toggleRowSelection(row);
-      if (row.className === "highlight") {
-        row.className = "normal";
-      } else {
-        row.className = "highlight";
-      }
+      this.$refs.table.toggleRowSelection(row)
+      row.className === "highlight" ? row.className = "unChecked" : "highlight"
+    },
+    selectionChange(selection) {
+      this.selectionList = selection
     },
     handleView(_index, _row) {
       console.log(_index, _row)
@@ -149,6 +134,18 @@ export default {
     },
     handleSizeChange() {
     },
+  },
+  watch: {
+    selectionList(newVal, oldVal) {
+      newVal.forEach(k => {
+        k.className = 'highlight'
+      })
+      if (newVal.length === 0) {
+        oldVal.forEach(k => {
+          k.className = 'unChecked'
+        })
+      }
+    }
   }
 }
 </script>

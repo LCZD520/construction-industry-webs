@@ -6,7 +6,9 @@
   <div class="company-account">
     <div class="split-line">
       <div class="split-line-left">
-        <el-button icon="el-icon-plus" size="small" type="primary">添加</el-button>
+        <el-button icon="el-icon-plus" size="small" type="primary"
+                   @click="$router.push('/company-account-add')">添加
+        </el-button>
       </div>
       <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
     </div>
@@ -26,13 +28,25 @@
           :prop="item.key"
           :label="item.title">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="90">
+      <el-table-column fixed="right" label="操作" width="240">
         <template slot-scope="scope">
           <el-button
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">查看
+              @click="handleView(scope.$index, scope.row)">查看
+          </el-button>
+          <el-button
+              size="mini"
+              type="primary"
+              plain
+              @click="handleEdit(scope.$index, scope.row)">编辑
+          </el-button>
+          <el-button
+              size="mini"
+              type="danger"
+              plain
+              @click="handleDelete(scope.$index, scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
@@ -173,6 +187,17 @@ export default {
         return 'success-row';
       }
       return '';
+    },
+    handleView(_index, _row) {
+      console.log(_index, _row)
+      this.$router.push('/company-account-view')
+    },
+    handleEdit(_index, _row) {
+      this.$router.push('/company-account-edit')
+      console.log(_index, _row)
+    },
+    handleDelete(_index, _row) {
+      console.log(_index, _row)
     },
   }
 }

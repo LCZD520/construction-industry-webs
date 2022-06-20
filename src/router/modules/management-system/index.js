@@ -21,6 +21,30 @@ const systemRoutes = [
         component: () => import('../../../views/management-system/system-notice/SystemNotice'),
     },
     {
+        path: '/system-notice-view',
+        name: 'system-notice-view',
+        meta: {
+            title: '系统公告查看',
+        },
+        component: () => import('../../../views/management-system/system-notice/SystemNoticeView'),
+    },
+    {
+        path: '/system-notice-add',
+        name: 'system-notice-add',
+        meta: {
+            title: '系统公告添加',
+        },
+        component: () => import('../../../views/management-system/system-notice/SystemNoticeAdd'),
+    },
+    {
+        path: '/system-notice-edit',
+        name: 'system-notice-edit',
+        meta: {
+            title: '系统公告编辑',
+        },
+        component: () => import('../../../views/management-system/system-notice/SystemNoticeEdit'),
+    },
+    {
         path: '/data-transfer',
         name: 'data-transfer',
         meta: {
@@ -53,6 +77,30 @@ const systemRoutes = [
         component: () => import('../../../views/management-system/company-account/CompanyAccount'),
     },
     {
+        path: '/company-account-view',
+        name: 'company-account-view',
+        meta: {
+            title: '公司账户查看',
+        },
+        component: () => import('../../../views/management-system/company-account/CompanyAccountView'),
+    },
+    {
+        path: '/company-account-add',
+        name: 'company-account-add',
+        meta: {
+            title: '公司账户添加',
+        },
+        component: () => import('../../../views/management-system/company-account/CompanyAccountAdd'),
+    },
+    {
+        path: '/company-account-edit',
+        name: 'company-account-edit',
+        meta: {
+            title: '公司账户编辑',
+        },
+        component: () => import('../../../views/management-system/company-account/CompanyAccountEdit'),
+    },
+    {
         path: '/management-approval',
         name: 'management-approval',
         meta: {
@@ -67,7 +115,23 @@ const systemRoutes = [
             title: '高级设置',
         },
         component: () => import('../../../views/management-system/advanced-setting/AdvancedSetting'),
-    }
+    },
+    {
+        path: '/advanced-setting-add',
+        name: 'advanced-setting-add',
+        meta: {
+            title: '高级设置添加',
+        },
+        component: () => import('../../../views/management-system/advanced-setting/AdvancedSettingAdd'),
+    },
+    {
+        path: '/advanced-setting-edit',
+        name: 'advanced-setting-edit',
+        meta: {
+            title: '高级设置',
+        },
+        component: () => import('../../../views/management-system/advanced-setting/AdvancedSettingEdit'),
+    },
 ]
 
 export default systemRoutes
