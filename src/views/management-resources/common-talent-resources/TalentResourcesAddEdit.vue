@@ -1,20 +1,24 @@
 /**
-* Created by Lv Cheng on 2022/6/17
-* Notes 人才查询添加
+* Created by Lv Cheng on 2022/6/20
+* Notes 人才资源添加、编辑公共表单
 */
 <template>
-  <div class="talent-query-add">
+  <div class="talent-resources-add-edit">
     <el-form label-position="right" label-width="120px">
-      <el-form-item label="从人才资源选择">
-        <el-button type="primary" size="small">点击选择</el-button>
-      </el-form-item>
-      <el-form-item label="从已录人才选择">
-        <el-button type="primary" size="small">点击选择</el-button>
-      </el-form-item>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="资源是否共享">
+            <el-radio-group v-model="form.name">
+              <el-radio :label="2">否</el-radio>
+              <el-radio :label="1">是</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+      </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="姓名">
-            <el-input class="width328" placeholder="请输入姓名" size="small" v-model="form.name"/>
+            <el-input placeholder="请输入联系人" size="small" v-model="form.name"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -31,7 +35,7 @@
         <el-col :span="12">
           <el-form-item label="地区">
             <el-cascader
-                class="width328"
+                class="width-full"
                 size="small"
                 clearable
                 placeholder="请选择地区"
@@ -44,7 +48,7 @@
         <el-col :span="12">
           <el-form-item label="社保">
             <el-cascader
-                class="width328"
+                class="width-full"
                 size="small"
                 clearable
                 placeholder="请选择地区"
@@ -58,19 +62,19 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="电话号码">
-            <el-input class="width328" size="small" v-model="form.name"/>
+            <el-input placeholder="请输入电话号码" size="small" v-model="form.name"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="QQ">
-            <el-input class="width328" size="small" placeholder="请输入QQ" v-model="form.name"/>
+          <el-form-item label="QQ号码">
+            <el-input placeholder="请输入QQ号码" size="small" v-model="form.name"/>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="学历">
-            <el-select class="width328" size="small" v-model="form.name" placeholder="请选择学历">
+            <el-select class="width-full" size="small" v-model="form.name" placeholder="请选择学历">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -82,7 +86,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="职称">
-            <el-select class="width328" size="small" v-model="form.name" placeholder="请选择职称">
+            <el-select class="width-full" size="small" v-model="form.name" placeholder="请选择职称">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -95,21 +99,6 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="招标出场">
-            <el-select class="width328" size="small" v-model="form.name" placeholder="请选择招标出场">
-              <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-divider content-position="left">三类人员</el-divider>
-      <el-row>
-        <el-col :span="24">
           <el-form-item label="三类人员">
             <el-select class="width-full" size="small" v-model="form.name" placeholder="请选择三类人员">
               <el-option
@@ -121,30 +110,16 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24">
-          <el-form-item label="发证时间">
-            <el-date-picker
-                class="width-full"
-                size="small"
-                v-model="value"
-                type="date"
-                placeholder="请选择三类人员发证日期">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24">
-          <el-form-item label="继续教育时间">
-            <el-date-picker
-                class="width-full"
-                size="small"
-                v-model="value"
-                type="date"
-                placeholder="请选择继续教育日期">
-            </el-date-picker>
+        <el-col :span="12">
+          <el-form-item label="招标出场">
+            <el-select class="width-full" size="small" v-model="form.name" placeholder="请选择招标出场">
+              <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -198,7 +173,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="证书状态">
-            <el-select class="width328" size="small" v-model="form.name" placeholder="请选择证书状态">
+            <el-select class="width-full" size="small" v-model="form.name" placeholder="请选择证书状态">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -209,8 +184,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="人才状态">
-            <el-select disabled class="width328" size="small" v-model="form.name">
+          <el-form-item label="客户类型">
+            <el-select class="width-full" size="small" v-model="form.name" placeholder="请选择客户类型">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -228,7 +203,7 @@
             元
             <el-input-number controls-position="right" :min="1" size="small" v-model="form.name"/>
             &nbsp;
-            <el-select size="small" v-model="form.name" style="width: 80px;" placeholder="请选择">
+            <el-select class="width-full" size="small" v-model="form.name" style="width: 80px;" placeholder="请选择">
               <el-option label="年" value="1"></el-option>
               <el-option label="月" value="2"></el-option>
               <el-option label="日" value="3"></el-option>
@@ -236,15 +211,21 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
-        <el-col :span="24">
-          <el-form-item label="备注">
-            <el-input placeholder="请输入备注..." :rows="5" type="textarea">
+      <el-form-item label="人才要求">
+        <el-input placeholder="请输入人才要求..." :rows="3" type="textarea">
 
-            </el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
+        </el-input>
+      </el-form-item>
+      <el-form-item label="跟进情况">
+        <el-input placeholder="请输入跟进情况..." :rows="3" type="textarea">
+
+        </el-input>
+      </el-form-item>
+      <el-form-item label="备注">
+        <el-input placeholder="请输入备注..." :rows="3" type="textarea">
+
+        </el-input>
+      </el-form-item>
       <el-form-item label=" ">
         <el-button icon="el-icon-circle-plus-outline" type="primary" size="small">
           保存
@@ -259,7 +240,7 @@
 
 <script>
 export default {
-  name: 'TalentQueryAdd',
+  name: 'TalentResourcesAddEdit',
   components: {},
   data() {
     return {
@@ -285,6 +266,7 @@ export default {
         },
       ],
       tableData: [{}]
+
     }
   },
   methods: {
@@ -303,14 +285,21 @@ export default {
 <style scoped lang="less">
 @import "../../../assets/css/common-el-table-scrollbar";
 
-.talent-query-add {
+.talent-resources-add-edit {
   margin: 0 150px;
+}
 
-  .width328 {
-    width: 328px;
-  }
-  .width-full{
-    width: 100%;
-  }
+.description-item {
+  display: inline-block;
+  margin-right: 100px;
+  font-size: 14px;
+}
+
+/deep/ .el-step__description {
+  padding-right: 0;
+}
+
+.width-full {
+  width: 100%;
 }
 </style>

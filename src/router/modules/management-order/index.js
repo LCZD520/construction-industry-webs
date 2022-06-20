@@ -54,7 +54,7 @@ const orderRoutes = [
     },
     {
         path: '/order-title-evaluation-edit',
-        name: 'order-title-evaluation-view',
+        name: 'order-title-evaluation-edit',
         meta: {
             title: '职称评审订单编辑',
         },

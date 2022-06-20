@@ -1,25 +1,29 @@
 /**
-* Created by Lv Cheng on 2022/6/19
-* Notes
+* Created by Lv Cheng on 2022/6/20
+* Notes 企业资源添加、编辑公共表单
 */
 <template>
-  <div class="enterprise-add-edit-common-form">
+  <div class="enterprise-resources-add-edit">
     <el-form label-position="right" label-width="120px">
-      <el-form-item label="从人才资源选择">
-        <el-button type="primary" size="small">点击选择</el-button>
-      </el-form-item>
-      <el-form-item label="从已录人才选择">
-        <el-button type="primary" size="small">点击选择</el-button>
-      </el-form-item>
       <el-row>
-        <el-col :span="8">
-          <el-form-item label="企业名称">
-            <el-input placeholder="请输入企业名称" size="small" v-model="form.name"/>
+        <el-col :span="12">
+          <el-form-item label="是否共享">
+            <el-radio-group v-model="form.name">
+              <el-radio :label="2">否</el-radio>
+              <el-radio :label="1">是</el-radio>
+            </el-radio-group>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="企业名称">
+            <el-input placeholder="请输入电话号码" size="small" v-model="form.name"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
           <el-form-item label="企业资质">
-            <el-select size="small" v-model="form.name" placeholder="请选择企业资质">
+            <el-select class="width-full" size="small" v-model="form.name" placeholder="请选择企业资质">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -29,9 +33,12 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+      </el-row>
+      <el-row>
+        <el-col :span="12">
           <el-form-item label="地区">
             <el-cascader
+                class="width-full"
                 size="small"
                 clearable
                 placeholder="请选择地区"
@@ -41,19 +48,19 @@
             </el-cascader>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="8">
+        <el-col :span="12">
           <el-form-item label="联系地址">
-            <el-input placeholder="请输入联系地址" size="small" v-model="form.name"/>
+            <el-input placeholder="请输入联系人" size="small" v-model="form.name"/>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+      </el-row>
+      <el-row>
+        <el-col :span="12">
           <el-form-item label="联系人">
             <el-input placeholder="请输入联系人" size="small" v-model="form.name"/>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="12">
           <el-form-item label="性别">
             <el-radio-group v-model="form.name">
               <el-radio :label="1">男</el-radio>
@@ -63,20 +70,23 @@
           </el-form-item>
         </el-col>
       </el-row>
+
       <el-row>
-        <el-col :span="8">
+        <el-col :span="12">
           <el-form-item label="电话号码">
             <el-input placeholder="请输入电话号码" size="small" v-model="form.name"/>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="12">
           <el-form-item label="QQ号码">
             <el-input placeholder="请输入QQ号码" size="small" v-model="form.name"/>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="企业状态">
-            <el-select disabled size="small" v-model="form.name" placeholder="请选择企业状态">
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="客户类型">
+            <el-select class="width-full" size="small" v-model="form.name" placeholder="请选择学历">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -134,15 +144,16 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
-        <el-col :span="24">
-          <el-form-item label="备注">
-            <el-input placeholder="请输入备注..." :rows="5" type="textarea">
+      <el-form-item label="跟进情况">
+        <el-input placeholder="请输入跟进情况..." :rows="3" type="textarea">
 
-            </el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
+        </el-input>
+      </el-form-item>
+      <el-form-item label="备注">
+        <el-input placeholder="请输入备注..." :rows="3" type="textarea">
+
+        </el-input>
+      </el-form-item>
       <el-form-item label=" ">
         <el-button icon="el-icon-circle-plus-outline" type="primary" size="small">
           保存
@@ -157,7 +168,7 @@
 
 <script>
 export default {
-  name: 'EnterpriseAddEditCommonForm',
+  name: 'EnterpriseResourcesAddEdit',
   components: {},
   data() {
     return {
@@ -166,35 +177,7 @@ export default {
       },
       columns: [
         {
-          title: '级别专业-初转',
-          key: 'address'
-        },
-        {
-          title: '招标出场',
-          key: 'address'
-        },
-        {
-          title: '企业出价',
-          key: 'address'
-        },
-        {
-          title: '三类人员',
-          key: 'address'
-        },
-        {
-          title: '需求人数',
-          key: 'address'
-        },
-        {
-          title: '市场开发费',
-          key: 'address'
-        },
-        {
-          title: '职称',
-          key: 'address'
-        },
-        {
-          title: '学历',
+          title: '级别专业-初/转',
           key: 'address'
         },
       ],
@@ -216,10 +199,23 @@ export default {
 </script>
 
 <style scoped lang="less">
-@import "../../../../assets/css/common-el-table-scrollbar";
-@import "../../../../assets/css/common-el-input-inner-width";
+@import "../../../assets/css/common-el-table-scrollbar";
 
-.enterprise-add-edit-common-form {
-  margin: 0 100px;
+.enterprise-resources-add-edit {
+  margin: 0 150px;
+}
+
+.description-item {
+  display: inline-block;
+  margin-right: 100px;
+  font-size: 14px;
+}
+
+/deep/ .el-step__description {
+  padding-right: 0;
+}
+
+.width-full {
+  width: 100%;
 }
 </style>

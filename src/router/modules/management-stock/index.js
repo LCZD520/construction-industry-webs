@@ -12,6 +12,14 @@ const stockRoutes = [
         },
         component: () => import('../../../views/management-stock/lib-certificate/LibCertificate'),
     },
+    {
+        path: '/lib-certificate-view',
+        name: 'lib-certificate-view',
+        meta: {
+            title: '证件库查看',
+        },
+        component: () => import('../../../views/management-stock/lib-certificate/LibCertificateView'),
+    },
 ]
 
 export default stockRoutes

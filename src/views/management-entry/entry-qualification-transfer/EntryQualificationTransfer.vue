@@ -76,7 +76,7 @@
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">详情
+              @click="handleView(scope.$index, scope.row)">详情
           </el-button>
         </template>
       </el-table-column>
@@ -210,6 +210,10 @@ export default {
       }
       return '';
     },
+    handleView(_index,_row){
+      console.log(_index,_row)
+      this.$router.push('/entry-qualification-transfer-view')
+    }
   }
 }
 </script>

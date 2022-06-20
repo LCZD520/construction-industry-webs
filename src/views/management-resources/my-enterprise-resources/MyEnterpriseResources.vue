@@ -52,7 +52,9 @@
     </el-form>
     <div class="split-line">
       <div class="split-line-left">
-        <el-button icon="el-icon-plus" size="small" type="primary">新建资源</el-button>
+        <el-button icon="el-icon-plus" size="small" type="primary"
+                   @click="$router.push('/my-enterprise-resources-add')">新建资源
+        </el-button>
       </div>
       <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
     </div>
@@ -78,7 +80,7 @@
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">查看
+              @click="handleView(scope.$index, scope.row)">查看
           </el-button>
           <el-button
               size="mini"
@@ -215,6 +217,14 @@ export default {
         return 'success-row';
       }
       return '';
+    },
+    handleView(_index, _row) {
+      console.log(_index, _row)
+      this.$router.push('/my-enterprise-resources-view')
+    },
+    handleEdit(_index, _row) {
+      console.log(_index, _row)
+      this.$router.push('/my-enterprise-resources-edit')
     },
   }
 }

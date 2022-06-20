@@ -72,7 +72,9 @@
     </el-form>
     <div class="split-line">
       <div class="split-line-left">
-        <el-button icon="el-icon-plus" size="small" type="primary">添加</el-button>
+        <el-button icon="el-icon-plus" size="small" type="primary"
+                   @click="$router.push('/summary-talent-resources-add')">添加
+        </el-button>
       </div>
       <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
     </div>
@@ -98,7 +100,7 @@
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">查看
+              @click="handleView(scope.$index, scope.row)">查看
           </el-button>
           <el-button
               size="mini"
@@ -236,36 +238,14 @@ export default {
       }
       return '';
     },
-    handleChange(file, fileList) {
-      this.fileList = [fileList[fileList.length - 1]]; // 只能上传一个Excel，重复上传会覆盖之前的
-      this.file = file.raw;
-      let reader = new FileReader()
-      let _this = this
-      console.log(_this)
-      reader.readAsArrayBuffer(this.file)
-      reader.onload = function () {
-        let buffer = reader.result
-        let bytes = new Uint8Array(buffer)
-        let length = bytes.byteLength
-        let binary = ''
-        for (let i = 0; i < length; i++) {
-          binary += String.fromCharCode(bytes[i])
-        }
-        let XLSX = require('xlsx')
-        let wb = XLSX.read(binary, {
-          type: 'binary'
-        })
-        let outdata = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
-        outdata.forEach(item => {
-          let newObj = {}
-          for (const itemKey in _this.mapObj) {
-            newObj[_this.mapObj[itemKey]] = item[itemKey]
-          }
-          _this.list.push(newObj)
-          console.log(_this.list)
-        })
-      }
-    }
+    handleView(_index, _row) {
+      console.log(_index, _row)
+      this.$router.push('/summary-talent-resources-view')
+    },
+    handleEdit(_index, _row) {
+      console.log(_index, _row)
+      this.$router.push('/summary-talent-resources-edit')
+    },
   }
 }
 </script>
