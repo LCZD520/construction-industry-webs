@@ -8,7 +8,8 @@ const statisticsRoutes = [
         path: '/statistics-input-quantity',
         name: 'statistics-input-quantity ',
         meta: {
-            title: '录入量统计',
+            title: '录入量统计列表',
+            activeMenuPath: '/statistics-input-quantity'
         },
         component: () => import('../../../views/statistical-analysis/statistics-input-quantity/StatisticsInputQuantity'),
     },
@@ -16,7 +17,8 @@ const statisticsRoutes = [
         path: '/statistics-certificate',
         name: 'statistics-certificate',
         meta: {
-            title: '证书统计',
+            title: '证书统计列表',
+            activeMenuPath: '/statistics-certificate'
         },
         component: () => import('../../../views/statistical-analysis/statistics-certificate/StatisticsCertificate'),
     }

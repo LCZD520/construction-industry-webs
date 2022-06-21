@@ -210,7 +210,7 @@ export default {
     },
     handleView(_index, _row) {
       console.log(_index, _row)
-      this.$router.push('/my-enterprise-resources-view')
+      this.$router.push('/share-enterprise-resources-view')
     },
   }
 }

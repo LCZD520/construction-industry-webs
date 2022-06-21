@@ -51,20 +51,6 @@
                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
               </el-input>
             </div>
-            <!--            <el-scrollbar style="height: 450px">-->
-            <!--              <ul class="list-item-content">-->
-            <!--                <li v-for="item in 100" :key="item">-->
-            <!--                  <el-tooltip class="item" :open-delay="300" effect="dark" :content="item" placement="top">-->
-            <!--                    <span class="title">{{ item }} </span>-->
-            <!--                  </el-tooltip>-->
-            <!--                  <div class="button-group">-->
-            <!--                    <el-button style="padding: 5px" size="mini" plain type="primary" icon="el-icon-plus"></el-button>-->
-            <!--                    <el-button style="padding: 5px" size="mini" plain type="primary" icon="el-icon-edit"></el-button>-->
-            <!--                    <el-button style="padding: 5px" size="mini" plain type="danger" icon="el-icon-delete"></el-button>-->
-            <!--                  </div>-->
-            <!--                </li>-->
-            <!--              </ul>-->
-            <!--            </el-scrollbar>-->
             <el-empty :image-size="220"></el-empty>
           </div>
         </el-col>

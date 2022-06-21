@@ -8,7 +8,8 @@ const businessRoutes = [
         path: '/talent-query',
         name: 'talent-query',
         meta: {
-            title: '人才查询',
+            title: '人才查询列表',
+            activeMenuPath: '/talent-query',
         },
         component: () => import('../../../views/management-business/talent-query/TalentQuery'),
     },
@@ -17,7 +18,7 @@ const businessRoutes = [
         name: 'talent-query-view',
         meta: {
             title: '人才查询查看',
-            path: '/talent-query',
+            activeMenuPath: '/talent-query',
         },
         component: () => import('../../../views/management-business/talent-query/TalentQueryView'),
     },
@@ -26,7 +27,7 @@ const businessRoutes = [
         name: 'talent-query-add',
         meta: {
             title: '人才查询添加',
-            path: '/talent-query',
+            activeMenuPath: '/talent-query',
         },
         component: () => import('../../../views/management-business/talent-query/TalentQueryAdd'),
     },
@@ -34,23 +35,26 @@ const businessRoutes = [
         path: '/enterprise-query',
         name: 'enterprise-query',
         meta: {
-            title: '企业查询',
+            title: '企业查询列表',
+            activeMenuPath: '/enterprise-query',
         },
         component: () => import('../../../views/management-business/enterprise-query/EnterpriseQuery'),
     },
     {
-        path: '/enterprise-add',
-        name: 'enterprise-add',
+        path: '/enterprise-query-add',
+        name: 'enterprise-query-add',
         meta: {
-            title: '企业添加',
+            title: '企业查询添加',
+            activeMenuPath: '/enterprise-query',
         },
         component: () => import('../../../views/management-business/enterprise-query/EnterpriseAdd'),
     },
     {
-        path: '/enterprise-edit',
-        name: 'enterprise-edit',
+        path: '/enterprise-query-edit',
+        name: 'enterprise-query-edit',
         meta: {
-            title: '企业添加',
+            title: '企业查询编辑',
+            activeMenuPath: '/enterprise-query',
         },
         component: () => import('../../../views/management-business/enterprise-query/EnterpriseEdit'),
     },
@@ -59,6 +63,7 @@ const businessRoutes = [
         name: 'enterprise-query-view',
         meta: {
             title: '企业查询查看',
+            activeMenuPath: '/enterprise-query',
         },
         component: () => import('../../../views/management-business/enterprise-query/EnterpriseQueryView'),
     },
@@ -67,6 +72,7 @@ const businessRoutes = [
         name: 'qualification-acquisition',
         meta: {
             title: '资质收购',
+            activeMenuPath: '/qualification-acquisition',
         },
         component: () => import('../../../views/management-business/qualification-acquisition/QualificationAcquisition'),
     },
@@ -75,6 +81,7 @@ const businessRoutes = [
         name: 'qualification-acquisition-view',
         meta: {
             title: '资质收购查看',
+            activeMenuPath: '/qualification-acquisition',
         },
         component: () => import('../../../views/management-business/qualification-acquisition/QualificationAcquisitionView'),
     },
@@ -83,14 +90,25 @@ const businessRoutes = [
         name: 'qualification-acquisition-add',
         meta: {
             title: '资质收购添加',
+            activeMenuPath: '/qualification-acquisition',
         },
         component: () => import('../../../views/management-business/qualification-acquisition/QualificationAcquisitionAdd'),
+    },
+    {
+        path: '/qualification-acquisition-edit',
+        name: 'qualification-acquisition-edit',
+        meta: {
+            title: '资质收购编辑',
+            activeMenuPath: '/qualification-acquisition',
+        },
+        component: () => import('../../../views/management-business/qualification-acquisition/QualificationAcquisitionEdit'),
     },
     {
         path: '/qualification-transfer',
         name: 'qualification-transfer',
         meta: {
-            title: '资质转让',
+            title: '资质转让列表',
+            activeMenuPath: '/qualification-transfer',
         },
         component: () => import('../../../views/management-business/qualification-transfer/QualificationTransfer'),
     },
@@ -98,7 +116,8 @@ const businessRoutes = [
         path: '/qualification-transfer-view',
         name: 'qualification-transfer-view',
         meta: {
-            title: '资质转让',
+            title: '资质转让查看',
+            activeMenuPath: '/qualification-transfer',
         },
         component: () => import('../../../views/management-business/qualification-transfer/QualificationTransferView'),
     },
@@ -106,7 +125,8 @@ const businessRoutes = [
         path: '/qualification-transfer-add',
         name: 'qualification-transfer-add',
         meta: {
-            title: '资质转让',
+            title: '资质转让添加',
+            activeMenuPath: '/qualification-transfer',
         },
         component: () => import('../../../views/management-business/qualification-transfer/QualificationTransferAdd'),
     },
@@ -114,7 +134,8 @@ const businessRoutes = [
         path: '/qualification-agency',
         name: 'qualification-agency',
         meta: {
-            title: '资质代办',
+            title: '资质代办列表',
+            activeMenuPath: '/qualification-agency',
         },
         component: () => import('../../../views/management-business/qualification-agency/QualificationAgency'),
     },
@@ -122,7 +143,8 @@ const businessRoutes = [
         path: '/qualification-agency-view',
         name: 'qualification-agency-view',
         meta: {
-            title: '资质代办查看',
+            title: '资质代办详细信息查看',
+            activeMenuPath: '/qualification-agency',
         },
         component: () => import('../../../views/management-business/qualification-agency/QualificationAgencyView'),
     },
@@ -131,6 +153,7 @@ const businessRoutes = [
         name: 'qualification-agency-add',
         meta: {
             title: '资质代办添加',
+            activeMenuPath: '/qualification-agency',
         },
         component: () => import('../../../views/management-business/qualification-agency/QualificationAgencyAdd'),
     },
@@ -139,6 +162,7 @@ const businessRoutes = [
         name: 'qualification-agency-edit',
         meta: {
             title: '资质代办编辑',
+            activeMenuPath: '/qualification-agency',
         },
         component: () => import('../../../views/management-business/qualification-agency/QualificationAgencyEdit'),
     },
@@ -146,7 +170,8 @@ const businessRoutes = [
         path: '/title-evaluation',
         name: 'title-evaluation',
         meta: {
-            title: '职称评审',
+            title: '职称评审列表',
+            activeMenuPath: '/title-evaluation',
         },
         component: () => import('../../../views/management-business/title-evaluation/TitleEvaluation'),
     },
@@ -155,6 +180,7 @@ const businessRoutes = [
         name: 'title-evaluation-view',
         meta: {
             title: '职称评审查看',
+            activeMenuPath: '/title-evaluation',
         },
         component: () => import('../../../views/management-business/title-evaluation/TitleEvaluationView'),
     },
@@ -163,6 +189,7 @@ const businessRoutes = [
         name: 'title-evaluation-add',
         meta: {
             title: '职称评审添加',
+            activeMenuPath: '/title-evaluation',
         },
         component: () => import('../../../views/management-business/title-evaluation/TitleEvaluationAdd'),
     },
@@ -171,6 +198,7 @@ const businessRoutes = [
         name: 'title-evaluation-edit',
         meta: {
             title: '职称评审编辑',
+            activeMenuPath: '/title-evaluation',
         },
         component: () => import('../../../views/management-business/title-evaluation/TitleEvaluationEdit'),
     },
@@ -178,7 +206,8 @@ const businessRoutes = [
         path: '/class-three-personnel',
         name: 'class-three-personnel',
         meta: {
-            title: '三类人员',
+            title: '三类人员列表',
+            activeMenuPath: '/class-three-personnel',
         },
         component: () => import('../../../views/management-business/class-three-personnel/ClassThreePersonnel'),
     },
@@ -187,6 +216,7 @@ const businessRoutes = [
         name: 'class-three-personnel-view',
         meta: {
             title: '三类人员查看',
+            activeMenuPath: '/class-three-personnel',
         },
         component: () => import('../../../views/management-business/class-three-personnel/ClassThreePersonnel'),
     },
@@ -195,6 +225,7 @@ const businessRoutes = [
         name: 'class-three-personnel-add',
         meta: {
             title: '三类人员添加',
+            activeMenuPath: '/class-three-personnel',
         },
         component: () => import('../../../views/management-business/class-three-personnel/ClassThreePersonnel'),
     },
@@ -203,6 +234,7 @@ const businessRoutes = [
         name: 'class-three-personnel-edit',
         meta: {
             title: '三类人员添加',
+            activeMenuPath: '/class-three-personnel',
         },
         component: () => import('../../../views/management-business/class-three-personnel/ClassThreePersonnel'),
     },
@@ -210,7 +242,8 @@ const businessRoutes = [
         path: '/education-promotion',
         name: 'education-promotion',
         meta: {
-            title: '学历提升',
+            title: '学历提升列表',
+            activeMenuPath: '/education-promotion',
         },
         component: () => import('../../../views/management-business/education-promotion/EducationPromotion'),
     },
@@ -219,6 +252,7 @@ const businessRoutes = [
         name: 'education-promotion-view',
         meta: {
             title: '学历提升查看',
+            activeMenuPath: '/education-promotion',
         },
         component: () => import('../../../views/management-business/education-promotion/EducationPromotion'),
     },
@@ -227,6 +261,7 @@ const businessRoutes = [
         name: 'education-promotion-add',
         meta: {
             title: '学历提升添加',
+            activeMenuPath: '/education-promotion',
         },
         component: () => import('../../../views/management-business/education-promotion/EducationPromotion'),
     },
@@ -235,6 +270,7 @@ const businessRoutes = [
         name: 'education-promotion-edit',
         meta: {
             title: '学历提升编辑',
+            activeMenuPath: '/education-promotion',
         },
         component: () => import('../../../views/management-business/education-promotion/EducationPromotion'),
     },

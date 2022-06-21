@@ -8,10 +8,20 @@ const logisticsRoutes = [
         path: '/confirm-logistics',
         name: 'confirm-logistics',
         meta: {
-            title: '后勤确认',
+            title: '人才后勤确认列表',
+            activeMenuPath: '/confirm-logistics'
         },
         component: () => import('../../../views/management-logistics/confirm-logistics/ConfirmLogistics'),
-    }
+    },
+    {
+        path: '/confirm-logistics-view',
+        name: 'confirm-logistics-view',
+        meta: {
+            title: '后勤确认查看',
+            activeMenuPath: '/confirm-logistics'
+        },
+        component: () => import('../../../views/management-logistics/confirm-logistics/ConfirmLogisticsView'),
+    },
 ]
 
 export default logisticsRoutes

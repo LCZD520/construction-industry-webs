@@ -77,7 +77,7 @@
     <div class="split-line">
       <div class="split-line-left">
         <el-button icon="el-icon-plus" size="small" type="primary"
-                   @click="$router.push('/enterprise-add')">录入企业
+                   @click="$router.push('/enterprise-query-add')">录入企业
         </el-button>
       </div>
       <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
@@ -112,7 +112,7 @@
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">图片
+              @click="handleView(scope.$index, scope.row)">图片
           </el-button>
           <el-button
               size="mini"
@@ -382,8 +382,12 @@ export default {
     handleSizeChange(_pageSize) {
       console.log(_pageSize)
     },
-    handleEdit(_index, _row) {
+    handleView(_index, _row) {
       this.$router.push('/enterprise-query-view')
+      console.log(_index, _row)
+    },
+    handleEdit(_index, _row) {
+      this.$router.push('/enterprise-query-edit')
       console.log(_index, _row)
     },
     handleDelete(_index, _row) {

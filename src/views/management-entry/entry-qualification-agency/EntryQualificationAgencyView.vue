@@ -224,7 +224,7 @@
       </el-card>
       <br>
       <el-form-item label=" ">
-        <el-button icon="el-icon-back" size="small">
+        <el-button icon="el-icon-back" size="small" @click="$router.back()">
           返回
         </el-button>
       </el-form-item>

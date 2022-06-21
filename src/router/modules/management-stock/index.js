@@ -8,7 +8,8 @@ const stockRoutes = [
         path: '/lib-certificate',
         name: 'lib-certificate',
         meta: {
-            title: '证件库',
+            title: '证件库列表',
+            activeMenuPath: '/lib-certificate'
         },
         component: () => import('../../../views/management-stock/lib-certificate/LibCertificate'),
     },
@@ -17,6 +18,7 @@ const stockRoutes = [
         name: 'lib-certificate-view',
         meta: {
             title: '证件库查看',
+            activeMenuPath: '/lib-certificate'
         },
         component: () => import('../../../views/management-stock/lib-certificate/LibCertificateView'),
     },

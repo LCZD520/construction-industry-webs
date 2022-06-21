@@ -8,7 +8,8 @@ const orderRoutes = [
         path: '/order-talent',
         name: 'order-talent',
         meta: {
-            title: '人才订单',
+            title: '人才订单列表',
+            activeMenuPath: '/order-talent'
         },
         component: () => import('../../../views/management-order/order-talent/OrderTalent'),
     },
@@ -17,6 +18,7 @@ const orderRoutes = [
         name: 'order-talent-view',
         meta: {
             title: '人才订单查看',
+            activeMenuPath: '/order-talent'
         },
         component: () => import('../../../views/management-order/order-talent/OrderTalentView'),
     },
@@ -24,7 +26,8 @@ const orderRoutes = [
         path: '/order-qualification-transfer',
         name: 'order-qualification-transfer',
         meta: {
-            title: '资质转让订单',
+            title: '资质转让订单列表',
+            activeMenuPath: '/order-qualification-transfer'
         },
         component: () => import('../../../views/management-order/order-qualification-transfer/OrderQualificationTransfer'),
     },
@@ -33,6 +36,7 @@ const orderRoutes = [
         name: 'order-qualification-transfer-view',
         meta: {
             title: '资质转让订单查看',
+            activeMenuPath: '/order-qualification-transfer'
         },
         component: () => import('../../../views/management-order/order-qualification-transfer/OrderQualificationTransferView'),
     },
@@ -40,7 +44,8 @@ const orderRoutes = [
         path: '/order-title-evaluation',
         name: 'order-title-evaluation',
         meta: {
-            title: '职称评审订单',
+            title: '职称评审订单列表',
+            activeMenuPath: '/order-title-evaluation'
         },
         component: () => import('../../../views/management-order/order-title-evaluation/OrderTitleEvaluation'),
     },
@@ -49,6 +54,7 @@ const orderRoutes = [
         name: 'order-title-evaluation-view',
         meta: {
             title: '职称评审订单查看',
+            activeMenuPath: '/order-title-evaluation'
         },
         component: () => import('../../../views/management-order/order-title-evaluation/OrderTitleEvaluationView'),
     },
@@ -57,6 +63,7 @@ const orderRoutes = [
         name: 'order-title-evaluation-edit',
         meta: {
             title: '职称评审订单编辑',
+            activeMenuPath: '/order-title-evaluation'
         },
         component: () => import('../../../views/management-order/order-title-evaluation/OrderTitleEvaluationEdit'),
     },
@@ -64,7 +71,8 @@ const orderRoutes = [
         path: '/order-class-three-personnel',
         name: 'order-class-three-personnel',
         meta: {
-            title: '三类人员订单',
+            title: '三类人员订单列表',
+            activeMenuPath: '/order-class-three-personnel'
         },
         component: () => import('../../../views/management-order/order-class-three-personnel/OrderClassThreePersonnel'),
     },
@@ -73,6 +81,7 @@ const orderRoutes = [
         name: 'order-class-three-personnel-view',
         meta: {
             title: '三类人员订单查看',
+            activeMenuPath: '/order-class-three-personnel'
         },
         component: () => import('../../../views/management-order/order-class-three-personnel/OrderClassThreePersonnelView'),
     },
@@ -81,6 +90,7 @@ const orderRoutes = [
         name: 'order-class-three-personnel-edit',
         meta: {
             title: '三类人员订单编辑',
+            activeMenuPath: '/order-class-three-personnel'
         },
         component: () => import('../../../views/management-order/order-class-three-personnel/OrderClassThreePersonnelEdit'),
     },
@@ -88,7 +98,8 @@ const orderRoutes = [
         path: '/order-education-promotion',
         name: 'order-education-promotion',
         meta: {
-            title: '学历提升订单',
+            title: '学历提升订单列表',
+            activeMenuPath: '/order-education-promotion'
         },
         component: () => import('../../../views/management-order/order-education-promotion/OrderEducationPromotion'),
     },
@@ -97,6 +108,7 @@ const orderRoutes = [
         name: 'order-education-promotion-view',
         meta: {
             title: '学历提升订单查看',
+            activeMenuPath: '/order-education-promotion'
         },
         component: () => import('../../../views/management-order/order-education-promotion/OrderEducationPromotionView'),
     },
@@ -105,6 +117,7 @@ const orderRoutes = [
         name: 'order-education-promotion-edit',
         meta: {
             title: '学历提升订单编辑',
+            activeMenuPath: '/order-education-promotion'
         },
         component: () => import('../../../views/management-order/order-education-promotion/OrderEducationPromotionEdit'),
     }

@@ -8,7 +8,8 @@ const resourcesRoutes = [
         path: '/my-talent-resources',
         name: 'my-talent-resources',
         meta: {
-            title: '我的人才资源',
+            title: '人才资源列表',
+            activeMenuPath: '/my-talent-resources'
         },
         component: () => import('../../../views/management-resources/my-talent-resources/MyTalentResources'),
     },
@@ -16,7 +17,8 @@ const resourcesRoutes = [
         path: '/my-talent-resources-view',
         name: 'my-talent-resources-view',
         meta: {
-            title: '我的人才资源查看',
+            title: '人才资源查看',
+            activeMenuPath: '/my-talent-resources'
         },
         component: () => import('../../../views/management-resources/my-talent-resources/MyTalentResourcesView'),
     },
@@ -24,7 +26,8 @@ const resourcesRoutes = [
         path: '/my-talent-resources-add',
         name: 'my-talent-resources-add',
         meta: {
-            title: '我的人才资源添加',
+            title: '人才资源添加',
+            activeMenuPath: '/my-talent-resources'
         },
         component: () => import('../../../views/management-resources/my-talent-resources/MyTalentResourcesAdd'),
     },
@@ -32,7 +35,8 @@ const resourcesRoutes = [
         path: '/my-talent-resources-edit',
         name: 'my-talent-resources-edit',
         meta: {
-            title: '我的人才资源编辑',
+            title: '人才资源编辑',
+            activeMenuPath: '/my-talent-resources'
         },
         component: () => import('../../../views/management-resources/my-talent-resources/MyTalentResourcesEdit'),
     },
@@ -40,7 +44,8 @@ const resourcesRoutes = [
         path: '/summary-talent-resources',
         name: 'summary-talent-resources',
         meta: {
-            title: '人才资源汇总',
+            title: '人才资源汇总列表',
+            activeMenuPath: '/summary-talent-resources'
         },
         component: () => import('../../../views/management-resources/summary-talent-resources/SummaryTalentResources'),
     },
@@ -49,6 +54,7 @@ const resourcesRoutes = [
         name: 'summary-talent-resources-view',
         meta: {
             title: '人才资源汇总查看',
+            activeMenuPath: '/summary-talent-resources'
         },
         component: () => import('../../../views/management-resources/summary-talent-resources/SummaryTalentResourcesView'),
     },
@@ -56,7 +62,8 @@ const resourcesRoutes = [
         path: '/summary-talent-resources-add',
         name: 'summary-talent-resources-add',
         meta: {
-            title: '人才资源汇总添加',
+            title: '人才资源添加',
+            activeMenuPath: '/summary-talent-resources'
         },
         component: () => import('../../../views/management-resources/summary-talent-resources/SummaryTalentResourcesAdd'),
     },
@@ -64,7 +71,8 @@ const resourcesRoutes = [
         path: '/summary-talent-resources-edit',
         name: 'summary-talent-resources-edit',
         meta: {
-            title: '人才资源汇总编辑',
+            title: '人才资源编辑',
+            activeMenuPath: '/summary-talent-resources'
         },
         component: () => import('../../../views/management-resources/summary-talent-resources/SummaryTalentResourcesEdit'),
     },
@@ -72,7 +80,8 @@ const resourcesRoutes = [
         path: '/sharing-talent-resources',
         name: 'sharing-talent-resources',
         meta: {
-            title: '共享人才资源',
+            title: '共享人才资源列表',
+            activeMenuPath: '/sharing-talent-resources'
         },
         component: () => import('../../../views/management-resources/sharing-talent-resources/SharingTalentResources'),
     },
@@ -80,7 +89,8 @@ const resourcesRoutes = [
         path: '/sharing-talent-resources-view',
         name: 'sharing-talent-resources-view',
         meta: {
-            title: '共享人才资源查看',
+            title: '人才资源查看',
+            activeMenuPath: '/sharing-talent-resources'
         },
         component: () => import('../../../views/management-resources/sharing-talent-resources/SharingTalentResourcesView'),
     },
@@ -88,7 +98,8 @@ const resourcesRoutes = [
         path: '/my-enterprise-resources',
         name: 'my-enterprise-resources',
         meta: {
-            title: '我的企业资源',
+            title: '企业资源列表',
+            activeMenuPath: '/my-enterprise-resources'
         },
         component: () => import('../../../views/management-resources/my-enterprise-resources/MyEnterpriseResources'),
     },
@@ -97,6 +108,7 @@ const resourcesRoutes = [
         name: 'my-enterprise-resources-view',
         meta: {
             title: '企业资源查看',
+            activeMenuPath: '/my-enterprise-resources'
         },
         component: () => import('../../../views/management-resources/my-enterprise-resources/MyEnterpriseResourcesView'),
     },
@@ -105,6 +117,7 @@ const resourcesRoutes = [
         name: 'my-enterprise-resources-add',
         meta: {
             title: '企业资源添加',
+            activeMenuPath: '/my-enterprise-resources'
         },
         component: () => import('../../../views/management-resources/my-enterprise-resources/MyEnterpriseResourcesAdd'),
     },
@@ -113,6 +126,7 @@ const resourcesRoutes = [
         name: 'my-enterprise-resources-edit',
         meta: {
             title: '企业资源编辑',
+            activeMenuPath: '/my-enterprise-resources'
         },
         component: () => import('../../../views/management-resources/my-enterprise-resources/MyEnterpriseResourcesEdit'),
     },
@@ -120,7 +134,8 @@ const resourcesRoutes = [
         path: '/summary-enterprise-resources',
         name: 'summary-enterprise-resources',
         meta: {
-            title: '企业资源汇总',
+            title: '企业资源汇总列表',
+            activeMenuPath: '/summary-enterprise-resources'
         },
         component: () => import('../../../views/management-resources/summary-enterprise-resources/SummaryEnterpriseResources'),
     },
@@ -128,7 +143,8 @@ const resourcesRoutes = [
         path: '/summary-enterprise-resources-view',
         name: 'summary-enterprise-resources-view',
         meta: {
-            title: '企业资源汇总查看',
+            title: '企业资源查看',
+            activeMenuPath: '/summary-enterprise-resources'
         },
         component: () => import('../../../views/management-resources/summary-enterprise-resources/SummaryEnterpriseResourcesView'),
     },
@@ -136,7 +152,8 @@ const resourcesRoutes = [
         path: '/summary-enterprise-resources-add',
         name: 'summary-enterprise-resources-add',
         meta: {
-            title: '企业资源汇总',
+            title: '企业资源添加',
+            activeMenuPath: '/summary-enterprise-resources'
         },
         component: () => import('../../../views/management-resources/summary-enterprise-resources/SummaryEnterpriseResourcesAdd'),
     },
@@ -144,7 +161,8 @@ const resourcesRoutes = [
         path: '/summary-enterprise-resources-edit',
         name: 'summary-enterprise-resources-edit',
         meta: {
-            title: '企业资源汇总',
+            title: '企业资源编辑',
+            activeMenuPath: '/summary-enterprise-resources'
         },
         component: () => import('../../../views/management-resources/summary-enterprise-resources/SummaryEnterpriseResourcesEdit'),
     },
@@ -152,7 +170,8 @@ const resourcesRoutes = [
         path: '/share-enterprise-resources',
         name: 'share-enterprise-resources',
         meta: {
-            title: '共享企业资源',
+            title: '共享企业资源列表',
+            activeMenuPath: '/share-enterprise-resources'
         },
         component: () => import('../../../views/management-resources/share-enterprise-resources/ShareEnterpriseResources'),
     },
@@ -160,7 +179,8 @@ const resourcesRoutes = [
         path: '/share-enterprise-resources-view',
         name: 'share-enterprise-resources-view',
         meta: {
-            title: '共享企业资源查看',
+            title: '企业资源查看',
+            activeMenuPath: '/share-enterprise-resources'
         },
         component: () => import('../../../views/management-resources/share-enterprise-resources/ShareEnterpriseResourcesView'),
     }

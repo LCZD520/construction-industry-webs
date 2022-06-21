@@ -347,9 +347,13 @@ export default {
     handleSizeChange(_pageSize) {
       console.log(_pageSize)
     },
-    handleEdit(_index, _row) {
+    handleView(_index, _row) {
       console.log(_index, _row)
       this.$router.push('/qualification-acquisition-view')
+    },
+    handleEdit(_index, _row) {
+      console.log(_index, _row)
+      this.$router.push('/qualification-acquisition-edit')
     },
     handleDelete(_index, _row) {
       console.log(_index, _row)

@@ -24,7 +24,7 @@
                     首页
                   </el-breadcrumb-item>
                   <span v-if="$route.path !== '/home'">
-                    <el-breadcrumb-item>{{ $route.meta.title }}列表</el-breadcrumb-item>
+                    <el-breadcrumb-item>{{ $route.meta.title }}</el-breadcrumb-item>
                   </span>
                 </el-breadcrumb>
               </div>
@@ -45,17 +45,18 @@
             </el-col>
           </el-row>
         </el-header>
-        <el-main style="padding: 0">
-          <VueScrollx>
-            <div style="padding: 10px">
+        <VueScrollx>
+          <div class="box" style="height: 100vh;background: #F8F9FB">
+            <el-main>
               <div style="padding: 10px;background: #fff;min-height: 600px">
                 <transition :enter-active-class="enterTraName">
                   <router-view/>
                 </transition>
               </div>
-            </div>
-          </VueScrollx>
-        </el-main>
+              <div style="height: 46px"></div>
+            </el-main>
+          </div>
+        </VueScrollx>
         <el-dialog
             :close-on-click-modal=false
             width="32%"
@@ -161,37 +162,25 @@ export default {
 }
 </script>
 <style scoped lang="less">
+
+
 .el-header, .el-footer {
   z-index: 1000;
-  background-color: #fff;
   color: #333;
-  height: 46px;
+  background: #fff;
   line-height: 46px;
 }
 
 .el-aside {
-  background: #eee;
+  background: #515a6e;
   transition: .5s;
+  //transition: 10s;
 }
 
 .el-main {
   z-index: 900;
-  max-height: 700px;
-  height: 700px;
-  background: #eee;
-}
-
-body > .el-container {
-  margin-bottom: 40px;
-}
-
-.el-container:nth-child(5) .el-aside,
-.el-container:nth-child(6) .el-aside {
-  line-height: 260px;
-}
-
-.el-container:nth-child(7) .el-aside {
-  line-height: 320px;
+  background: #F8F9FB;
+  padding: 10px;
 }
 
 .el-breadcrumb {

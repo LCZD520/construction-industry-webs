@@ -6,7 +6,7 @@
   <div class="lib-certificate-view">
     <el-button size="small" type="primary" icon="el-icon-plus">添加证件</el-button>
     <el-button size="small" icon="el-icon-edit" style="background: rgb(0, 188, 212);color: #fff">更新证件去向</el-button>
-    <el-button size="small" icon="el-icon-back">返回</el-button>
+    <el-button size="small" icon="el-icon-back" @click="$router.back()">返回</el-button>
     <br><br>
     <el-table
         ref="table"
@@ -36,19 +36,19 @@
               size="mini"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row)">证件去向流水
+              @click.stop="handleView(scope.$index, scope.row)">证件去向流水
           </el-button>
           <el-button
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">编辑
+              @click.stop="handleEdit(scope.$index, scope.row)">编辑
           </el-button>
           <el-button
               size="mini"
               type="danger"
               plain
-              @click="handleDelete(scope.$index, scope.row)">删除
+              @click.stop="handleDelete(scope.$index, scope.row)">删除
           </el-button>
         </template>
       </el-table-column>

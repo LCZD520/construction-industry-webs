@@ -214,8 +214,9 @@ export default {
     handleConfirm(_index, _row) {
       console.log(_index, _row)
     },
-    handleView(_index, _row) {
-      console.log(_index, _row)
+    handleView(_index,_row){
+      console.log(_index,_row)
+      this.$router.push('/confirm-logistics-view')
     }
   }
 }

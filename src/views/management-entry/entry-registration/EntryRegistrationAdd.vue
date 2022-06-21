@@ -87,10 +87,10 @@
         </el-input>
       </el-form-item>
       <el-form-item label=" ">
-        <el-button icon="el-icon-circle-plus-outline" type="primary" size="small">
+        <el-button icon="el-icon-plus" type="primary" size="small">
           保存
         </el-button>
-        <el-button icon="el-icon-back" size="small">
+        <el-button icon="el-icon-back" size="small" @click="$router.back()">
           返回
         </el-button>
       </el-form-item>

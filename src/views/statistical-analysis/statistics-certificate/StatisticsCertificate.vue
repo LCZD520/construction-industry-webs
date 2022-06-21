@@ -37,13 +37,13 @@
         <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
         <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
       </el-form-item>
-      <el-form-item>
-        <el-button-group>
-          <el-button size="small" plain type="primary" icon="el-icon-s-grid"></el-button>
-          <el-button size="small" plain type="primary" icon="el-icon-pie-chart"></el-button>
-          <el-button size="small" plain type="primary" icon="el-icon-s-data"></el-button>
-        </el-button-group>
-      </el-form-item>
+<!--      <el-form-item>-->
+<!--        <el-button-group>-->
+<!--          <el-button size="small" plain type="primary" icon="el-icon-s-grid"></el-button>-->
+<!--          <el-button size="small" plain type="primary" icon="el-icon-pie-chart"></el-button>-->
+<!--          <el-button size="small" plain type="primary" icon="el-icon-s-data"></el-button>-->
+<!--        </el-button-group>-->
+<!--      </el-form-item>-->
     </el-form>
     <el-table
         :data="tableData"

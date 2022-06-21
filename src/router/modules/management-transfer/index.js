@@ -8,7 +8,8 @@ const transferRoutes = [
         path: '/transfer-talent',
         name: 'transfer-talent',
         meta: {
-            title: '人才转账',
+            title: '人才转账审核列表',
+            activeMenuPath: '/transfer-talent'
         },
         component: () => import('../../../views/management-transfer/transfer-talent/TransferTalent'),
     },
@@ -16,7 +17,8 @@ const transferRoutes = [
         path: '/transfer-talent-view',
         name: 'transfer-talent-view',
         meta: {
-            title: '人才转账查看',
+            title: '人才转账审核查看',
+            activeMenuPath: '/transfer-talent'
         },
         component: () => import('../../../views/management-transfer/transfer-talent/TransferTalentView'),
     },
@@ -24,7 +26,8 @@ const transferRoutes = [
         path: '/transfer-enterprise',
         name: 'transfer-enterprise',
         meta: {
-            title: '企业转账',
+            title: '市场开拓转账列表',
+            activeMenuPath: '/transfer-enterprise'
         },
         component: () => import('../../../views/management-transfer/transfer-enterprise/TransferEnterprise'),
     },
@@ -32,7 +35,8 @@ const transferRoutes = [
         path: '/transfer-enterprise-view',
         name: 'transfer-enterprise-view',
         meta: {
-            title: '企业转账查看',
+            title: '市场开拓转账查看',
+            activeMenuPath: '/transfer-enterprise'
         },
         component: () => import('../../../views/management-transfer/transfer-enterprise/TransferEnterpriseView'),
     },
@@ -40,7 +44,8 @@ const transferRoutes = [
         path: '/transfer-qualification-acquisition',
         name: 'transfer-qualification-acquisition',
         meta: {
-            title: '资质收购转账',
+            title: '资质收购转账列表',
+            activeMenuPath: '/transfer-qualification-acquisition'
         },
         component: () => import('../../../views/management-transfer/transfer-qualification-acquisition/TransferQualificationAcquisition'),
     },
@@ -49,6 +54,7 @@ const transferRoutes = [
         name: 'transfer-qualification-acquisition-view',
         meta: {
             title: '资质收购转账查看',
+            activeMenuPath: '/transfer-qualification-acquisition'
         },
         component: () => import('../../../views/management-transfer/transfer-qualification-acquisition/TransferQualificationAcquisitionView'),
     },
@@ -57,6 +63,7 @@ const transferRoutes = [
         name: 'transfer-of-qualification',
         meta: {
             title: '资质转让转账',
+            activeMenuPath: '/transfer-of-qualification'
         },
         component: () => import('../../../views/management-transfer/transfer-of-qualification/TransferOfQualification'),
     },
@@ -65,6 +72,7 @@ const transferRoutes = [
         name: 'transfer-of-qualification-view',
         meta: {
             title: '资质转让转账查看',
+            activeMenuPath: '/transfer-of-qualification'
         },
         component: () => import('../../../views/management-transfer/transfer-of-qualification/TransferOfQualificationView'),
     },
@@ -72,7 +80,8 @@ const transferRoutes = [
         path: '/transfer-qualification-agency',
         name: 'transfer-qualification-agency',
         meta: {
-            title: '资质代办转账',
+            title: '资质代办转账列表',
+            activeMenuPath: '/transfer-qualification-agency'
         },
         component: () => import('../../../views/management-transfer/transfer-qualification-agency/TransferQualificationAgency'),
     },
@@ -81,6 +90,7 @@ const transferRoutes = [
         name: 'transfer-qualification-agency-view',
         meta: {
             title: '资质代办转账查看',
+            activeMenuPath: '/transfer-qualification-agency'
         },
         component: () => import('../../../views/management-transfer/transfer-qualification-agency/TransferQualificationAgencyView'),
     },
@@ -88,7 +98,8 @@ const transferRoutes = [
         path: '/transfer-title-evaluation',
         name: 'transfer-title-evaluation',
         meta: {
-            title: '职称评审转账',
+            title: '职称评审转账列表',
+            activeMenuPath: '/transfer-title-evaluation'
         },
         component: () => import('../../../views/management-transfer/transfer-title-evaluation/TransferTitleEvaluation'),
     },
@@ -97,6 +108,7 @@ const transferRoutes = [
         name: 'transfer-title-evaluation-view',
         meta: {
             title: '职称评审转账查看',
+            activeMenuPath: '/transfer-title-evaluation'
         },
         component: () => import('../../../views/management-transfer/transfer-title-evaluation/TransferTitleEvaluationView'),
     },
@@ -104,7 +116,8 @@ const transferRoutes = [
         path: '/transfer-class-three-personnel',
         name: 'transfer-class-three-personnel',
         meta: {
-            title: '三类人员转账',
+            title: '三类人员转账列表',
+            activeMenuPath: '/transfer-class-three-personnel'
         },
         component: () => import('../../../views/management-transfer/transfer-class-three-personnel/TransferClassThreePersonnel'),
     },
@@ -113,6 +126,7 @@ const transferRoutes = [
         name: 'transfer-class-three-personnel-view',
         meta: {
             title: '三类人员转账查看',
+            activeMenuPath: '/transfer-class-three-personnel'
         },
         component: () => import('../../../views/management-transfer/transfer-class-three-personnel/TransferClassThreePersonnelView'),
     },
@@ -120,7 +134,8 @@ const transferRoutes = [
         path: '/transfer-education-promotion',
         name: 'transfer-education-promotion',
         meta: {
-            title: '学历提升转账',
+            title: '学历提升转账列表',
+            activeMenuPath: '/transfer-education-promotion'
         },
         component: () => import('../../../views/management-transfer/transfer-education-promotion/TransferEducationPromotion'),
     },
@@ -129,6 +144,7 @@ const transferRoutes = [
         name: 'transfer-education-promotion-view',
         meta: {
             title: '学历提升转账查看',
+            activeMenuPath: '/transfer-education-promotion'
         },
         component: () => import('../../../views/management-transfer/transfer-education-promotion/TransferEducationPromotionView'),
     }

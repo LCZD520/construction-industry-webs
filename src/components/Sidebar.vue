@@ -12,7 +12,7 @@
     </div>
     <el-scrollbar wrap-style="overflow-x:hidden;" style="height: 100%">
       <el-menu
-          :default-active="$route.path"
+          :default-active="$route.meta.activeMenuPath"
           background-color="#515a6e"
           text-color="#fff"
           active-text-color="#fff"
@@ -20,16 +20,18 @@
           :class="isCollapse ? 'el-menu-vertical-collapse' : 'el-menu-vertical-demo'"
           router
           :collapse="isCollapse">
-        <el-menu-item index="home">
+        <el-menu-item index="home" :class="isCollapse ? 'home' : ''">
           <i style="color: #fff" :class=" isCollapse ? 'el-icon-s-promotion' : 'el-icon-s-home'"></i>
           <span slot="title">首页</span>
         </el-menu-item>
         <el-submenu v-for="item in menuList" :key="item.id" :index="item.id">
           <template slot="title">
-            <i style="color: #fff" class="el-icon-ship"></i>
-            <span style="transition: .5s" slot="title">
+            <div :class="isCollapse ? 'collapse-active' : ''">
+              <i style="color: #fff" class="el-icon-ship"></i>
+              <span style="transition: .5s" slot="title">
               {{ item.level1_title }}
             </span>
+            </div>
           </template>
           <el-menu-item v-for="subItem in item.subMenuItems" :key="subItem.id"
                         :index="subItem.route">
@@ -39,7 +41,7 @@
         </el-submenu>
       </el-menu>
     </el-scrollbar>
-
+    <div style="height: 20px;background: #515a6e"></div>
   </div>
 </template>
 
@@ -507,10 +509,18 @@ export default {
   background: #409EFF !important;
 }
 
-/deep/ .el-submenu__title:hover {
-  background: #409EFF !important;
-  color: #fff;
+.collapse-active {
+  width: 64px;
+  margin-left: -20px;
+  text-align: center;
 }
 
+.collapse-active:hover {
+  background: #409EFF;
+}
+
+/deep/ .el-menu-item.home:hover {
+  background: #409EFF !important;
+}
 </style>
 

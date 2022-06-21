@@ -6,7 +6,7 @@
   <div class="entry-registration-view">
     <el-form label-position="right" label-width="120px">
       <el-row>
-        <el-col :span="8">
+        <el-col :span="12">
           <el-form-item label="入账类别">
             <el-select disabled class="width-full" size="small" v-model="form.name" placeholder="请选择转账用途">
               <el-option
@@ -18,7 +18,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="12">
           <el-form-item label="转账用途">
             <el-select disabled class="width-full" size="small" v-model="form.name" placeholder="请选择转账用途">
               <el-option
@@ -32,13 +32,13 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="8">
+        <el-col :span="12">
           <el-form-item label="客户名称">
             <el-input disabled size="small" v-model="form.name">
             </el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="12">
           <el-form-item label="录入人">
             <el-input disabled size="small" v-model="form.name">
             </el-input>
@@ -46,7 +46,7 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="8">
+        <el-col :span="12">
           <el-form-item label="录入时间">
             <el-date-picker
                 disabled
@@ -57,7 +57,7 @@
             </el-date-picker>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="12">
           <el-form-item label="本次转入金额">
             <el-input-number
                 disabled
@@ -74,7 +74,7 @@
         </el-input>
       </el-form-item>
       <el-row>
-        <el-col :span="8">
+        <el-col :span="12">
           <el-form-item label="转账方式">
             <el-select disabled class="width-full" size="small" v-model="form.name" placeholder="请选择转账方式">
               <el-option
@@ -86,7 +86,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="12">
           <el-form-item label="公司账户">
             <el-select disabled class="width-full" size="small" v-model="form.name" placeholder="请选择公司账户">
               <el-option
@@ -100,7 +100,7 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="8">
+        <el-col :span="12">
           <el-form-item label="到账日期">
             <el-date-picker
                 disabled
@@ -124,7 +124,7 @@
         </el-input>
       </el-form-item>
       <el-form-item label=" ">
-        <el-button icon="el-icon-back" size="small">
+        <el-button icon="el-icon-back" size="small" @click="$router.back()">
           返回
         </el-button>
       </el-form-item>
@@ -141,45 +141,6 @@ export default {
       form: {
         name: ''
       },
-      columns: [
-        {
-          title: '客户名称',
-          key: 'address'
-        },
-        {
-          title: '订单编号',
-          key: 'address'
-        },
-        {
-          title: '申请转入金额',
-          key: 'address'
-        },
-        {
-          title: '转账方信息',
-          key: 'address'
-        },
-        {
-          title: '到账日期',
-          key: 'address'
-        },
-        {
-          title: '申请状态',
-          key: 'address'
-        },
-        {
-          title: '申请人',
-          key: 'address'
-        },
-        {
-          title: '申请时间',
-          key: 'address'
-        },
-        {
-          title: '录入人',
-          key: 'address'
-        },
-      ],
-      tableData:[{}]
     }
   },
   methods: {}

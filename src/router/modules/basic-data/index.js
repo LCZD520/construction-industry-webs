@@ -8,7 +8,8 @@ const basicDataRoutes = [
         path: '/management-role',
         name: 'management-role',
         meta: {
-            title: '角色管理',
+            title: '角色列表',
+            activeMenuPath: '/management-role',
         },
         component: () => import('../../../views/basic-data/management-role/ManagementRole'),
     },
@@ -17,6 +18,7 @@ const basicDataRoutes = [
         name: 'management-role-add',
         meta: {
             title: '角色添加',
+            activeMenuPath: '/management-role',
         },
         component: () => import('../../../views/basic-data/management-role/ManagementRoleAdd'),
     },
@@ -25,6 +27,7 @@ const basicDataRoutes = [
         name: 'management-role-edit',
         meta: {
             title: '角色编辑',
+            activeMenuPath: '/management-role',
         },
         component: () => import('../../../views/basic-data/management-role/ManagementRoleEdit'),
     },
@@ -32,7 +35,8 @@ const basicDataRoutes = [
         path: '/management-role-set-permissions',
         name: 'management-role-set-permissions',
         meta: {
-            title: '角色设置权限',
+            title: '设置权限',
+            activeMenuPath: '/management-role',
         },
         component: () => import('../../../views/basic-data/management-role/ManagementRoleSetPermissions'),
     },
@@ -40,7 +44,8 @@ const basicDataRoutes = [
         path: '/management-organization',
         name: 'management-organization',
         meta: {
-            title: '组织管理',
+            title: '用户列表',
+            activeMenuPath: '/management-organization',
         },
         component: () => import('../../../views/basic-data/management-organization/ManagementOrganization'),
     },
@@ -48,7 +53,8 @@ const basicDataRoutes = [
         path: '/management-organization-view',
         name: 'management-organization-view',
         meta: {
-            title: '组织管理查看',
+            title: '用户查看',
+            activeMenuPath: '/management-organization',
         },
         component: () => import('../../../views/basic-data/management-organization/ManagementOrganizationView'),
     },
@@ -56,7 +62,8 @@ const basicDataRoutes = [
         path: '/management-organization-add',
         name: 'management-organization-add',
         meta: {
-            title: '组织管理添加',
+            title: '用户添加',
+            activeMenuPath: '/management-organization',
         },
         component: () => import('../../../views/basic-data/management-organization/ManagementOrganizationAdd'),
     },
@@ -64,7 +71,8 @@ const basicDataRoutes = [
         path: '/management-organization-edit',
         name: 'management-organization-edit',
         meta: {
-            title: '组织管理编辑',
+            title: '用户编辑',
+            activeMenuPath: '/management-organization',
         },
         component: () => import('../../../views/basic-data/management-organization/ManagementOrganizationEdit'),
     },
