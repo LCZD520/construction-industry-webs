@@ -8,7 +8,8 @@
       <el-col :span="4">
         <div class="content-left">
           <div class="content-left-header">
-            <el-button size="mini" type="primary">添加</el-button>
+            <el-button size="mini" type="primary">添加
+            </el-button>
             <el-button size="mini">编辑</el-button>
             <el-button size="mini" type="danger">删除</el-button>
           </div>
@@ -44,7 +45,9 @@
           </el-form>
           <div class="split-line">
             <div class="split-line-left">
-              <el-button icon="el-icon-plus" size="small" type="primary">添加</el-button>
+              <el-button icon="el-icon-plus" size="small" type="primary"
+                         @click="$router.push('/management-organization-add')">添加
+              </el-button>
             </div>
             <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
           </div>
@@ -60,11 +63,47 @@
             <el-table-column
                 min-width="180"
                 prop="username"
-                label="角色名称">
+                label="姓名">
             </el-table-column>
             <el-table-column
                 min-width="180"
-                label="是否启用">
+                prop="username"
+                label="用户名">
+            </el-table-column>
+            <el-table-column
+                min-width="180"
+                label="性别">
+              <template slot-scope="scope">
+                <el-tag
+                    v-if="scope.row.sex === 1"
+                    size="small"
+                    effect="dark">
+                  男
+                </el-tag>
+                <el-tag
+                    v-if="scope.row.sex === 2"
+                    size="small"
+                    type="success"
+                    effect="dark">
+                  女
+                </el-tag>
+                <el-tag
+                    v-if="scope.row.sex === 3"
+                    size="small"
+                    type="info"
+                    effect="dark">
+                  未知
+                </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column
+                min-width="180"
+                prop="username"
+                label="机构名称">
+            </el-table-column>
+            <el-table-column
+                min-width="180"
+                label="是否在职">
               <template slot-scope="scope">
                 <el-tag
                     size="small"
@@ -77,7 +116,7 @@
             <el-table-column
                 min-width="200"
                 prop="username"
-                label="角色描述">
+                label="联系方式">
             </el-table-column>
             <el-table-column fixed="right" label="操作" width="300">
               <template slot-scope="scope">
@@ -85,7 +124,7 @@
                     size="mini"
                     type="primary"
                     plain
-                    @click="handleEdit(scope.$index, scope.row)">查看
+                    @click="handleView(scope.$index, scope.row)">查看
                 </el-button>
                 <el-button
                     size="mini"
@@ -97,13 +136,13 @@
                     size="mini"
                     type="danger"
                     plain
-                    @click="handleEdit(scope.$index, scope.row)">删除
+                    @click="handleDelete(scope.$index, scope.row)">删除
                 </el-button>
                 <el-button
                     size="mini"
                     type="primary"
                     plain
-                    @click="handleEdit(scope.$index, scope.row)">重置密码
+                    @click="handleResetPassword(scope.$index, scope.row)">重置密码
                 </el-button>
               </template>
             </el-table-column>
@@ -141,11 +180,20 @@ export default {
           date: '2016-05-02',
           username: '王小虎',
           address: '上海市普陀区',
+          sex: 1,
           enabled: true
         },
         {
           date: '2016-05-02',
           username: '王小',
+          sex: 2,
+          address: '上海市普陀区',
+          enabled: false
+        },
+        {
+          date: '2016-05-02',
+          username: '王小',
+          sex: 3,
           address: '上海市普陀区',
           enabled: false
         },
@@ -250,6 +298,21 @@ export default {
       }
       return '';
     },
+    handleView(_index, _row) {
+      console.log(_index, _row)
+      this.$router.push('/management-organization-view')
+    },
+    handleEdit(_index, _row) {
+      console.log(_index, _row)
+      this.$router.push('/management-organization-edit')
+    },
+    handleDelete(_index, _row) {
+      console.log(_index, _row)
+    },
+    handleResetPassword(_index, _row) {
+      console.log(_index, _row)
+
+    },
   }
 }
 </script>
@@ -269,7 +332,8 @@ export default {
     .content-left-header {
       padding: 10px;
     }
-    .content-left-content{
+
+    .content-left-content {
       padding: 10px;
     }
   }

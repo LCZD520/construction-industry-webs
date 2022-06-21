@@ -29,7 +29,9 @@
     </el-form>
     <div class="split-line">
       <div class="split-line-left">
-        <el-button icon="el-icon-plus" size="small" type="primary">添加</el-button>
+        <el-button icon="el-icon-plus" size="small" type="primary"
+                   @click="$router.push('/management-role-add')">添加
+        </el-button>
       </div>
       <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
     </div>
@@ -76,19 +78,19 @@
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">设置权限
+              @click="handleSetPermissions(scope.$index, scope.row)">设置权限
           </el-button>
           <el-button
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">禁用
+              @click="handleDisable(scope.$index, scope.row)">禁用
           </el-button>
           <el-button
               size="mini"
               type="danger"
               plain
-              @click="handleEdit(scope.$index, scope.row)">删除
+              @click="handleDelete(scope.$index, scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
@@ -191,6 +193,20 @@ export default {
         return 'success-row';
       }
       return '';
+    },
+    handleEdit(_index, _row) {
+      console.log(_index, _row)
+      this.$router.push('/management-role-edit')
+    },
+    handleSetPermissions(_index, _row) {
+      console.log(_index, _row)
+      this.$router.push('/management-role-set-permissions')
+    },
+    handleDisable(_index, _row) {
+      console.log(_index, _row)
+    },
+    handleDelete(_index, _row) {
+      console.log(_index, _row)
     },
   }
 }
