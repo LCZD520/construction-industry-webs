@@ -111,7 +111,7 @@
               size="mini"
               type="danger"
               plain
-              @click="handleEdit(scope.$index, scope.row)">删除
+              @click="handleDelete(scope.$index, scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
@@ -240,6 +240,10 @@ export default {
     handleEdit(_index, _row) {
       console.log(_index, _row)
       this.$router.push('/summary-enterprise-resources-edit')
+    },
+    handleDelete(_index, _row) {
+      console.log(_index, _row)
+      this.$message.success('删除')
     },
   }
 }

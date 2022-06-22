@@ -104,19 +104,19 @@
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">完成
+              @click="handleComplete(scope.$index, scope.row)">完成
           </el-button>
           <el-button
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">订单
+              @click="handleView(scope.$index, scope.row,'first')">订单
           </el-button>
           <el-button
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">图片
+              @click="handleView(scope.$index, scope.row,'second')">图片
           </el-button>
           <el-button
               size="mini"
@@ -330,9 +330,15 @@ export default {
     handleSizeChange(_pageSize) {
       console.log(_pageSize)
     },
-    handleView(_index, _row) {
+    handleView(_index, _row, _activeTab) {
       console.log(_index, _row)
-      this.$router.push('/title-evaluation-view')
+      this.$router.push({
+        path: '/title-evaluation-view',
+        query: {
+          activeTab: _activeTab,
+          id: _row.id
+        }
+      })
     },
     handleEdit(_index, _row) {
       console.log(_index, _row)
@@ -340,6 +346,10 @@ export default {
     },
     handleDelete(_index, _row) {
       console.log(_index, _row)
+    },
+    handleComplete(_index, _row) {
+      console.log(_index, _row)
+      this.$message.success('完成')
     },
   }
 }

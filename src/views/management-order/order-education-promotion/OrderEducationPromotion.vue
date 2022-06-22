@@ -49,7 +49,7 @@
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">转账
+              @click="handleTransfer(scope.$index, scope.row)">转账
           </el-button>
           <el-button
               size="mini"
@@ -170,6 +170,10 @@ export default {
     handleView(_index,_row){
       console.log(_index,_row)
       this.$router.push('/order-education-promotion-view')
+    },
+    handleTransfer(_index,_row){
+      console.log(_index,_row)
+      this.$message.success("弹窗")
     },
     handleEdit(_index,_row){
       console.log(_index,_row)

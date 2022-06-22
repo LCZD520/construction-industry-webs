@@ -317,6 +317,7 @@ export default {
     },
     handleEdit(_index, _row) {
       console.log(_index, _row)
+      this.$message.error('暂未开放')
     },
     handleDelete(_index, _row) {
       console.log(_index, _row)

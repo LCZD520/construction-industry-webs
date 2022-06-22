@@ -142,8 +142,7 @@ export default {
   components: {ImagesUpload},
   data() {
     return {
-      activeName: 'first',
-      // activeName: 'second',
+      activeName: this.$route.query.activeTab ? this.$route.query.activeTab : 'first',
       isShowDetail: false,
       form: {
         name: ''

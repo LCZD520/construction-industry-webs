@@ -13,15 +13,15 @@
         </el-input>
       </el-form-item>
       <el-form-item label="级别专业" label-width="120px">
-      <el-cascader
-          size="small"
-          clearable
-          placeholder="请选择级别专业"
-          :options="regionData"
-          v-model="form.newPassword"
-          @change="handleChange">
-      </el-cascader>
-    </el-form-item>
+        <el-cascader
+            size="small"
+            clearable
+            placeholder="请选择级别专业"
+            :options="regionData"
+            v-model="form.newPassword"
+            @change="handleChange">
+        </el-cascader>
+      </el-form-item>
       <el-form-item label="客户类型" label-width="120px">
         <el-select size="small" v-model="form.oldPassword" placeholder="请选择客户类型">
           <el-option
@@ -53,7 +53,8 @@
     <div class="split-line">
       <div class="split-line-left">
         <el-button icon="el-icon-plus" size="small" type="primary"
-        @click="$router.push('/my-talent-resources-add')">添加</el-button>
+                   @click="$router.push('/my-talent-resources-add')">添加
+        </el-button>
       </div>
       <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
     </div>
@@ -91,7 +92,7 @@
               size="mini"
               type="danger"
               plain
-              @click="handleEdit(scope.$index, scope.row)">删除
+              @click="handleDelete(scope.$index, scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
@@ -224,6 +225,10 @@ export default {
     handleEdit(_index, _row) {
       console.log(_index, _row)
       this.$router.push('/my-talent-resources-edit')
+    },
+    handleDelete(_index, _row) {
+      console.log(_index, _row)
+      this.$message.success('删除' + _row.username)
     },
   }
 }

@@ -213,6 +213,7 @@ export default {
     },
     handleConfirm(_index, _row) {
       console.log(_index, _row)
+      this.$message.success('确认')
     },
     handleView(_index,_row){
       console.log(_index,_row)

@@ -387,7 +387,7 @@
           </el-table-column>
         </el-table>
       </el-tab-pane>
-      <el-tab-pane label="后勤申请" name="five">
+      <el-tab-pane label="后勤申请" name="fifth">
         <el-button type="primary" size="small">
           添加后勤记录
         </el-button>
@@ -445,13 +445,13 @@
 
 <script>
 import ImagesUpload from "./talent-query-view/ImagesUpload";
+
 export default {
   name: 'TalentQueryView',
   components: {ImagesUpload},
   data() {
     return {
-      // activeName: 'first',
-      activeName: 'second',
+      activeName: this.$route.query.activeTab ? this.$route.query.activeTab : 'first',
       isShowDetail: false,
       form: {
         name: ''
@@ -497,6 +497,9 @@ export default {
       ],
 
     }
+  },
+  mounted() {
+    console.log(this.$route.query)
   },
   methods: {
     tableRowClassName({rowIndex}) {

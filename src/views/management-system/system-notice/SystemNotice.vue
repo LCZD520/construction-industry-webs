@@ -200,6 +200,10 @@ export default {
       this.$router.push('/system-notice-edit')
       console.log(_index, _row)
     },
+    handleDelete(_index, _row) {
+      console.log(_index, _row)
+      this.$message.success('删除')
+    },
   }
 }
 </script>

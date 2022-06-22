@@ -90,19 +90,25 @@
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">订单
+              @click="handleView(scope.$index, scope.row,'first')">转账
           </el-button>
           <el-button
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">图片
+              @click="handleStrippe(scope.$index, scope.row,'second')">剥离
           </el-button>
           <el-button
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">查看
+              @click="handleView(scope.$index, scope.row,'second')">图片
+          </el-button>
+          <el-button
+              size="mini"
+              type="primary"
+              plain
+              @click="handleView(scope.$index, scope.row)">查看
           </el-button>
           <el-button
               size="mini"
@@ -347,9 +353,15 @@ export default {
     handleSizeChange(_pageSize) {
       console.log(_pageSize)
     },
-    handleView(_index, _row) {
+    handleView(_index, _row, _activeTab) {
       console.log(_index, _row)
-      this.$router.push('/qualification-acquisition-view')
+      this.$router.push({
+        path: '/qualification-acquisition-view',
+        query: {
+          activeTab: _activeTab,
+          id: _row.id
+        }
+      })
     },
     handleEdit(_index, _row) {
       console.log(_index, _row)
@@ -357,6 +369,10 @@ export default {
     },
     handleDelete(_index, _row) {
       console.log(_index, _row)
+    },
+    handleStrippe(_index, _row) {
+      console.log(_index, _row)
+      this.$message.error('暂未开放')
     },
   }
 }

@@ -46,7 +46,7 @@
           </el-row>
         </el-header>
         <VueScrollx>
-          <div class="box" style="height: 100vh;background: #F8F9FB">
+          <div style="height: 100vh;background: #F8F9FB">
             <el-main>
               <div style="padding: 10px;background: #fff;min-height: 600px">
                 <transition :enter-active-class="enterTraName">
@@ -57,43 +57,43 @@
             </el-main>
           </div>
         </VueScrollx>
-        <el-dialog
-            :close-on-click-modal=false
-            width="32%"
-            title="修改密码"
-            :visible.sync="visible"
-            :before-close="beforeClose">
-          <div class="dialog-wrapper">
-            <div class="dialog-content">
-              <el-form
-                  ref="formData"
-                  :rules="rules"
-                  :model="form">
-                <el-form-item prop="oldPassword" label="输入旧密码" label-width="100px">
-                  <el-input size="small" placeholder="请输入旧密码" v-model="form.oldPassword"
-                            autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item prop="newPassword" label="输入新密码" label-width="100px">
-                  <el-input size="small" placeholder="请输入新密码" v-model="form.newPassword"
-                            autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item prop="confirmPassword" label="确认新密码" label-width="100px">
-                  <el-input size="small" placeholder="请确认新密码" v-model="form.confirmPassword"
-                            autocomplete="off"></el-input>
-                </el-form-item>
-              </el-form>
-            </div>
-          </div>
-          <div slot="footer">
-            <el-button
-                size="small"
-                type="primary">提 交
-            </el-button>
-            <el-button size="small" @click="beforeClose">取 消</el-button>
-          </div>
-        </el-dialog>
       </el-container>
     </el-container>
+    <el-dialog
+        :close-on-click-modal=false
+        width="32%"
+        title="修改密码"
+        :visible.sync="visible"
+        :before-close="beforeClose">
+      <div class="dialog-wrapper">
+        <div class="dialog-content">
+          <el-form
+              ref="formData"
+              :rules="rules"
+              :model="form">
+            <el-form-item prop="oldPassword" label="输入旧密码" label-width="100px">
+              <el-input size="small" placeholder="请输入旧密码" v-model="form.oldPassword"
+                        autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item prop="newPassword" label="输入新密码" label-width="100px">
+              <el-input size="small" placeholder="请输入新密码" v-model="form.newPassword"
+                        autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item prop="confirmPassword" label="确认新密码" label-width="100px">
+              <el-input size="small" placeholder="请确认新密码" v-model="form.confirmPassword"
+                        autocomplete="off"></el-input>
+            </el-form-item>
+          </el-form>
+        </div>
+      </div>
+      <div slot="footer">
+        <el-button
+            size="small"
+            type="primary">提 交
+        </el-button>
+        <el-button size="small" @click="beforeClose">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>

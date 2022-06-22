@@ -4,81 +4,6 @@
 */
 <template>
   <div class="talent-query">
-    <!--    <el-upload-->
-    <!--        ref="upload"-->
-    <!--        action=""-->
-    <!--        :auto-upload="false"-->
-    <!--        :file-list="fileList"-->
-    <!--        :on-change="handleChange"-->
-    <!--        multiple-->
-    <!--        :show-file-list="false"-->
-    <!--    >-->
-    <!--      <el-button type="primary">批量导入</el-button>-->
-    <!--    </el-upload>-->
-    <!--    <br>-->
-    <!--    <el-button type="primary">导出Excel</el-button>-->
-    <!--    <el-table-->
-    <!--        :data="list"-->
-    <!--        stripe-->
-    <!--        highlight-current-row-->
-    <!--        :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"-->
-    <!--        :cell-style="{textAlign:'center'}"-->
-    <!--        style="width: 100%"-->
-    <!--        :row-class-name="tableRowClassName">-->
-    <!--      <el-table-column-->
-    <!--          prop="name"-->
-    <!--          label="姓名">-->
-    <!--      </el-table-column>-->
-    <!--      <el-table-column-->
-    <!--          prop="name"-->
-    <!--          label="性别">-->
-    <!--      </el-table-column>-->
-    <!--      <el-table-column-->
-    <!--          prop="name"-->
-    <!--          label="身份证">-->
-    <!--      </el-table-column>-->
-    <!--      <el-table-column-->
-    <!--          prop="name"-->
-    <!--          label="联系电话">-->
-    <!--      </el-table-column>-->
-    <!--      <el-table-column-->
-    <!--          prop="originalEducation"-->
-    <!--          label="原始学历">-->
-    <!--      </el-table-column>-->
-    <!--      <el-table-column-->
-    <!--          prop="applicationSchool"-->
-    <!--          label="申报学校">-->
-    <!--      </el-table-column>-->
-    <!--      <el-table-column-->
-    <!--          prop="educationalSystem"-->
-    <!--          label="学制">-->
-    <!--      </el-table-column>-->
-    <!--      <el-table-column-->
-    <!--          prop="major"-->
-    <!--          label="专业">-->
-    <!--      </el-table-column>-->
-    <!--      <el-table-column-->
-    <!--          prop="improveEducation"-->
-    <!--          label="提升学历">-->
-    <!--      </el-table-column>-->
-    <!--      <el-table-column-->
-    <!--          prop="agencyAmount"-->
-    <!--          label="代办金额">-->
-    <!--      </el-table-column>-->
-    <!--      <el-table-column width="200" label="操作">-->
-    <!--        <template slot-scope="scope">-->
-    <!--          <el-button-->
-    <!--              size="mini"-->
-    <!--              @click="handleEdit(scope.$index, scope.row)">编辑-->
-    <!--          </el-button>-->
-    <!--          <el-button-->
-    <!--              size="mini"-->
-    <!--              type="danger"-->
-    <!--              @click="handleDelete(scope.$index, scope.row)">删除-->
-    <!--          </el-button>-->
-    <!--        </template>-->
-    <!--      </el-table-column>-->
-    <!--    </el-table>-->
     <el-form
         ref="formData"
         inline
@@ -233,14 +158,14 @@
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">图片
+              @click="handleView(scope.$index, scope.row,'second')">图片
           </el-button>
           <el-button
               style="padding: 5px"
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">证件
+              @click="handleView(scope.$index, scope.row,'first')">证件
           </el-button>
           <el-button
               size="mini"
@@ -256,21 +181,21 @@
               style="padding: 5px"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">转账
+              @click="handleView(scope.$index, scope.row,'third')">转账
           </el-button>
           <el-button
               style="padding: 5px"
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">人才回访
+              @click="handleView(scope.$index, scope.row,'fourth')">人才回访
           </el-button>
           <el-button
               style="padding: 5px"
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">后勤申请
+              @click="handleView(scope.$index, scope.row,'fifth')">后勤申请
           </el-button>
         </template>
       </el-table-column>
@@ -434,18 +359,22 @@ export default {
         }],
       tableData: [
         {
+          id: 111,
           date: '2016-05-02',
           username: '王小虎',
           address: '上海市普陀区',
         }, {
+          id: 222,
           date: '2016-05-04',
           username: '王小虎',
           address: '上海市普陀区'
         }, {
+          id: 333,
           date: '2016-05-01',
           username: '王小虎',
           address: '上海市普陀区',
         }, {
+          id: 444,
           date: '2016-05-03',
           username: '王小虎',
           address: '上海市普陀区'
@@ -542,7 +471,17 @@ export default {
           console.log(_this.list)
         })
       }
-    }
+    },
+    handleView(_index, _row, _activeTab) {
+      console.log(_index, _row)
+      this.$router.push({
+        path: '/talent-query-view',
+        query: {
+          activeTab: _activeTab,
+          id: _row.id
+        }
+      })
+    },
   }
 }
 </script>

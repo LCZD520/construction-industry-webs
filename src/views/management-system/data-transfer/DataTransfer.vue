@@ -32,7 +32,7 @@
     </el-form>
     <div class="split-line">
       <div class="split-line-left">
-        <el-button icon="el-icon-right" size="small" type="primary">转移</el-button>
+        <el-button icon="el-icon-right" size="small" type="primary" @click="handleTransfer">转移</el-button>
       </div>
       <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
     </div>
@@ -157,6 +157,9 @@ export default {
       }
       return '';
     },
+    handleTransfer(){
+      this.$message('转移')
+    }
   }
 }
 </script>

@@ -176,7 +176,7 @@ export default {
   data() {
     return {
       isShowDetail: false,
-      activeName:'first',
+      activeName: this.$route.query.activeTab ? this.$route.query.activeTab : 'first',
       form: {
         name: ''
       },

@@ -82,7 +82,7 @@
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">公告
+              @click="handleViewNotice(scope.$index, scope.row)">公告
           </el-button>
         </template>
       </el-table-column>
@@ -211,6 +211,9 @@ export default {
      */
     handleSizeChange(_pageSize) {
       console.log(_pageSize)
+    },
+    handleViewNotice(){
+      this.$message.success("弹窗")
     }
   }
 }

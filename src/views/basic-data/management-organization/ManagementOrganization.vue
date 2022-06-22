@@ -8,10 +8,10 @@
       <el-col :span="4">
         <div class="content-left">
           <div class="content-left-header">
-            <el-button size="mini" type="primary">添加
+            <el-button size="mini" type="primary" @click="handleAdd">添加
             </el-button>
-            <el-button size="mini">编辑</el-button>
-            <el-button size="mini" type="danger">删除</el-button>
+            <el-button size="mini" @click="handleEditMenu">编辑</el-button>
+            <el-button size="mini" type="danger" @click="handleDelete">删除</el-button>
           </div>
           <div class="content-left-content">
             <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
@@ -308,10 +308,19 @@ export default {
     },
     handleDelete(_index, _row) {
       console.log(_index, _row)
+      this.$message.success('删除')
+    },
+    handleAdd(_index, _row) {
+      console.log(_index, _row)
+      this.$message.success('添加组织')
+    },
+    handleEditMenu(_index, _row) {
+      console.log(_index, _row)
+      this.$message.success('编辑组织')
     },
     handleResetPassword(_index, _row) {
       console.log(_index, _row)
-
+      this.$message.success('重置密码 ')
     },
   }
 }

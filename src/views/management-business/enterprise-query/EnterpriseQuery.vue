@@ -105,14 +105,14 @@
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">订单
+              @click="handleView(scope.$index, scope.row,'first')">订单
           </el-button>
           <el-button
               style="padding: 5px"
               size="mini"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row)">图片
+              @click="handleView(scope.$index, scope.row,'second')">图片
           </el-button>
           <el-button
               size="mini"
@@ -128,21 +128,21 @@
               style="padding: 5px"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">企业回访
+              @click="handleView(scope.$index, scope.row,'fourth')">企业回访
           </el-button>
           <el-button
               style="padding: 5px"
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">后勤申请
+              @click="handleView(scope.$index, scope.row,'fifth')">后勤申请
           </el-button>
           <el-button
               style="padding: 5px"
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">完成确认
+              @click="handleCompleteConfirm(scope.$index, scope.row)">完成确认
           </el-button>
           <el-button
               style="padding: 5px"
@@ -382,9 +382,15 @@ export default {
     handleSizeChange(_pageSize) {
       console.log(_pageSize)
     },
-    handleView(_index, _row) {
-      this.$router.push('/enterprise-query-view')
+    handleView(_index, _row, _activeTab) {
       console.log(_index, _row)
+      this.$router.push({
+        path: '/enterprise-query-view',
+        query: {
+          activeTab: _activeTab,
+          id: _row.id
+        }
+      })
     },
     handleEdit(_index, _row) {
       this.$router.push('/enterprise-query-edit')
@@ -392,6 +398,10 @@ export default {
     },
     handleDelete(_index, _row) {
       console.log(_index, _row)
+    },
+    handleCompleteConfirm(_index, _row) {
+      console.log(_index, _row)
+      this.$message.success("完成确认")
     },
   }
 }

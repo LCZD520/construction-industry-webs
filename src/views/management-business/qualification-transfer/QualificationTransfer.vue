@@ -95,45 +95,19 @@
           :prop="item.key"
           :label="item.title">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="400">
+      <el-table-column fixed="right" label="操作" width="180">
         <template slot-scope="scope">
           <el-button
-              v-if="false"
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">完成
+              @click="handleView(scope.$index, scope.row)">订单
           </el-button>
           <el-button
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">订单
-          </el-button>
-          <el-button
-              size="mini"
-              type="primary"
-              plain
-              @click="handleEdit(scope.$index, scope.row)">图片
-          </el-button>
-          <el-button
-              size="mini"
-              type="primary"
-              plain
-              @click="handleEdit(scope.$index, scope.row)">查看
-          </el-button>
-          <el-button
-              size="mini"
-              type="primary"
-              plain
-              @click="handleEdit(scope.$index, scope.row)">编辑
-          </el-button>
-          <el-button
-              v-if="true"
-              size="mini"
-              type="danger"
-              plain
-              @click="handleDelete(scope.$index, scope.row)">删除
+              @click="handleView(scope.$index, scope.row)">图片
           </el-button>
         </template>
       </el-table-column>
@@ -366,9 +340,15 @@ export default {
     handleSizeChange(_pageSize) {
       console.log(_pageSize)
     },
-    handleEdit(_index, _row) {
+    handleView(_index, _row, _activeTab) {
       console.log(_index, _row)
-      this.$router.push('/qualification-transfer-view')
+      this.$router.push({
+        path: '/qualification-transfer-view',
+        query: {
+          activeTab: _activeTab,
+          id: _row.id
+        }
+      })
     },
     handleDelete(_index, _row) {
       console.log(_index, _row)

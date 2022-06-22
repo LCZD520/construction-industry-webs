@@ -14,6 +14,7 @@ body {
     line-height: 1.5;
     font-family: 'Microsoft Yahei', 'simsun', 'arial', 'tahoma';
     color: #666;
+    padding: 0 !important;
     background: #F8F9FB;
 }
 

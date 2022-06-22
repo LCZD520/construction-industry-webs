@@ -204,9 +204,11 @@ export default {
     },
     handleDisable(_index, _row) {
       console.log(_index, _row)
+      this.$message.success('禁用')
     },
     handleDelete(_index, _row) {
       console.log(_index, _row)
+      this.$message.success('禁用')
     },
   }
 }

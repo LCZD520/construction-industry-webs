@@ -72,19 +72,19 @@
               size="mini"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row)">完成
+              @click="handleConfirm(scope.$index, scope.row)">执行确认
           </el-button>
           <el-button
               size="mini"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row)">订单
+              @click="handleView(scope.$index, scope.row,'second')">图片
           </el-button>
           <el-button
               size="mini"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row)">图片
+              @click="handleEdit(scope.$index, scope.row)">编辑
           </el-button>
           <el-button
               size="mini"
@@ -96,7 +96,19 @@
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">编辑
+              @click="handleView(scope.$index, scope.row,'third')">代办入账
+          </el-button>
+          <el-button
+              size="mini"
+              type="primary"
+              plain
+              @click="handleView(scope.$index, scope.row,'fourth')">转账
+          </el-button>
+          <el-button
+              size="mini"
+              type="primary"
+              plain
+              @click="handleView(scope.$index, scope.row,'first')">人才订单
           </el-button>
           <el-button
               v-if="true"
@@ -336,13 +348,23 @@ export default {
     handleSizeChange(_pageSize) {
       console.log(_pageSize)
     },
+    handleConfirm(_index, _row) {
+      console.log(_index, _row)
+      this.$message.success('执行确认')
+    },
     handleEdit(_index, _row) {
       console.log(_index, _row)
       this.$router.push('/qualification-agency-edit')
     },
-    handleView(_index, _row) {
+    handleView(_index, _row, _activeTab) {
       console.log(_index, _row)
-      this.$router.push('/qualification-agency-view')
+      this.$router.push({
+        path: '/qualification-agency-view',
+        query: {
+          activeTab: _activeTab,
+          id: _row.id
+        }
+      })
     },
     handleDelete(_index, _row) {
       console.log(_index, _row)
