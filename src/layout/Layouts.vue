@@ -65,26 +65,24 @@
         title="修改密码"
         :visible.sync="visible"
         :before-close="beforeClose">
-      <div class="dialog-wrapper">
-        <div class="dialog-content">
-          <el-form
-              ref="formData"
-              :rules="rules"
-              :model="form">
-            <el-form-item prop="oldPassword" label="输入旧密码" label-width="100px">
-              <el-input size="small" placeholder="请输入旧密码" v-model="form.oldPassword"
-                        autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item prop="newPassword" label="输入新密码" label-width="100px">
-              <el-input size="small" placeholder="请输入新密码" v-model="form.newPassword"
-                        autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item prop="confirmPassword" label="确认新密码" label-width="100px">
-              <el-input size="small" placeholder="请确认新密码" v-model="form.confirmPassword"
-                        autocomplete="off"></el-input>
-            </el-form-item>
-          </el-form>
-        </div>
+      <div class="dialog-content">
+        <el-form
+            ref="formData"
+            :rules="rules"
+            :model="form">
+          <el-form-item prop="oldPassword" label="输入旧密码" label-width="100px">
+            <el-input size="small" placeholder="请输入旧密码" v-model="form.oldPassword"
+                      autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item prop="newPassword" label="输入新密码" label-width="100px">
+            <el-input size="small" placeholder="请输入新密码" v-model="form.newPassword"
+                      autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item prop="confirmPassword" label="确认新密码" label-width="100px">
+            <el-input size="small" placeholder="请确认新密码" v-model="form.confirmPassword"
+                      autocomplete="off"></el-input>
+          </el-form-item>
+        </el-form>
       </div>
       <div slot="footer">
         <el-button
@@ -126,10 +124,6 @@ export default {
     }
   },
   computed: {},
-  mounted() {
-    const body = window.document.getElementsByTagName('body')[0];
-    body.style.overflow = 'hidden';
-  },
   methods: {
     handleCommand(command) {
       if (command === 'logout') {
@@ -161,9 +155,7 @@ export default {
   }
 }
 </script>
-<style scoped lang="less">
-
-
+<style lang="less">
 .el-header, .el-footer {
   z-index: 1000;
   color: #333;
@@ -174,7 +166,6 @@ export default {
 .el-aside {
   background: #515a6e;
   transition: .5s;
-  //transition: 10s;
 }
 
 .el-main {
@@ -184,7 +175,7 @@ export default {
 }
 
 .el-breadcrumb {
-  line-height: 46px;
+  line-height: 46px !important;
 }
 
 .header-right {
@@ -192,12 +183,30 @@ export default {
 }
 
 
-/deep/ .el-dialog {
-  border-radius: 5px;
+.el-dialog {
+  border-radius: 8px !important;
+  margin-top: 10vh !important;
 }
 
-/deep/ .el-scrollbar__wrap {
-  overflow-x: hidden;
+.el-dialog__body {
+  border-bottom: 1px solid #ddd;
+  border-top: 1px solid #ddd;
+  padding: 16px 20px !important;
 }
 
+.el-scrollbar__wrap {
+  overflow-x: hidden !important;
+}
+
+.dialog-content {
+  max-height: 560px;
+}
+
+.el-message-box {
+  margin-top: -360px;
+}
+
+.current-row > td {
+  background: #fff6d8 !important
+}
 </style>

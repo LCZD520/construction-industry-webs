@@ -16,6 +16,7 @@ body {
     color: #666;
     padding: 0 !important;
     background: #F8F9FB;
+    overflow: hidden;
 }
 
 table {
@@ -102,4 +103,8 @@ ul, ol {
 
 .el-time-panel__content::before, .el-time-panel__content::after {
     display: none !important;
+}
+
+.v-modal {
+    background: rgba(0, 0, 0, 0.5) !important;
 }

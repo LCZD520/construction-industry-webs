@@ -20,19 +20,13 @@
                 prop="name"
                 label="发布时间">
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" width="100px">
               <template slot-scope="scope">
                 <el-button
                     size="mini"
-                    icon="el-icon-edit"
+                    icon="el-icon-info"
                     type="primary"
-                    @click="handleEdit(scope.$index, scope.row)">编辑
-                </el-button>
-                <el-button
-                    size="mini"
-                    icon="el-icon-delete"
-                    type="danger"
-                    @click="handleDelete(scope.$index, scope.row)">删除
+                    @click="handleView(scope.$index, scope.row)">查看
                 </el-button>
               </template>
             </el-table-column>
@@ -57,19 +51,13 @@
                 :prop="item.key"
                 :label="item.title">
             </el-table-column>
-            <el-table-column label="操作" width="200">
+            <el-table-column label="操作" fixed="right" width="200">
               <template slot-scope="scope">
                 <el-button
                     size="mini"
-                    icon="el-icon-edit"
+                    icon="el-icon-check"
                     type="primary"
-                    @click="handleEdit(scope.$index, scope.row)">编辑
-                </el-button>
-                <el-button
-                    size="mini"
-                    icon="el-icon-delete"
-                    type="danger"
-                    @click="handleDelete(scope.$index, scope.row)">删除
+                    @click="handleConfirm(scope.$index, scope.row)">确认
                 </el-button>
               </template>
             </el-table-column>
@@ -98,15 +86,9 @@
               <template slot-scope="scope">
                 <el-button
                     size="mini"
-                    icon="el-icon-edit"
+                    icon="el-icon-check"
                     type="primary"
-                    @click="handleEdit(scope.$index, scope.row)">编辑
-                </el-button>
-                <el-button
-                    size="mini"
-                    icon="el-icon-delete"
-                    type="danger"
-                    @click="handleDelete(scope.$index, scope.row)">删除
+                    @click="handleConfirm(scope.$index, scope.row)">确认
                 </el-button>
               </template>
             </el-table-column>
@@ -115,6 +97,16 @@
       </el-tab-pane>
       <el-tab-pane label="合同即将到期" name="four">
         <div v-if="activeName === 'four'">
+          <el-row>
+            <el-col :span="8">
+              <el-select clearable placeholder="请选择合同到期时间" v-model="value1">
+                <el-option :value="1" label="一个月内到期"/>
+                <el-option :value="2" label="两个月内到期"/>
+                <el-option :value="3" label="三个月内到期"/>
+              </el-select>
+            </el-col>
+          </el-row>
+          <br>
           <el-table
               :data="tableData"
               stripe
@@ -208,6 +200,7 @@ export default {
         total: 0,
         currentPage: 1,
       },
+      value1: null,
       columns1: [
         {
           title: '标题',
@@ -403,10 +396,11 @@ export default {
       }
       return '';
     },
-    handleEdit(_index, _row) {
+    handleView(_index, _row) {
       console.log(_index, _row)
+      this.$router.push('/system-notice-view')
     },
-    handleDelete(_index, _row) {
+    handleConfirm(_index, _row) {
       console.log(_index, _row)
     },
     handleClick() {

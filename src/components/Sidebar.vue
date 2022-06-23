@@ -20,11 +20,11 @@
           :class="isCollapse ? 'el-menu-vertical-collapse' : 'el-menu-vertical-demo'"
           router
           :collapse="isCollapse">
-        <el-menu-item index="home" :class="isCollapse ? 'home' : ''">
+        <el-menu-item style="transition: .5s" index="home" :class="isCollapse ? 'home' : ''">
           <i style="color: #fff" :class=" isCollapse ? 'el-icon-s-promotion' : 'el-icon-s-home'"></i>
           <span slot="title">首页</span>
         </el-menu-item>
-        <el-submenu v-for="item in menuList" :key="item.id" :index="item.id">
+        <el-submenu style="transition: .5s" v-for="item in menuList" :key="item.id" :index="item.id">
           <template slot="title">
             <div :class="isCollapse ? 'collapse-active' : ''">
               <i style="color: #fff" class="el-icon-ship"></i>
@@ -33,7 +33,7 @@
             </span>
             </div>
           </template>
-          <el-menu-item v-for="subItem in item.subMenuItems" :key="subItem.id"
+          <el-menu-item style="transition: .5s" v-for="subItem in item.subMenuItems" :key="subItem.id"
                         :index="subItem.route">
             <i :class="subItem.icon"></i>
             {{ subItem.level2_title }}

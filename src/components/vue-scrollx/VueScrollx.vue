@@ -50,8 +50,9 @@ export default {
           maxWidth: undefined,
         },
         bar: {
-          background:'#999',
+          background: '#999',
           opacity: 1,
+          size:'5px',
         },
       }, // 在这里设置全局默认配置
     }

@@ -18,10 +18,13 @@ import 'element-ui/lib/theme-chalk/index.css'
 // import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
+import {provinceAndCityData} from "_element-china-area-data@5.0.2@element-china-area-data";
+
 Vue.use(animated)
 Vue.use(Viewer)
 Vue.use(ElementUI)
 
+Vue.prototype.$provinceAndCityData = provinceAndCityData;
 Vue.prototype.$echarts = echarts;
 Vue.prototype.$http = axios;
 Vue.prototype.$qs = qs;

@@ -101,13 +101,13 @@
               size="mini"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row)">订单
+              @click="handleView(scope.$index, scope.row,'first')">订单
           </el-button>
           <el-button
               size="mini"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row)">图片
+              @click="handleView(scope.$index, scope.row,'second')">图片
           </el-button>
         </template>
       </el-table-column>
