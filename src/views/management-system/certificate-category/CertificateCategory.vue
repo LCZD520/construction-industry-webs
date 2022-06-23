@@ -20,7 +20,7 @@
                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
               </el-input>
               <div style="float: right">
-                <el-button size="small" plain>新增</el-button>
+                <el-button @click="visible=true" size="small" plain>新增  </el-button>
               </div>
             </div>
             <el-scrollbar style="height: 450px">
@@ -30,7 +30,7 @@
                     <span class="title">{{ item }} </span>
                   </el-tooltip>
                   <div class="button-group">
-                    <el-button style="padding: 5px" size="mini" plain type="primary" icon="el-icon-plus"></el-button>
+                    <el-button style="padding: 5px" size="mini" plain type="primary" icon="el-icon-plus"  @click="visible=true"></el-button>
                     <el-button style="padding: 5px" size="mini" plain type="primary" icon="el-icon-edit"></el-button>
                     <el-button style="padding: 5px" size="mini" plain type="danger" icon="el-icon-delete"></el-button>
                   </div>
@@ -56,7 +56,47 @@
         </el-col>
       </el-row>
     </div>
+
+    <el-dialog
+        :close-on-click-modal=false
+        width="30%"
+        title="证书类别"
+        :visible.sync="visible"
+        :before-close="beforeClose">
+      <div class="dialog-content">
+        <el-form
+            label-width="120px"
+            label-position="right">
+          <el-form-item label="上级类别:">
+            <el-select disabled style="width: 100%" size="small" v-model="form.name">
+              <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="类别名称:">
+            <el-input v-model="form.name" size="small" style="width: 100%" ></el-input>
+          </el-form-item>
+          <el-form-item label="排序:">
+            <el-input v-model="form.name" size="small" style="width: 100%" ></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div slot="footer">
+        <el-button size="small" @click="beforeClose">取 消</el-button>
+        <el-button
+            size="small"
+            type="primary">确定
+        </el-button>
+
+      </div>
+    </el-dialog>
+
   </div>
+
 </template>
 
 <script>
@@ -65,10 +105,13 @@ export default {
   components: {},
   data() {
     return {
+      form:{name:''},
       keyword1: '',
       keyword2: '',
       keyword3: '',
       keyword4: '',
+      visible:false,
+      options:[]
     }
   },
   methods: {
@@ -81,6 +124,9 @@ export default {
     },
     searchKeyword4() {
     },
+    beforeClose(){
+      this.visible = false
+    }
   }
 }
 </script>

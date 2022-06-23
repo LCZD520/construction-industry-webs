@@ -32,7 +32,7 @@
     </el-form>
     <div class="split-line">
       <div class="split-line-left">
-        <el-button icon="el-icon-right" size="small" type="primary" @click="handleTransfer">转移</el-button>
+        <el-button icon="el-icon-right" size="small" type="primary" @click.native="visible = true">转移</el-button>
       </div>
       <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
     </div>
@@ -69,6 +69,52 @@
         </el-pagination>
       </div>
     </div>
+
+    <el-dialog
+        :close-on-click-modal=false
+        width="50%"
+        title="数据转移"
+        :visible.sync="visible"
+        :before-close="beforeClose">
+      <div class="dialog-content">
+      <el-form
+          label-width="120px"
+          label-position="right">
+        <el-form-item label="原录入人">
+          <el-select disabled style="width: 100%" size="small" v-model="form.name">
+            <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label=" 交接人">
+            <el-select disabled style="width: 100%" size="small" v-model="form.name">
+              <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
+        </el-form-item>
+          <el-form-item label="备注">
+            <el-input style="width: 100%" disabled size="small" type="textarea" :rows="3" v-model="form.name"/>
+          </el-form-item>
+      </el-form>
+      </div>
+      <div slot="footer">
+        <el-button size="small" @click="beforeClose">取 消</el-button>
+        <el-button
+            size="small"
+            type="primary">确定
+        </el-button>
+
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -146,6 +192,7 @@ export default {
           }
         ]
       },
+      visible:false
     }
   },
   methods: {
@@ -159,6 +206,9 @@ export default {
     },
     handleTransfer(){
       this.$message('转移')
+    },
+    beforeClose(){
+      this.visible = false
     }
   }
 }
