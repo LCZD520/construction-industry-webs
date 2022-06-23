@@ -191,7 +191,7 @@ export default {
 .el-dialog__body {
   border-bottom: 1px solid #ddd;
   border-top: 1px solid #ddd;
-  padding: 16px 20px !important;
+  padding: 16px 40px !important;
 }
 
 .el-scrollbar__wrap {
@@ -209,4 +209,18 @@ export default {
 .current-row > td {
   background: #fff6d8 !important
 }
+
+.el-table__fixed-right {
+  height: 100% !important;
+}
+
+.el-input-number.is-controls-right .el-input__inner {
+  text-align: left;
+}
+
+.width-full {
+  width: 100% !important;
+}
+
+
 </style>

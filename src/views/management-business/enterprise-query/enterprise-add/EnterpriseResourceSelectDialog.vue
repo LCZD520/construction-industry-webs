@@ -1,9 +1,9 @@
 /**
 * Created by Lv Cheng on 2022/6/23
-* Notes 从人才资源选择/从已录人才资源选择弹窗
+* Notes 从企业资源选择/从已录企业选择
 */
 <template>
-  <div class="resource-select-dialog">
+  <div class="enterprise-resource-select-dialog">
     <el-dialog
         :close-on-click-modal=false
         width="80%"
@@ -17,8 +17,8 @@
               inline
               label-width="120px"
               :model="form">
-            <el-form-item label="姓名">
-              <el-input size="small" v-model="form.name" placeholder="请输入姓名">
+            <el-form-item label="企业">
+              <el-input size="small" v-model="form.name" placeholder="请输入企业">
               </el-input>
             </el-form-item>
             <el-form-item label="地区">
@@ -35,34 +35,6 @@
                   v-model="form.area">
               </el-cascader>
             </el-form-item>
-            <el-form-item label="电话号码">
-              <el-input size="small" v-model="form.name" placeholder="请输入姓名">
-              </el-input>
-            </el-form-item>
-            <el-form-item label="级别专业">
-              <el-cascader
-                  size="small"
-                  clearable
-                  ref="cascader"
-                  @expand-change="cascaderClick"
-                  @visible-change="cascaderClick"
-                  :props="{ expandTrigger: 'hover' ,checkStrictly:true ,emitPath:false}"
-                  placeholder="请选择级别专业"
-                  :options="this.$provinceAndCityData"
-                  @change="handleChange"
-                  v-model="form.area">
-              </el-cascader>
-            </el-form-item>
-            <el-form-item label="初始转注">
-              <el-select size="small" v-model="form.name" placeholder="请选择初始转注">
-                <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
             <el-form-item label=" ">
               <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
               <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
@@ -72,7 +44,7 @@
               height="260"
               ref="table"
               size="mini"
-              :data="talentList"
+              :data="enterpriseList"
               highlight-current-row
               border
               @row-click="handleRowClick"
@@ -86,7 +58,6 @@
               </template>
             </el-table-column>
             <el-table-column
-                width="180"
                 v-for="item in columns"
                 :key="item.key"
                 :prop="item.key"
@@ -124,9 +95,8 @@
 </template>
 
 <script>
-
 export default {
-  name: 'ResourceSelectDialog',
+  name: 'EnterpriseResourceSelectDialog',
   components: {},
   data() {
     return {
@@ -138,40 +108,12 @@ export default {
       },
       columns: [
         {
-          title: '姓名',
+          title: '企业名称',
           key: 'username'
         },
         {
-          title: '地区',
+          title: '地区名称',
           key: 'address'
-        },
-        {
-          title: '社保',
-          key: 'address2'
-        },
-        {
-          title: '电话号码',
-          key: 'address3'
-        },
-        {
-          title: '职称',
-          key: 'address4'
-        },
-        {
-          title: '三类人员',
-          key: 'address5'
-        },
-        {
-          title: '招标出场',
-          key: 'address6'
-        },
-        {
-          title: '级别-专业-初/转',
-          key: 'address7'
-        },
-        {
-          title: '报价',
-          key: 'address8'
         },
       ],
       options: [
@@ -226,7 +168,7 @@ export default {
       type: Boolean,
       default: false
     },
-    talentList: {
+    enterpriseList: {
       type: Array,
       default: () => []
     },
@@ -258,11 +200,11 @@ export default {
      * @param _row
      */
     handleRowClick(_row) {
-      if (this.currentIndex === this.talentList.indexOf(_row)) {
+      if (this.currentIndex === this.enterpriseList.indexOf(_row)) {
         this.cancelSelect()
         return
       }
-      this.currentIndex = this.talentList.indexOf(_row)
+      this.currentIndex = this.enterpriseList.indexOf(_row)
       this.currentSelectId = _row.id
     },
     /**
@@ -329,5 +271,4 @@ export default {
 /deep/ .el-radio__label {
   padding: 0 !important;
 }
-
 </style>

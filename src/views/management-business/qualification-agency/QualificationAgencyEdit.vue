@@ -1,9 +1,9 @@
 /**
 * Created by Lv Cheng on 2022/6/19
-* Notes 资质代办添加
+* Notes 资质代办编辑
 */
 <template>
-  <div class="qualification-agency-add">
+  <div class="qualification-agency-edit">
     <QualificationAgencyAddEditCommonForm/>
   </div>
 </template>
@@ -12,7 +12,7 @@
 import QualificationAgencyAddEditCommonForm from "./common/QualificationAgencyAddEditCommonForm";
 
 export default {
-  name: 'QualificationAgencyAdd',
+  name: 'QualificationAgencyEdit',
   components: {QualificationAgencyAddEditCommonForm},
   data() {
     return {}

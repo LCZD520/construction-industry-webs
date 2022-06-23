@@ -63,7 +63,7 @@
               size="mini"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row)">详情
+              @click.stop="handleView(scope.$index, scope.row)">详情
           </el-button>
         </template>
       </el-table-column>

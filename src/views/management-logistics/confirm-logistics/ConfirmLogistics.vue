@@ -63,13 +63,13 @@
               size="mini"
               type="primary"
               plain
-              @click="handleConfirm(scope.$index, scope.row)">确认
+              @click.stop="handleConfirm(scope.$index, scope.row)">确认
           </el-button>
           <el-button
               size="mini"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row)">查看
+              @click.stop="handleView(scope.$index, scope.row)">查看
           </el-button>
         </template>
       </el-table-column>

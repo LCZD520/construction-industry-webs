@@ -77,7 +77,7 @@
     <div class="split-line">
       <div class="split-line-left">
         <el-button icon="el-icon-plus" size="small" type="primary"
-                   @click="$router.push('/enterprise-query-add')">录入企业
+                   @click.stop="$router.push('/enterprise-query-add')">录入企业
         </el-button>
       </div>
       <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
@@ -105,21 +105,21 @@
               size="mini"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row,'first')">订单
+              @click.stop="handleView(scope.$index, scope.row,'first')">订单
           </el-button>
           <el-button
               style="padding: 5px"
               size="mini"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row,'second')">图片
+              @click.stop="handleView(scope.$index, scope.row,'second')">图片
           </el-button>
           <el-button
               size="mini"
               style="padding: 5px"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">编辑
+              @click.stop="handleEdit(scope.$index, scope.row)">编辑
           </el-button>
           <p style="height: 10px"></p>
           <el-button
@@ -128,28 +128,28 @@
               style="padding: 5px"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row,'fourth')">企业回访
+              @click.stop="handleView(scope.$index, scope.row,'fourth')">企业回访
           </el-button>
           <el-button
               style="padding: 5px"
               size="mini"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row,'fifth')">后勤申请
+              @click.stop="handleView(scope.$index, scope.row,'fifth')">后勤申请
           </el-button>
           <el-button
               style="padding: 5px"
               size="mini"
               type="primary"
               plain
-              @click="handleCompleteConfirm(scope.$index, scope.row)">完成确认
+              @click.stop="handleCompleteConfirm(scope.$index, scope.row)">完成确认
           </el-button>
           <el-button
               style="padding: 5px"
               size="mini"
               type="danger"
               plain
-              @click="handleEdit(scope.$index, scope.row)">删除
+              @click.stop="handleDelete(scope.$index, scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
@@ -398,6 +398,17 @@ export default {
     },
     handleDelete(_index, _row) {
       console.log(_index, _row)
+      this.$confirm('确定要删除这条记录吗？', '温馨提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '确定删除!'
+        });
+      }).catch(() => {
+      })
     },
     handleCompleteConfirm(_index, _row) {
       console.log(_index, _row)

@@ -50,8 +50,8 @@
       <el-form-item label=" " label-width="100px">
         <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
         <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
-        <el-button v-if="enableAdvancedSearch" type="text" @click="enableAdvancedSearch = false">收起</el-button>
-        <el-button v-else type="text" @click="enableAdvancedSearch = true">高级搜索</el-button>
+        <el-button v-if="enableAdvancedSearch" type="text" @click.stop="enableAdvancedSearch = false">收起</el-button>
+        <el-button v-else type="text" @click.stop="enableAdvancedSearch = true">高级搜索</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -76,13 +76,13 @@
               size="mini"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row)">查看
+              @click.stop="handleView(scope.$index, scope.row)">查看
           </el-button>
           <el-button
               size="mini"
               type="primary"
               plain
-              @click="handleViewNotice(scope.$index, scope.row)">公告
+              @click.stop="handleViewNotice(scope.$index, scope.row)">公告
           </el-button>
         </template>
       </el-table-column>

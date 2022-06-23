@@ -37,7 +37,7 @@
                 size="small"
                 clearable
                 placeholder="请选择地区"
-                :options="regionData"
+                :options="this.$provinceAndCityData"
                 v-model="form.name"
                 @change="handleChange">
             </el-cascader>
@@ -50,7 +50,7 @@
                 size="small"
                 clearable
                 placeholder="请选择地区"
-                :options="regionData"
+                :options="this.$provinceAndCityData"
                 v-model="form.name"
                 @change="handleChange">
             </el-cascader>
@@ -154,7 +154,8 @@
         <el-col :span="24">
           <el-form-item label="证书">
             <div style="background:#f8f8f9;padding: 5px 10px;border: 1px solid #eee">
-              <el-button icon="el-icon-plus" type="primary" size="mini">
+              <el-button icon="el-icon-plus" type="primary" size="mini"
+                         @click="visible2 = true">
                 添加
               </el-button>
             </div>
@@ -182,14 +183,14 @@
                       size="mini"
                       type="primary"
                       plain
-                      @click="handleEdit(scope.$index, scope.row)">编辑
+                      @click.stop="handleEdit(scope.$index, scope.row)">编辑
                   </el-button>
                   <el-button
                       style="padding: 5px"
                       size="mini"
                       type="danger"
                       plain
-                      @click="handleEdit(scope.$index, scope.row)">删除
+                      @click.stop="handleDelete(scope.$index, scope.row)">删除
                   </el-button>
                 </template>
               </el-table-column>
@@ -248,7 +249,7 @@
         </el-col>
       </el-row>
       <el-form-item label=" ">
-        <el-button icon="el-icon-circle-plus-outline" type="primary" size="small">
+        <el-button icon="el-icon-plus" type="primary" size="small">
           保存
         </el-button>
         <el-button icon="el-icon-back" size="small" @click="$router.back()">
@@ -256,25 +257,30 @@
         </el-button>
       </el-form-item>
     </el-form>
-    <ResourceSelectDialog
+    <TalentResourceSelectDialog
         :talent-list="talentList"
         :visible="visible"
         :dialog-title="dialogTitle"
         @closeDialog="visible = false"/>
+    <CertificateAddDialog :visible="visible2" @closeDialog="visible2 = false"/>
+    <CertificateEditDialog :visible="visible3" @closeDialog="visible3 = false"/>
   </div>
 </template>
 
 <script>
-import {provinceAndCityData} from "_element-china-area-data@5.0.2@element-china-area-data";
-import ResourceSelectDialog from "./talent-query-add/ResourceSelectDialog";
+import TalentResourceSelectDialog from "./talent-query-add/TalentResourceSelectDialog";
+import CertificateAddDialog from "./talent-query-add/CertificateAddDialog";
+import CertificateEditDialog from "./talent-query-add/CertificateEditDialog";
 
 export default {
   name: 'TalentQueryAdd',
-  components: {ResourceSelectDialog},
+  components: {CertificateEditDialog, CertificateAddDialog, TalentResourceSelectDialog},
   data() {
     return {
       dialogTitle: '',
       visible: false,
+      visible2: false,
+      visible3: false,
       form: {
         name: '',
         area: ''
@@ -320,7 +326,6 @@ export default {
         },
       ],
       talentList: [],
-      regionData: provinceAndCityData,
       columns: [
         {
           title: '级别专业',
@@ -379,6 +384,13 @@ export default {
       this.dialogTitle = '从已录人才资源选择'
       this.talentList = this.list2
       this.visible = true
+    },
+    handleEdit(_index, _row) {
+      console.log(_index, _row)
+      this.visible3 = true
+    },
+    handleDelete(_index, _row) {
+      console.log(_index, _row)
     }
   },
 }

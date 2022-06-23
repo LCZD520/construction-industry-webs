@@ -118,13 +118,13 @@
       <el-form-item label=" " label-width="120px">
         <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
         <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
-        <el-button v-if="enableAdvancedSearch" type="text" @click="enableAdvancedSearch = false">收起</el-button>
-        <el-button v-else type="text" @click="enableAdvancedSearch = true">高级搜索</el-button>
+        <el-button v-if="enableAdvancedSearch" type="text" @click.stop="enableAdvancedSearch = false">收起</el-button>
+        <el-button v-else type="text" @click.stop="enableAdvancedSearch = true">高级搜索</el-button>
       </el-form-item>
     </el-form>
     <div class="split-line">
       <div class="split-line-left">
-        <el-button icon="el-icon-plus" size="small" type="primary" @click="$router.push('/talent-query-add')">录入人才
+        <el-button icon="el-icon-plus" size="small" type="primary" @click.stop="$router.push('/talent-query-add')">录入人才
         </el-button>
       </div>
       <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
@@ -158,21 +158,21 @@
               size="mini"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row,'second')">图片
+              @click.stop="handleView(scope.$index, scope.row,'second')">图片
           </el-button>
           <el-button
               style="padding: 5px"
               size="mini"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row,'first')">证件
+              @click.stop="handleView(scope.$index, scope.row,'first')">证件
           </el-button>
           <el-button
               size="mini"
               style="padding: 5px"
               type="primary"
               plain
-              @click="$router.push('/talent-query-view')">查看
+              @click.stop="$router.push('/talent-query-view')">查看
           </el-button>
           <p style="height: 10px"></p>
           <el-button
@@ -181,21 +181,28 @@
               style="padding: 5px"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row,'third')">转账
+              @click.stop="handleView(scope.$index, scope.row,'third')">转账
           </el-button>
           <el-button
               style="padding: 5px"
               size="mini"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row,'fourth')">人才回访
+              @click.stop="handleView(scope.$index, scope.row,'fourth')">人才回访
           </el-button>
           <el-button
               style="padding: 5px"
               size="mini"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row,'fifth')">后勤申请
+              @click.stop="handleView(scope.$index, scope.row,'fifth')">后勤申请
+          </el-button>
+          <el-button
+              style="padding: 5px"
+              size="mini"
+              type="danger"
+              plain
+              @click.stop="handleDelete(scope.$index, scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
@@ -480,6 +487,32 @@ export default {
           activeTab: _activeTab,
           id: _row.id
         }
+      })
+    },
+    /**
+     * 表格翻页
+     */
+    handleCurrentChange() {
+
+    },
+    /**
+     * 改变页数
+     */
+    handleSizeChange(_pageSize) {
+      console.log(_pageSize)
+    },
+    handleDelete(_index, _row) {
+      console.log(_index, _row)
+      this.$confirm('确定要删除这条记录吗？', '温馨提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '确定删除!'
+        });
+      }).catch(() => {
       })
     },
   }

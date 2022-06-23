@@ -195,13 +195,13 @@
                 size="mini"
                 type="primary"
                 plain
-                @click="approvalDetail(scope.$index, scope.row)">审批详情
+                @click.stop="approvalDetail(scope.$index, scope.row)">审批详情
             </el-button>
             <el-button
                 size="mini"
                 type="primary"
                 plain
-                @click="approvalDetail(scope.$index, scope.row)">查看图片
+                @click.stop="approvalDetail(scope.$index, scope.row)">查看图片
             </el-button>
           </template>
         </el-table-column>
@@ -210,7 +210,7 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label=" ">
-            <el-button icon="el-icon-back" @click="$router.back()" size="small">
+            <el-button icon="el-icon-back" @click.stop="$router.back()" size="small">
               返回
             </el-button>
           </el-form-item>

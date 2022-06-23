@@ -49,19 +49,19 @@
               size="mini"
               type="primary"
               plain
-              @click="handleTransfer(scope.$index, scope.row)">转账
+              @click.stop="handleTransfer(scope.$index, scope.row)">转账
           </el-button>
           <el-button
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">编辑
+              @click.stop="handleEdit(scope.$index, scope.row)">编辑
           </el-button>
           <el-button
               size="mini"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row)">查看
+              @click.stop="handleView(scope.$index, scope.row)">查看
           </el-button>
         </template>
       </el-table-column>

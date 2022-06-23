@@ -53,7 +53,7 @@
     <div class="split-line">
       <div class="split-line-left">
         <el-button icon="el-icon-plus" size="small" type="primary"
-                   @click="$router.push('/my-enterprise-resources-add')">新建资源
+                   @click.stop="$router.push('/my-enterprise-resources-add')">新建资源
         </el-button>
       </div>
       <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
@@ -80,19 +80,19 @@
               size="mini"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row)">查看
+              @click.stop="handleView(scope.$index, scope.row)">查看
           </el-button>
           <el-button
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">编辑
+              @click.stop="handleEdit(scope.$index, scope.row)">编辑
           </el-button>
           <el-button
               size="mini"
               type="danger"
               plain
-              @click="handleDelete(scope.$index, scope.row)">删除
+              @click.stop="handleDelete(scope.$index, scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
@@ -228,7 +228,17 @@ export default {
     },
     handleDelete(_index, _row) {
       console.log(_index, _row)
-      this.$message.success('删除')
+      this.$confirm('确定要删除这条记录吗？', '温馨提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '确定删除!'
+        });
+      }).catch(() => {
+      })
     },
   }
 }

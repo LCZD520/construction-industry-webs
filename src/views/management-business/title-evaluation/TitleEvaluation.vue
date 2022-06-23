@@ -77,7 +77,7 @@
     <div class="split-line">
       <div class="split-line-left">
         <el-button icon="el-icon-plus" size="small" type="primary"
-        @click="$router.push('/title-evaluation-add')">添加</el-button>
+        @click.stop="$router.push('/title-evaluation-add')">添加</el-button>
       </div>
       <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
     </div>
@@ -104,38 +104,38 @@
               size="mini"
               type="primary"
               plain
-              @click="handleComplete(scope.$index, scope.row)">完成
+              @click.stop="handleComplete(scope.$index, scope.row)">完成
           </el-button>
           <el-button
               size="mini"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row,'first')">订单
+              @click.stop="handleView(scope.$index, scope.row,'first')">订单
           </el-button>
           <el-button
               size="mini"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row,'second')">图片
+              @click.stop="handleView(scope.$index, scope.row,'second')">图片
           </el-button>
           <el-button
               size="mini"
               type="primary"
               plain
-              @click="handleView(scope.$index, scope.row)">查看
+              @click.stop="handleView(scope.$index, scope.row)">查看
           </el-button>
           <el-button
               size="mini"
               type="primary"
               plain
-              @click="handleEdit(scope.$index, scope.row)">编辑
+              @click.stop="handleEdit(scope.$index, scope.row)">编辑
           </el-button>
           <el-button
               v-if="true"
               size="mini"
               type="danger"
               plain
-              @click="handleDelete(scope.$index, scope.row)">删除
+              @click.stop="handleDelete(scope.$index, scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
@@ -346,6 +346,17 @@ export default {
     },
     handleDelete(_index, _row) {
       console.log(_index, _row)
+      this.$confirm('确定要删除这条记录吗？', '温馨提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '确定删除!'
+        });
+      }).catch(() => {
+      })
     },
     handleComplete(_index, _row) {
       console.log(_index, _row)

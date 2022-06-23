@@ -155,14 +155,14 @@
                       size="mini"
                       type="primary"
                       plain
-                      @click="handleEdit(scope.$index, scope.row)">编辑
+                      @click.stop="handleEdit(scope.$index, scope.row)">编辑
                   </el-button>
                   <el-button
                       style="padding: 5px"
                       size="mini"
                       type="danger"
                       plain
-                      @click="handleEdit(scope.$index, scope.row)">删除
+                      @click.stop="handleDelete(scope.$index, scope.row)">删除
                   </el-button>
                 </template>
               </el-table-column>
@@ -203,7 +203,7 @@
             元
             <el-input-number controls-position="right" :min="1" size="small" v-model="form.name"/>
             &nbsp;
-            <el-select class="width-full" size="small" v-model="form.name" style="width: 80px;" placeholder="请选择">
+            <el-select size="small" v-model="form.name" style="width: 80px;" placeholder="请选择">
               <el-option label="年" value="1"></el-option>
               <el-option label="月" value="2"></el-option>
               <el-option label="日" value="3"></el-option>
@@ -230,7 +230,7 @@
         <el-button icon="el-icon-plus" type="primary" size="small">
           保存
         </el-button>
-        <el-button icon="el-icon-back" size="small" @click="$router.back()">
+        <el-button icon="el-icon-back" size="small" @click.stop="$router.back()">
           返回
         </el-button>
       </el-form-item>
@@ -277,6 +277,20 @@ export default {
         return 'success-row';
       }
       return '';
+    },
+    handleDelete(_index, _row) {
+      console.log(_index, _row)
+      this.$confirm('确定要删除这条记录吗？', '温馨提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '确定删除!'
+        });
+      }).catch(() => {
+      })
     },
   }
 }

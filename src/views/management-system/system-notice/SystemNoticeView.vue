@@ -4,7 +4,7 @@
 */
 <template>
   <div class="system-notice-view">
-    <el-form label-position="right">
+    <el-form label-width="80px" label-position="right">
       <el-row>
         <el-col :span="8">
           <el-form-item label="发布时间">
