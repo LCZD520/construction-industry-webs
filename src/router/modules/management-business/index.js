@@ -104,6 +104,15 @@ const businessRoutes = [
         component: () => import('../../../views/management-business/qualification-acquisition/QualificationAcquisitionEdit'),
     },
     {
+        path: '/qualification-acquisition-stripping',
+        name: 'qualification-acquisition-stripping',
+        meta: {
+            title: '资质收购剥离',
+            activeMenuPath: '/qualification-acquisition',
+        },
+        component: () => import('../../../views/management-business/qualification-acquisition/QualificationAcquisitionStripping'),
+    },
+    {
         path: '/qualification-transfer',
         name: 'qualification-transfer',
         meta: {

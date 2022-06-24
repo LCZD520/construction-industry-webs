@@ -349,7 +349,7 @@ export default {
               id: '7-1',
               level2_title: '证件库',
               icon: 'el-icon-location',
-              route: '/lib-certificate',
+              route: '/lib-certificate-view',
             },
           ]
         },

@@ -76,6 +76,24 @@ const basicDataRoutes = [
         },
         component: () => import('../../../views/basic-data/management-organization/ManagementOrganizationEdit'),
     },
+    {
+        path: '/institution-add',
+        name: 'institution-add',
+        meta: {
+            title: '机构添加',
+            activeMenuPath: '/management-organization',
+        },
+        component: () => import('../../../views/basic-data/management-organization/management-institution/InstitutionAdd'),
+    },
+    {
+        path: '/institution-edit',
+        name: 'institution-edit',
+        meta: {
+            title: '机构编辑',
+            activeMenuPath: '/management-organization',
+        },
+        component: () => import('../../../views/basic-data/management-organization/management-institution/InstitutionEdit'),
+    },
 ]
 
 export default basicDataRoutes

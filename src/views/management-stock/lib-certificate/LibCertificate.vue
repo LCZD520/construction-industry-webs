@@ -7,26 +7,27 @@
     <el-form
         ref="formData"
         inline
+        label-width="120px"
         :model="form">
-      <el-form-item label="姓名" label-width="120px">
+      <el-form-item label="姓名" >
         <el-input size="small" v-model="form.newPassword" placeholder="请输入企业名称">
         </el-input>
       </el-form-item>
-      <el-form-item label="人才状态" label-width="120px">
+      <el-form-item label="人才状态" >
         <el-select size="small" v-model="form.oldPassword" placeholder="请选择人才状态">
           <el-option
-              v-for="item in options"
+              v-for="item in []"
               :key="item.value"
               :label="item.label"
               :value="item.value">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="录入人" label-width="120px">
+      <el-form-item label="录入人" >
         <el-input size="small" v-model="form.oldPassword" placeholder="请输入录入人">
         </el-input>
       </el-form-item>
-      <el-form-item label="录入日期" label-width="120px">
+      <el-form-item label="录入日期" >
         <el-date-picker
             v-model="form.oldPassword"
             size="small"
@@ -39,27 +40,27 @@
             :picker-options="pickerOptions">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="级别专业" label-width="120px">
+      <el-form-item label="级别专业" >
         <el-cascader
             size="small"
             clearable
             placeholder="请选择级别专业"
-            :options="regionData"
+            :options="this.$provinceAndCityData"
             v-model="form.newPassword"
             @change="handleChange">
         </el-cascader>
       </el-form-item>
-      <el-form-item label="初始转注" label-width="120px">
+      <el-form-item label="初始转注" >
         <el-select size="small" v-model="form.oldPassword" placeholder="请选择初始转注">
           <el-option
-              v-for="item in options"
+              v-for="item in []"
               :key="item.value"
               :label="item.label"
               :value="item.value">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label=" " label-width="120px">
+      <el-form-item label=" " >
         <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
         <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
       </el-form-item>
@@ -111,6 +112,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'LibCertificate',
   components: {},
@@ -204,6 +206,8 @@ export default {
     }
   },
   methods: {
+    handleChange() {
+    },
     tableRowClassName({rowIndex}) {
       if (rowIndex === 1) {
         return 'warning-row';
@@ -212,9 +216,21 @@ export default {
       }
       return '';
     },
-    handleView(_index,_row){
-      console.log(_index,_row)
-      this.$router.push('/lib-certificate-view')
+    handleView(_index, _row) {
+      console.log(_index, _row)
+      this.$router.push('/lib-certificate-view-view')
+    },
+    /**
+     * 表格翻页
+     */
+    handleCurrentChange() {
+
+    },
+    /**
+     * 改变页数
+     */
+    handleSizeChange(_pageSize) {
+      console.log(_pageSize)
     }
   }
 }

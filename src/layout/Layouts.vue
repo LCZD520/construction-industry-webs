@@ -210,6 +210,10 @@ export default {
   background: #fff6d8 !important
 }
 
+.highlight td {
+  background-color: #fff6d8 !important;
+}
+
 .el-table__fixed-right {
   height: 100% !important;
 }
@@ -221,6 +225,5 @@ export default {
 .width-full {
   width: 100% !important;
 }
-
 
 </style>

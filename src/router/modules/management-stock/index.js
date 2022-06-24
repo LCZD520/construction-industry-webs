@@ -5,20 +5,20 @@
 
 const stockRoutes = [
     {
-        path: '/lib-certificate',
+        path: '/lib-certificate-view',
         name: 'lib-certificate',
         meta: {
             title: '证件库列表',
-            activeMenuPath: '/lib-certificate'
+            activeMenuPath: '/lib-certificate-view'
         },
         component: () => import('../../../views/management-stock/lib-certificate/LibCertificate'),
     },
     {
-        path: '/lib-certificate-view',
+        path: '/lib-certificate-view-view',
         name: 'lib-certificate-view',
         meta: {
             title: '证件库查看',
-            activeMenuPath: '/lib-certificate'
+            activeMenuPath: '/lib-certificate-view'
         },
         component: () => import('../../../views/management-stock/lib-certificate/LibCertificateView'),
     },

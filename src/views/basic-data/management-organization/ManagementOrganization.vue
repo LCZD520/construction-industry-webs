@@ -8,7 +8,7 @@
       <el-col :span="4">
         <div class="content-left">
           <div class="content-left-header">
-            <el-button style="padding: 6px" size="mini" type="primary" @click="handleAdd">添加
+            <el-button style="padding: 6px" size="mini" type="primary" @click="$router.push('/institution-add')">添加
             </el-button>
             <el-button style="padding: 6px" size="mini" @click="handleEditMenu">编辑</el-button>
             <el-button style="padding: 6px" size="mini" type="danger" @click="handleDelete">删除</el-button>
@@ -310,13 +310,9 @@ export default {
       console.log(_index, _row)
       this.$message.success('删除')
     },
-    handleAdd(_index, _row) {
-      console.log(_index, _row)
-      this.$message.success('添加组织')
-    },
     handleEditMenu(_index, _row) {
       console.log(_index, _row)
-      this.$message.success('编辑组织')
+      this.$router.push('/institution-edit')
     },
     handleResetPassword(_index, _row) {
       console.log(_index, _row)

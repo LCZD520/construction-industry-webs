@@ -1,11 +1,15 @@
 /**
 * Created by Lv Cheng on 2022/6/20
-* Notes 整件库查看
+* Notes 证件库查看
 */
 <template>
   <div class="lib-certificate-view">
-    <el-button size="small" type="primary" icon="el-icon-plus">添加证件</el-button>
-    <el-button size="small" icon="el-icon-edit" style="background: rgb(0, 188, 212);color: #fff">更新证件去向</el-button>
+    <el-button size="small" type="primary" icon="el-icon-plus"
+               @click="handleCertificateAddEdit('add')">添加证件
+    </el-button>
+    <el-button size="small" icon="el-icon-edit" style="background: rgb(0, 188, 212);color: #fff"
+               @click="updateCertificate">更新证件去向
+    </el-button>
     <el-button size="small" icon="el-icon-back" @click="$router.back()">返回</el-button>
     <br><br>
     <el-table
@@ -42,7 +46,7 @@
               size="mini"
               type="primary"
               plain
-              @click.stop="handleEdit(scope.$index, scope.row)">编辑
+              @click.stop="handleCertificateAddEdit('edit', scope.row.id)">编辑
           </el-button>
           <el-button
               size="mini"
@@ -69,24 +73,47 @@
         </el-pagination>
       </div>
     </div>
+
+    <CertificateAddEditDialog
+        :visible="visible"
+        :dialog-title="dialogTitle"
+        :form-data="form"
+        @closeDialog="visible = false"
+        :handle-submit="handleSubmit"/>
+    <UpdateCertificateWhereaboutsDialog
+        :visible="visible2"
+        :form-data="form"
+        @closeDialog="visible2 = false"
+        :handle-submit="updateConfirm"/>
+    <CertificateWhereaboutsDialog
+        @closeDialog="visible3 = false"
+        :visible="visible3"/>
   </div>
 </template>
 
 <script>
+
+import CertificateAddEditDialog from "./lib-certificate-view/CertificateAddEditDialog";
+import UpdateCertificateWhereaboutsDialog from "./lib-certificate-view/UpdateCertificateWhereaboutsDialog";
+import CertificateWhereaboutsDialog from "./lib-certificate-view/CertificateWhereaboutsDialog";
+
 export default {
   name: 'LibCertificateView',
-  components: {},
+  components: {CertificateWhereaboutsDialog, UpdateCertificateWhereaboutsDialog, CertificateAddEditDialog},
   data() {
     return {
+      mode: '',
+      dialogTitle: '',
+      visible: false,
+      visible2: false,
+      visible3: false,
       pageInfo: {
         pageSize: 10,
         total: 0,
         currentPage: 1,
       },
       form: {
-        oldPassword: '',
-        newPassword: '',
-        confirmPassword: '',
+        name: '',
       },
       columns: [
         {
@@ -106,7 +133,7 @@ export default {
           key: 's2'
         },
       ],
-      tableData: [{}, {}, {}, {}],
+      tableData: [{id: 1}, {}, {}, {}],
       selectionList: [],
     }
   },
@@ -122,6 +149,7 @@ export default {
       this.selectionList = selection
     },
     handleView(_index, _row) {
+      this.visible3 = true
       console.log(_index, _row)
     },
     handleEdit(_index, _row) {
@@ -134,6 +162,42 @@ export default {
     },
     handleSizeChange() {
     },
+    handleCertificateAddEdit(_type, _id) {
+      console.log(_type, _id)
+      this.visible = true
+      if (_type === 'add') {
+        this.mode = 'add'
+        this.dialogTitle = '添加证书'
+
+
+        return
+      }
+      if (_type === 'edit') {
+        this.mode = 'edit'
+
+        this.dialogTitle = '编辑证书'
+      }
+    },
+    handleSubmit() {
+      if (this.mode === 'add') {
+
+
+        return
+      }
+      if (this.mode === 'edit') {
+      //
+
+      }
+    },
+    updateCertificate() {
+      this.visible2 = true
+    },
+    updateConfirm() {
+
+
+      this.visible2 = false
+      this.$message.success('确认更新')
+    }
   },
   watch: {
     selectionList(newVal, oldVal) {
@@ -154,7 +218,4 @@ export default {
 @import "../../../assets/css/common-table-pagination";
 @import "../../../assets/css/common-el-table-scrollbar";
 
-/deep/ .highlight td {
-  background-color: #fff6d8 !important;
-}
 </style>

@@ -6,7 +6,7 @@
   <div class="entry-registration-add">
     <el-form label-position="right" label-width="120px">
       <el-form-item label="企业合作记录">
-        <el-button type="primary" size="small">点击选择</el-button>
+        <el-button type="primary" size="small" @click="visible = true">点击选择</el-button>
       </el-form-item>
       <el-row>
         <el-col :span="12">
@@ -95,22 +95,29 @@
         </el-button>
       </el-form-item>
     </el-form>
+    <EnterpriseCooperationDialog
+        dialog-title="选择企业合作记录"
+        :talent-list="[]"
+        @closeDialog="visible = false"
+        :visible="visible"/>
   </div>
 </template>
 
 <script>
+import EnterpriseCooperationDialog from "./entry-registration-add/EnterpriseCooperationDialog";
+
 export default {
   name: 'EntryRegistrationAdd',
-  components: {},
+  components: {EnterpriseCooperationDialog},
   data() {
     return {
+      visible: false,
       form: {
         name: ''
       },
     }
   },
-  methods: {
-  }
+  methods: {}
 }
 </script>
 

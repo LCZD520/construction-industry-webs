@@ -383,7 +383,7 @@ export default {
     },
     handleStrippe(_index, _row) {
       console.log(_index, _row)
-      this.$message.error('暂未开放')
+      this.$router.push('/qualification-acquisition-stripping')
     },
   }
 }
