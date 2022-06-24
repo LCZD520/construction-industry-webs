@@ -64,13 +64,13 @@
         style="width: 100%"
         :row-class-name="tableRowClassName">
       <el-table-column
-          min-width="180"
+          min-width="200"
           v-for="item in columns"
           :key="item.key"
           :prop="item.key"
           :label="item.title">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="180">
+      <el-table-column fixed="right" label="操作" width="200">
         <template slot-scope="scope">
           <el-button
               size="mini"
@@ -103,6 +103,97 @@
         </el-pagination>
       </div>
     </div>
+    <el-dialog
+        :close-on-click-modal=false
+        width="80%"
+        title="公告"
+        :visible.sync="visible"
+        :before-close="beforeClose">
+      <div class="dialog-content">
+        <el-table
+            :data="list2"
+            stripe
+            border
+            height="200"
+            highlight-current-row
+            :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
+            :cell-style="{textAlign:'center'}"
+            style="width: 100%"
+            :row-class-name="tableRowClassName">
+          <el-table-column
+              min-width="200"
+              label="企业名称">
+          </el-table-column>
+          <el-table-column
+              min-width="200"
+              label="人才姓名	">
+          </el-table-column>
+          <el-table-column
+              min-width="200"
+              label="级别-专业-初/转">
+          </el-table-column>
+          <el-table-column
+              min-width="200"
+              label="企业合同价">
+          </el-table-column>
+          <el-table-column
+              min-width="200"
+              label="合同余额">
+          </el-table-column>
+          <el-table-column
+              min-width="200"
+              label="人才价格">
+          </el-table-column>
+          <el-table-column
+              min-width="200"
+              label="人才公告时间">
+          </el-table-column>
+          <el-table-column
+              min-width="200"
+              label="企业合同到期时间">
+          </el-table-column>
+          <el-table-column
+              min-width="200"
+              label="是否确认">
+          </el-table-column>
+        </el-table>
+        <br>
+        <el-table
+            :data="list3"
+            stripe
+            border
+            height="200"
+            highlight-current-row
+            :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
+            :cell-style="{textAlign:'center'}"
+            style="width: 100%"
+            :row-class-name="tableRowClassName">
+          <el-table-column
+              min-width="200"
+              label="人才姓名">
+          </el-table-column>
+          <el-table-column
+              min-width="200"
+              label="级别-专业-初/转">
+          </el-table-column>
+          <el-table-column
+              min-width="200"
+              label="人才公告日期">
+          </el-table-column>
+          <el-table-column
+              min-width="200"
+              label="企业合同到期日期">
+          </el-table-column>
+        </el-table>
+      </div>
+      <div slot="footer">
+        <el-button size="small" @click="beforeClose">取 消</el-button>
+        <el-button
+            size="small"
+            type="primary">确定
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -112,6 +203,7 @@ export default {
   components: {},
   data() {
     return {
+      visible: false,
       enableAdvancedSearch: false,
       columns: [
         {
@@ -169,6 +261,8 @@ export default {
           username: '王小虎',
           address: '上海市普陀区'
         }],
+      list2: [{},{},{},{},{},{},{},{},{},{}],
+      list3: [{},{},{},{},{},{},{},{},{},{}],
       pageInfo: {
         pageSize: 10,
         total: 0,
@@ -212,8 +306,11 @@ export default {
     handleSizeChange(_pageSize) {
       console.log(_pageSize)
     },
-    handleViewNotice(){
-      this.$message.success("弹窗")
+    handleViewNotice() {
+      this.visible = true
+    },
+    beforeClose() {
+      this.visible = false
     }
   }
 }

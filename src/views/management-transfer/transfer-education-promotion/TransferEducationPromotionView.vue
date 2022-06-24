@@ -195,13 +195,13 @@
                 size="mini"
                 type="primary"
                 plain
-                @click="approvalDetail(scope.$index, scope.row)">审批详情
+                @click.stop="approvalDetail(scope.$index, scope.row)">审批详情
             </el-button>
             <el-button
                 size="mini"
                 type="primary"
                 plain
-                @click="approvalDetail(scope.$index, scope.row)">查看图片
+                @click.stop="handleImageView(scope.$index, scope.row)">查看图片
             </el-button>
           </template>
         </el-table-column>
@@ -217,15 +217,27 @@
         </el-col>
       </el-row>
     </el-form>
+    <ApprovalDetailDialog
+        :form-data="form"
+        @closeDialog="visible = false"
+        :visible="visible"/>
+    <ImageViewDialog
+        @closeDialog="visible2 = false"
+        :visible="visible2"
+        :image-list="[]"/>
   </div>
 </template>
 
 <script>
+import ApprovalDetailDialog from "../common/ApprovalDetailDialog";
+import ImageViewDialog from "../common/ImageViewDialog";
 export default {
   name: 'TransferEducationPromotionView',
-  components: {},
+  components: {ImageViewDialog, ApprovalDetailDialog},
   data() {
     return {
+      visible:false,
+      visible2:false,
       form: {
         name: ''
       },
@@ -300,7 +312,12 @@ export default {
 
     },
     approvalDetail(_index, _row) {
+      this.visible = true
       console.log(_index, _row)
+    },
+    handleImageView(_index, _row) {
+      console.log(_index, _row)
+      this.visible2 = true
     }
   }
 }

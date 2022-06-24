@@ -4,7 +4,7 @@
 */
 <template>
   <div class="order-qualification-transfer-view">
-    <el-form label-position="right" label-width="150px">
+    <el-form label-position="right" label-width="160px">
       <el-row>
         <el-col :span="12">
           <el-form-item label="订单编号">

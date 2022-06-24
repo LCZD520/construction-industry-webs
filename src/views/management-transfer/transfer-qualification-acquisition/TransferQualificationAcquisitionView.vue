@@ -200,7 +200,7 @@
                 size="mini"
                 type="primary"
                 plain
-                @click="approvalDetail(scope.$index, scope.row)">审批详情
+                @click.stop="approvalDetail(scope.$index, scope.row)">审批详情
             </el-button>
           </template>
         </el-table-column>
@@ -217,15 +217,22 @@
         </el-col>
       </el-row>
     </el-form>
+    <ApprovalDetailDialog
+        @closeDialog="visible = false"
+        :form-data="form"
+        :visible="visible"/>
   </div>
 </template>
 
 <script>
+import ApprovalDetailDialog from "./transfer-qualification-acquisition-view/ApprovalDetailDialog";
+
 export default {
   name: 'TransferQualificationAcquisitionView',
-  components: {},
+  components: {ApprovalDetailDialog},
   data() {
     return {
+      visible: false,
       form: {
         name: ''
       },
@@ -300,6 +307,7 @@ export default {
 
     },
     approvalDetail(_index, _row) {
+      this.visible = true
       console.log(_index, _row)
     }
   }

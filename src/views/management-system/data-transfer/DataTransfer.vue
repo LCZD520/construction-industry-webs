@@ -75,22 +75,12 @@
         width="50%"
         title="数据转移"
         :visible.sync="visible"
-        :before-close="beforeClose">
+        :before-close="()=>this.visible = false">
       <div class="dialog-content">
-      <el-form
-          label-width="80px"
-          label-position="right">
-        <el-form-item label="原录入人">
-          <el-select style="width: 100%" size="small" v-model="form.name">
-            <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label=" 交接人">
+        <el-form
+            label-width="80px"
+            label-position="right">
+          <el-form-item label="原录入人">
             <el-select style="width: 100%" size="small" v-model="form.name">
               <el-option
                   v-for="item in options"
@@ -99,14 +89,24 @@
                   :value="item.value">
               </el-option>
             </el-select>
-        </el-form-item>
+          </el-form-item>
+          <el-form-item label=" 交接人">
+            <el-select style="width: 100%" size="small" v-model="form.name">
+              <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="备注">
             <el-input style="width: 100%" size="small" type="textarea" :rows="3" v-model="form.name"/>
           </el-form-item>
-      </el-form>
+        </el-form>
       </div>
       <div slot="footer">
-        <el-button size="small" @click="beforeClose">取 消</el-button>
+        <el-button size="small" @click="visible = false">取 消</el-button>
         <el-button
             size="small"
             type="primary">确定
@@ -191,7 +191,7 @@ export default {
           }
         ]
       },
-      visible:false
+      visible: false
     }
   },
   methods: {
@@ -203,10 +203,10 @@ export default {
       }
       return '';
     },
-    handleTransfer(){
+    handleTransfer() {
       this.$message('转移')
     },
-    beforeClose(){
+    beforeClose() {
       this.visible = false
     }
   }

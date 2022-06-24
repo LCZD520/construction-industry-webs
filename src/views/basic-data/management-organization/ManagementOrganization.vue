@@ -8,10 +8,10 @@
       <el-col :span="4">
         <div class="content-left">
           <div class="content-left-header">
-            <el-button size="mini" type="primary" @click="handleAdd">添加
+            <el-button style="padding: 6px" size="mini" type="primary" @click="handleAdd">添加
             </el-button>
-            <el-button size="mini" @click="handleEditMenu">编辑</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete">删除</el-button>
+            <el-button style="padding: 6px" size="mini" @click="handleEditMenu">编辑</el-button>
+            <el-button style="padding: 6px" size="mini" type="danger" @click="handleDelete">删除</el-button>
           </div>
           <div class="content-left-content">
             <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick"></el-tree>

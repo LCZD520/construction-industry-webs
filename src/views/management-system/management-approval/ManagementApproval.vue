@@ -330,7 +330,7 @@ export default {
 
     /deep/ .el-card__body:hover {
       transform: scale(1.1);
-      transition: .2s;
+      transition: 1s;
     }
 
   }

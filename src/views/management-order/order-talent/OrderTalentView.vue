@@ -107,8 +107,8 @@
       </el-form-item>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="备注">
-            <el-input disabled placeholder="备注......" :rows="3" type="textarea">
+          <el-form-item label="订单需求">
+            <el-input disabled :rows="3" type="textarea">
             </el-input>
           </el-form-item>
         </el-col>
