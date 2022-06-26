@@ -33,10 +33,11 @@
                    @click="$router.push('/system-notice-add')">新建
         </el-button>
       </div>
-      <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
+      <div class="split-line-right">共查询到 <b style="color: #409EFF">{{ pageInfo.total }}</b> 条记录</div>
     </div>
     <el-table
-        :data="tableData"
+        :data="listNotices"
+        height="460"
         stripe
         border
         highlight-current-row
@@ -46,12 +47,12 @@
         :row-class-name="tableRowClassName">
       <el-table-column
           min-width="300"
-          prop="username"
+          prop="title"
           label="标题">
       </el-table-column>
       <el-table-column
           min-width="180"
-          prop="date"
+          prop="gmtCreate"
           label="发布时间">
       </el-table-column>
       <el-table-column
@@ -117,20 +118,7 @@ export default {
   components: {},
   data() {
     return {
-      tableData: [
-        {
-          date: '2016-05-02',
-          username: '王小虎',
-          address: '上海市普陀区',
-          enabled: true
-        },
-        {
-          date: '2016-05-02',
-          username: '王小虎',
-          address: '上海市普陀区',
-          enabled: false
-        },
-      ],
+      listNotices: [],
       pageInfo: {
         pageSize: 10,
         total: 0,
@@ -183,7 +171,43 @@ export default {
       },
     }
   },
+  mounted() {
+    this.getListNotices()
+  },
   methods: {
+    /**
+     * 表格翻页
+     */
+    handleCurrentChange() {
+      this.getListNotices()
+    },
+    /**
+     * 改变页数
+     * @param _pageSize
+     */
+    handleSizeChange(_pageSize) {
+      this.getListNotices(_pageSize)
+    },
+    /**
+     * 获取公告列表
+     * @param _pageSize
+     */
+    getListNotices(_pageSize) {
+      let url = ``
+      if (undefined !== _pageSize) {
+        url = `/notice/get-list-notices?currentPage=${this.pageInfo.currentPage}&pageSize=${_pageSize}`
+      } else {
+        url = `/notice/get-list-notices?currentPage=${this.pageInfo.currentPage}&pageSize=${this.pageInfo.pageSize}`
+      }
+      this.$http(url)
+          .then(res => {
+            console.log(res)
+            if (null !== res.data) {
+              this.pageInfo.total = res.data.total
+              this.listNotices = res.data.listNotices
+            }
+          })
+    },
     tableRowClassName({rowIndex}) {
       if (rowIndex === 1) {
         return 'warning-row';
@@ -193,12 +217,20 @@ export default {
       return '';
     },
     handleView(_index, _row) {
-      this.$router.push('/system-notice-view')
-      console.log(_index, _row)
+      this.$router.push({
+        path: '/system-notice-view',
+        query: {
+          id: _row.id
+        }
+      })
     },
     handleEdit(_index, _row) {
-      this.$router.push('/system-notice-edit')
-      console.log(_index, _row)
+      this.$router.push({
+        path: '/system-notice-edit',
+        query: {
+          id: _row.id
+        }
+      })
     },
     handleDelete(_index, _row) {
       console.log(_index, _row)
@@ -207,10 +239,15 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '确定删除!'
-        });
+        this.$axios.delete('/api/notice/delete/' + _row.id).then(res => {
+          if (res.status) {
+            this.$message.success(res.data.message)
+            this.getListNotices()
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+
       }).catch(() => {
       })
     },

@@ -4,23 +4,21 @@
 */
 <template>
   <div class="system-notice-add">
-    <el-form label-width="120px">
-      <el-form-item label="标题">
+    <el-form :rules="rules" ref="form" :model="form" label-width="120px">
+      <el-form-item label="标题" prop="title">
         <el-input size="small" placeholder="请输入标题" v-model="form.title"></el-input>
       </el-form-item>
-      <el-form-item label="启用">
+      <el-form-item label="启用" prop="enabled">
         <el-radio-group v-model="form.enabled">
           <el-radio :label="true">启用</el-radio>
           <el-radio :label="false">禁用</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="内容">
-        <mavon-editor
-            ref="editor"
-            @save="saveDoc"
-            @change="updateDoc"
-            @imgAdd="addImages"
-            @imgDel="deleteImages"/>
+      <el-form-item prop="content" label="内容">
+        <quill-editor
+            v-model="form.content"
+            style="height:300px;"
+            ref="editor"/>
       </el-form-item>
       <el-form-item label=" ">
         <el-button icon="el-icon-plus" type="primary" size="small" @click="handleSave">
@@ -35,24 +33,48 @@
 </template>
 
 <script>
-import {mavonEditor} from 'mavon-editor'
-import "mavon-editor/dist/css/index.css";
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+import {quillEditor} from 'vue-quill-editor'
 
 export default {
   name: 'SystemNoticeAdd',
-  components: {mavonEditor},
+  components: {quillEditor},
   data() {
     return {
       form: {
         title: '',
         enabled: null,
         content: '',
+      },
+      rules: {
+        title: [
+          {required: true, message: '请输入公告标题', trigger: 'blur'},
+        ],
+        content: [
+          {required: true, message: '不能为空内容', trigger: 'blur'}
+        ],
+        enabled: [
+          {required: true, message: '不能为空', trigger: 'blur'}
+        ],
       }
     }
   },
   methods: {
     handleSave() {
       console.log(this.form)
+      this.$axios.post('/api/notice/insert', this.form).then(res => {
+        console.log(res.data)
+        if (res.status && res.data.code === '00000') {
+          this.$message.success(res.data.message)
+          this.$refs['form'].resetFields()
+          this.$refs.editor.d_value = ''
+          this.$router.back()
+        }
+      }).catch(e => {
+        console.log(e)
+      })
     },
     /**
      * 保存文档
@@ -68,7 +90,7 @@ export default {
      * @param value
      * @param render
      */
-    updateDoc(value,render) {
+    updateDoc(value, render) {
       console.log(value)
       this.form.content = render
     },

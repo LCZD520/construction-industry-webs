@@ -4,7 +4,7 @@
 */
 <template>
   <div class="system-notice-view">
-    <el-form label-width="80px" label-position="right">
+    <el-form :model="form" label-width="80px" label-position="right">
       <el-row>
         <el-col :span="8">
           <el-form-item label="发布时间">
@@ -29,8 +29,8 @@
         <div slot="header" class="clearfix">
           <span>{{ form.title }}</span>
         </div>
-        <div>
-          内容
+        <div v-html="form.content">
+
         </div>
       </el-card>
       <br>
@@ -55,7 +55,20 @@ export default {
       }
     }
   },
-  methods: {}
+  created() {
+    this.getNoticeById(this.$route.query.id)
+  },
+  methods: {
+    getNoticeById(_id) {
+      this.$http('/notice/detail/' + _id).then(res => {
+        if (res.data !== null) {
+          this.form = res.data
+        }
+      }).catch(e => {
+        console.log(e)
+      })
+    }
+  }
 }
 </script>
 

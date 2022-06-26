@@ -5,7 +5,7 @@ tfoot, thead, tr, th, td, textarea, input {
     padding: 0;
 }
 
-address, cite, dfn, em, var, i {
+address, cite, dfn, var {
     font-style: normal;
 }
 

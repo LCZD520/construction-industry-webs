@@ -15,15 +15,13 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="内容">
-        <mavon-editor
-            ref="editor"
-            @save="saveDoc"
-            @change="updateDoc"
-            @imgAdd="addImages"
-            @imgDel="deleteImages"/>
+        <quill-editor
+            v-model="form.content"
+            style="height:300px;"
+            ref="editor"/>
       </el-form-item>
-      <el-form-item label=" ">
-        <el-button icon="el-icon-plus" type="primary" size="small">
+      <el-form-item style="margin-top: 120px" label=" ">
+        <el-button icon="el-icon-plus" type="primary" size="small" @click="handleSubmit">
           保存
         </el-button>
         <el-button icon="el-icon-back" size="small" @click="$router.back()">
@@ -35,12 +33,17 @@
 </template>
 
 <script>
-import {mavonEditor} from 'mavon-editor'
-import "mavon-editor/dist/css/index.css";
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+import {quillEditor} from 'vue-quill-editor'
 
 export default {
   name: 'SystemNoticeEdit',
-  components: {mavonEditor},
+  components: {
+    quillEditor
+  },
   data() {
     return {
       form: {
@@ -48,29 +51,38 @@ export default {
         title: '',
         enabled: null,
         content: '',
-      }
+      },
     }
   },
+  created() {
+    this.getNoticeById(this.$route.query.id)
+  },
+  mounted() {
+  },
   methods: {
-    /**
-     * 保存文档
-     * @param value
-     * @param render
-     */
-    saveDoc(value, render) {
-      console.log("保存文档");
-      console.log(value)
-      console.log(render)
+    handleSubmit() {
+      console.log(this.form)
+      this.$axios.put('/api/notice/update', this.form).then(res => {
+        console.log(res)
+        if (res.status){
+          this.$message.success(res.data.message)
+          this.$router.back()
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     },
-    /**
-     * 更新文档
-     * @param value
-     * @param render
-     */
-    updateDoc(value, render) {
-      console.log(value)
-      this.form.content = render
+    getNoticeById(_id) {
+      this.$http('/notice/detail/' + _id).then(res => {
+            if (res.data !== null) {
+              this.form = res.data
+            }
+          }
+      ).catch(e => {
+        console.log(e)
+      })
     },
+
     /**
      * 上传图片
      * @param pos
@@ -95,7 +107,8 @@ export default {
       }).catch(res => {
         console.log(res)
       })
-    },
+    }
+    ,
     /**
      * 删除图片
      * @param filename
