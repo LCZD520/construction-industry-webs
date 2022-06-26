@@ -226,4 +226,13 @@ export default {
   width: 100% !important;
 }
 
+.required {
+  .el-form-item__label:before {
+    content: '*';
+    display: inline-block;
+    color: #F56C6C;
+    margin-right: 4px;
+  }
+}
+
 </style>

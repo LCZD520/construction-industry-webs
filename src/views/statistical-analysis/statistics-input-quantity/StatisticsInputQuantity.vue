@@ -91,47 +91,46 @@ export default {
   components: {},
   data() {
     return {
-      showStyle: '表格',
       columns: [
         {
           title: '所属分公司/部门/分组',
-          key: 'address'
+          key: 'department'
         },
         {
           title: '所属角色',
-          key: 'address'
+          key: 'role'
         },
         {
           title: '录入企业数',
-          key: 'address'
+          key: 'enterEnterpriseNumber'
         },
         {
           title: '录入人才数',
-          key: 'address'
+          key: 'enterTalentNumber'
         },
         {
           title: '资质收购录入数',
-          key: 'address'
+          key: 'qualificationAcquisitionNumber'
         },
         {
           title: '资质转让录入数',
-          key: 'address'
+          key: 'qualificationTransferNumber'
         },
         {
           title: '资质代办录入数',
-          key: 'address'
+          key: 'qualificationAgencyNumber'
         },
         {
           title: '职称评审录入数',
-          key: 'address'
+          key: 'TitleEvaluationNumber'
         },
         {
           title: '三类人员录入数',
-          key: 'address'
+          key: 'classThreePersonnelNumber'
         },
         {
           title: '学历提升录入数',
-          key: 'address'
+          key: 'educationPromotionNumber'
         },
       ],
       options: [
@@ -172,24 +171,7 @@ export default {
           label: '录入总数'
         },
       ],
-      tableData: [
-        {
-          date: '2016-05-02',
-          username: '王小虎',
-          address: '上海市普陀区',
-        }, {
-          date: '2016-05-04',
-          username: '王小虎',
-          address: '上海市普陀区'
-        }, {
-          date: '2016-05-01',
-          username: '王小虎',
-          address: '上海市普陀区',
-        }, {
-          date: '2016-05-03',
-          username: '王小虎',
-          address: '上海市普陀区'
-        }],
+      tableData: [],
       pageInfo: {
         pageSize: 10,
         total: 0,

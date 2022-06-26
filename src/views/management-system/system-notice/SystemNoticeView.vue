@@ -11,7 +11,7 @@
             <el-date-picker
                 disabled
                 class="width-full"
-                v-model="form.time"
+                v-model="form.gmtCreate"
                 size="small"
                 type="datetime">
             </el-date-picker>
@@ -19,7 +19,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="状态">
-            <el-tag effect="dark" :type="form.enabled ? 'success' : 'danger'">
+            <el-tag v-if="form.enabled!==null" effect="dark" :type="form.enabled ? 'success' : 'danger'">
               {{ form.enabled ? '启用' : '禁用' }}
             </el-tag>
           </el-form-item>
@@ -27,7 +27,7 @@
       </el-row>
       <el-card>
         <div slot="header" class="clearfix">
-          <span>标题</span>
+          <span>{{ form.title }}</span>
         </div>
         <div>
           内容
@@ -48,8 +48,10 @@ export default {
   data() {
     return {
       form: {
-        time: '',
-        enabled: true
+        title: '',
+        gmtCreate: null,
+        enabled: null,
+        content: '',
       }
     }
   },

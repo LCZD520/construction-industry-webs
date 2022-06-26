@@ -81,7 +81,7 @@
             label-width="80px"
             label-position="right">
           <el-form-item label="原录入人">
-            <el-select style="width: 100%" size="small" v-model="form.name">
+            <el-select style="width: 100%" size="small" v-model="form.originInputer">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -91,7 +91,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label=" 交接人">
-            <el-select style="width: 100%" size="small" v-model="form.name">
+            <el-select style="width: 100%" size="small" v-model="form.handoverPerson">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -101,7 +101,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="备注">
-            <el-input style="width: 100%" size="small" type="textarea" :rows="3" v-model="form.name"/>
+            <el-input style="width: 100%" size="small" type="textarea" :rows="3" v-model="form.remark"/>
           </el-form-item>
         </el-form>
       </div>
@@ -148,9 +148,9 @@ export default {
         currentPage: 1,
       },
       form: {
-        oldPassword: '',
-        newPassword: '',
-        confirmPassword: '',
+        originInputer:'',
+        handoverPerson:'',
+        remark:'',
       },
       pickerOptions: {
         shortcuts: [

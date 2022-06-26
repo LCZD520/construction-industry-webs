@@ -6,16 +6,16 @@
   <div class="advanced-setting-add">
     <el-form label-width="120px">
       <el-form-item label="名称">
-        <el-input size="small" placeholder="请输入配置名称" v-model="form.name"/>
+        <el-input size="small" placeholder="请输入配置名称" v-model="form.configName"/>
       </el-form-item>
       <el-form-item label="代码">
-        <el-input size="small" clearable placeholder="请输入配置代码" v-model="form.name"/>
+        <el-input size="small" clearable placeholder="请输入配置代码" v-model="form.configCode"/>
       </el-form-item>
       <el-form-item label="值">
-        <el-input size="small" clearable placeholder="请输入配置值" v-model="form.name"/>
+        <el-input size="small" clearable placeholder="请输入配置值" v-model="form.configValue"/>
       </el-form-item>
       <el-form-item label="描述">
-        <el-input size="small" clearable placeholder="请输入描述......" type="textarea" :rows="3" v-model="form.name"/>
+        <el-input size="small" clearable placeholder="请输入描述......" type="textarea" :rows="3" v-model="form.configDescription"/>
       </el-form-item>
       <el-form-item label=" ">
         <el-button icon="el-icon-plus" type="primary" size="small">
@@ -36,7 +36,10 @@ export default {
   data() {
     return {
       form: {
-        name: ''
+        configName: '',
+        configCode: '',
+        configValue: '',
+        configDescription: '',
       }
     }
   },
@@ -45,7 +48,7 @@ export default {
 </script>
 
 <style scoped lang="less">
-.advanced-setting-add{
+.advanced-setting-add {
   margin: 0 250px;
 }
 </style>

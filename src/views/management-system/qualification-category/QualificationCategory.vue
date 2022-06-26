@@ -144,15 +144,15 @@
             label-width="80px"
             label-position="right">
           <el-form-item label="上级类别">
-            <el-select class="width-full" disabled size="small" v-model="form.pid">
+            <el-select class="width-full" disabled size="small" v-model="form.parentId">
               <el-option label="无" :value="null"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="类别名称">
-            <el-input v-model="form.name" size="small"></el-input>
+            <el-input v-model="form.categoryName" size="small"></el-input>
           </el-form-item>
           <el-form-item label="排序">
-            <el-input-number class="width-full" controls-position="right" v-model="form.name"
+            <el-input-number class="width-full" controls-position="right" v-model="form.categoryName"
                              size="small"></el-input-number>
           </el-form-item>
         </el-form>
@@ -176,15 +176,15 @@
             label-width="80px"
             label-position="right">
           <el-form-item label="上级类别">
-            <el-select class="width-full" disabled size="small" v-model="form.pid">
+            <el-select class="width-full" disabled size="small" v-model="form.parentId">
               <el-option label="无" :value="null"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="类别名称">
-            <el-input v-model="form.name" size="small"></el-input>
+            <el-input v-model="form.categoryName" size="small"></el-input>
           </el-form-item>
           <el-form-item label="排序">
-            <el-input-number class="width-full" controls-position="right" v-model="form.name"
+            <el-input-number class="width-full" controls-position="right" v-model="form.sort"
                              size="small"></el-input-number>
           </el-form-item>
         </el-form>
@@ -210,8 +210,9 @@ export default {
       visible: false,
       visible2: false,
       form: {
-        name: '',
-        pid: null
+        parentId: '',
+        categoryName: '',
+        sort: '',
       },
       keyword1: '',
       keyword2: '',

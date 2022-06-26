@@ -13,7 +13,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="性别">
-            <el-select size="small" v-model="value" placeholder="请选择">
+            <el-select disabled class="width-full" size="small" v-model="value" placeholder="请选择">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -49,7 +49,7 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label="学历">
-            <el-select size="small" disabled v-model="value" placeholder="请选择">
+            <el-select class="width-full" size="small" disabled v-model="value" placeholder="请选择">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -61,7 +61,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="职称">
-            <el-select size="small" disabled v-model="value" placeholder="请选择">
+            <el-select class="width-full" size="small" disabled v-model="value" placeholder="请选择">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -73,7 +73,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="三类人员">
-            <el-select size="small" disabled v-model="value" placeholder="请选择">
+            <el-select class="width-full" size="small" disabled v-model="value" placeholder="请选择">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -88,6 +88,7 @@
         <el-col :span="8">
           <el-form-item label="发证日期">
             <el-date-picker
+                class="width-full"
                 disabled
                 size="small"
                 v-model="value"
@@ -99,6 +100,7 @@
         <el-col :span="8">
           <el-form-item label="过期日期">
             <el-date-picker
+                class="width-full"
                 disabled
                 size="small"
                 v-model="value"
@@ -109,7 +111,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="招标出场">
-            <el-select size="small" disabled v-model="value" placeholder="请选择">
+            <el-select class="width-full" size="small" disabled v-model="value" placeholder="请选择">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -123,7 +125,7 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label="证书状态">
-            <el-select size="small" disabled v-model="value" placeholder="请选择">
+            <el-select class="width-full" size="small" disabled v-model="value" placeholder="请选择">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -135,7 +137,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="人才状态">
-            <el-select size="small" disabled v-model="value" placeholder="请选择">
+            <el-select class="width-full" size="small" disabled v-model="value" placeholder="请选择">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -160,6 +162,7 @@
         <el-col :span="8">
           <el-form-item label="录入时间">
             <el-date-picker
+                class="width-full"
                 disabled
                 size="small"
                 v-model="value"
@@ -224,56 +227,7 @@
     </el-row>
     <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="人才证件" name="first">
-        <el-button type="primary" size="small">
-          添加证件
-        </el-button>
-        <el-button type="primary" size="small">
-          更新证件去向
-        </el-button>
-        <br><br>
-        <el-table
-            :data="tableData"
-            stripe
-            border
-            highlight-current-row
-            :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
-            :cell-style="{textAlign:'center'}"
-            style="width: 100%"
-            :row-class-name="tableRowClassName">
-          <el-table-column
-              type="selection"
-              width="55">
-          </el-table-column>
-          <el-table-column
-              min-width="180"
-              v-for="item in columns2"
-              :key="item.key"
-              :prop="item.key"
-              :label="item.title">
-          </el-table-column>
-          <el-table-column fixed="right" label="操作" width="300">
-            <template slot-scope="scope">
-              <el-button
-                  size="mini"
-                  type="primary"
-                  plain
-                  @click="handleEdit(scope.$index, scope.row)">证件去向流水
-              </el-button>
-              <el-button
-                  size="mini"
-                  type="primary"
-                  plain
-                  @click="handleEdit(scope.$index, scope.row)">编辑
-              </el-button>
-              <el-button
-                  size="mini"
-                  type="danger"
-                  plain
-                  @click="handleEdit(scope.$index, scope.row)">删除
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+        <TalentCertificate/>
       </el-tab-pane>
       <el-tab-pane label="图片上传" name="second">
         <ImagesUpload/>
@@ -375,13 +329,13 @@
                   size="mini"
                   type="primary"
                   plain
-                  @click="handleEdit(scope.$index, scope.row)">编辑
+                  @click.stop="handleEdit(scope.$index, scope.row)">编辑
               </el-button>
               <el-button
                   size="mini"
                   type="danger"
                   plain
-                  @click="handleEdit(scope.$index, scope.row)">删除
+                  @click.stop="handleDelete(scope.$index, scope.row)">删除
               </el-button>
             </template>
           </el-table-column>
@@ -445,12 +399,15 @@
 
 <script>
 import ImagesUpload from "./talent-query-view/ImagesUpload";
+import TalentCertificate from "./talent-query-view/TalentCertificate";
 
 export default {
   name: 'TalentQueryView',
-  components: {ImagesUpload},
+  components: {TalentCertificate, ImagesUpload},
   data() {
     return {
+      visible: false,
+      visible2: false,
       activeName: this.$route.query.activeTab ? this.$route.query.activeTab : 'first',
       isShowDetail: false,
       form: {
@@ -474,24 +431,7 @@ export default {
           key: 'address'
         },
       ],
-      columns2: [
-        {
-          title: '所在分支',
-          key: 'address'
-        },
-        {
-          title: '证件类型',
-          key: 'address'
-        },
-        {
-          title: '证件备注',
-          key: 'address'
-        },
-        {
-          title: '当前证件去向',
-          key: 'address'
-        },
-      ],
+
       tableData: [
         {}
       ],
@@ -513,11 +453,28 @@ export default {
     handleClick() {
 
     },
+    handleEdit(_index, _row) {
+      console.log(_index, _row)
+      this.visible2 = true
+    },
+    handleDelete(_index, _row) {
+      console.log(_index, _row)
+      this.$confirm('确定要删除这条记录吗？', '温馨提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '确定删除!'
+        });
+      }).catch(() => {
+      })
+    }
   }
 }
 </script>
 
 <style scoped lang="less">
 @import "../../../assets/css/common-el-table-scrollbar";
-@import "../../../assets/css/common-el-input-inner-width";
 </style>

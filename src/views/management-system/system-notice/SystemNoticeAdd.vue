@@ -6,12 +6,12 @@
   <div class="system-notice-add">
     <el-form label-width="120px">
       <el-form-item label="标题">
-        <el-input size="small" placeholder="请输入标题" v-model="form.name"></el-input>
+        <el-input size="small" placeholder="请输入标题" v-model="form.title"></el-input>
       </el-form-item>
       <el-form-item label="启用">
-        <el-radio-group v-model="form.name">
-          <el-radio :label="1">启用</el-radio>
-          <el-radio :label="2">禁用</el-radio>
+        <el-radio-group v-model="form.enabled">
+          <el-radio :label="true">启用</el-radio>
+          <el-radio :label="false">禁用</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="内容">
@@ -23,7 +23,7 @@
             @imgDel="deleteImages"/>
       </el-form-item>
       <el-form-item label=" ">
-        <el-button icon="el-icon-plus" type="primary" size="small">
+        <el-button icon="el-icon-plus" type="primary" size="small" @click="handleSave">
           保存
         </el-button>
         <el-button icon="el-icon-back" size="small" @click="$router.back()">
@@ -44,11 +44,16 @@ export default {
   data() {
     return {
       form: {
-        name: ''
+        title: '',
+        enabled: null,
+        content: '',
       }
     }
   },
   methods: {
+    handleSave() {
+      console.log(this.form)
+    },
     /**
      * 保存文档
      * @param value
@@ -56,15 +61,16 @@ export default {
      */
     saveDoc(value, render) {
       console.log("保存文档");
-      console.log(value)
-      console.log(render)
+      this.form.content = render
     },
     /**
      * 更新文档
      * @param value
+     * @param render
      */
-    updateDoc(value) {
+    updateDoc(value,render) {
       console.log(value)
+      this.form.content = render
     },
     /**
      * 上传图片

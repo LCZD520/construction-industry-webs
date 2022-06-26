@@ -8,10 +8,10 @@
     <div class="margin">
       <el-form label-width="120px">
         <el-form-item label="角色名称">
-          <el-input size="small" placeholder="请输入角色名称" v-model="form.name"/>
+          <el-input size="small" placeholder="请输入角色名称" v-model="form.roleName"/>
         </el-form-item>
         <el-form-item label="是否启用">
-          <el-select style="width: 100%" size="small" v-model="form.name" placeholder="请选择是否启用角色">
+          <el-select style="width: 100%" size="small" v-model="form.enabled" placeholder="请选择是否启用角色">
             <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -21,7 +21,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="数据权限">
-          <el-select style="width: 100%" size="small" v-model="form.name" placeholder="请选择数据权限">
+          <el-select style="width: 100%" size="small" v-model="form.dataPermission" placeholder="请选择数据权限">
             <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -31,7 +31,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="角色描述">
-          <el-input size="small" clearable placeholder="请填写角色描述......" type="textarea" :rows="3" v-model="form.name"/>
+          <el-input size="small" clearable placeholder="请填写角色描述......" type="textarea" :rows="3" v-model="form.roleDescription"/>
         </el-form-item>
         <el-form-item label=" ">
           <el-button icon="el-icon-plus" type="primary" size="small">
@@ -53,7 +53,10 @@ export default {
   data() {
     return {
       form: {
-        name: ''
+        roleName: '',
+        enabled: null,
+        dataPermission: null,
+        roleDescription: '',
       }
     }
   },

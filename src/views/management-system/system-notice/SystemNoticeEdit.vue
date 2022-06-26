@@ -6,12 +6,12 @@
   <div class="system-notice-edit">
     <el-form label-width="120px">
       <el-form-item label="标题">
-        <el-input size="small" placeholder="请输入标题" v-model="form.name"></el-input>
+        <el-input size="small" placeholder="请输入标题" v-model="form.title"></el-input>
       </el-form-item>
       <el-form-item label="启用">
-        <el-radio-group v-model="form.name">
-          <el-radio :label="1">启用</el-radio>
-          <el-radio :label="2">禁用</el-radio>
+        <el-radio-group v-model="form.enabled">
+          <el-radio :label="true">启用</el-radio>
+          <el-radio :label="false">禁用</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="内容">
@@ -37,13 +37,17 @@
 <script>
 import {mavonEditor} from 'mavon-editor'
 import "mavon-editor/dist/css/index.css";
+
 export default {
   name: 'SystemNoticeEdit',
   components: {mavonEditor},
   data() {
     return {
       form: {
-        name: ''
+        id: '',
+        title: '',
+        enabled: null,
+        content: '',
       }
     }
   },
@@ -61,9 +65,11 @@ export default {
     /**
      * 更新文档
      * @param value
+     * @param render
      */
-    updateDoc(value) {
+    updateDoc(value, render) {
       console.log(value)
+      this.form.content = render
     },
     /**
      * 上传图片
@@ -102,7 +108,7 @@ export default {
 </script>
 
 <style scoped lang="less">
-.system-notice-edit{
+.system-notice-edit {
   margin: 0 100px;
 }
 </style>

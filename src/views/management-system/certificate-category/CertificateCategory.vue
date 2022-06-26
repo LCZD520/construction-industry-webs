@@ -68,16 +68,17 @@
             label-width="80px"
             label-position="right">
           <el-form-item label="上级类别">
-            <el-select class="width-full" disabled size="small" v-model="form.pid">
+            <el-select class="width-full" disabled size="small" v-model="form.parentId">
               <el-option label="无" :value="null"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="类别名称">
-            <el-input v-model="form.name" size="small"></el-input>
+            <el-input v-model="form.categoryName" size="small"></el-input>
           </el-form-item>
           <el-form-item label="排序">
-            <el-input-number class="width-full" controls-position="right" v-model="form.name"
-                             size="small"></el-input-number>
+            <el-input-number
+                class="width-full" controls-position="right" v-model="form.sort"
+                size="small"></el-input-number>
           </el-form-item>
         </el-form>
       </div>
@@ -87,7 +88,6 @@
             size="small"
             type="primary">提 交
         </el-button>
-
       </div>
     </el-dialog>
   </div>
@@ -99,7 +99,11 @@ export default {
   components: {},
   data() {
     return {
-      form: {name: ''},
+      form: {
+        parentId: '',
+        categoryName: '',
+        sort: '',
+      },
       keyword1: '',
       keyword2: '',
       keyword3: '',

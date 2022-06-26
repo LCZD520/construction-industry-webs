@@ -10,7 +10,7 @@
       :before-close="()=>$emit('closeDialog')">
     <el-form
         label-position="right"
-        label-width="80px"
+        label-width="100px"
         ref="formData"
         :model="formData">
       <el-form-item label="证件所在分支">

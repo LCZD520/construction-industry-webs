@@ -15,10 +15,10 @@
     <el-table
         ref="table"
         @row-click="handleRowClick"
+        @selection-change="selectionChange"
         :data="tableData"
         stripe
         border
-        @selection-change="selectionChange"
         :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
         :cell-style="{textAlign:'center'}"
         style="width: 100%"

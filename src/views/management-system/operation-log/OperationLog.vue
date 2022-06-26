@@ -7,19 +7,19 @@
     <el-form
         ref="formData"
         inline
+        label-width="120px"
         :model="form">
-
-      <el-form-item label="用户名" label-width="120px">
-        <el-input size="small" v-model="form.newPassword" placeholder="请输入用户名">
+      <el-form-item label="用户名">
+        <el-input size="small" v-model="form.username" placeholder="请输入用户名">
         </el-input>
       </el-form-item>
-      <el-form-item label="用户中文姓名" label-width="120px">
-        <el-input size="small" v-model="form.newPassword" placeholder="请输入用户中文姓名">
+      <el-form-item label="用户中文姓名">
+        <el-input size="small" v-model="form.userChineseName" placeholder="请输入用户中文姓名">
         </el-input>
       </el-form-item>
-      <el-form-item label="操作日期" label-width="120px">
+      <el-form-item label="操作日期">
         <el-date-picker
-            v-model="form.oldPassword"
+            v-model="form.operationTime"
             size="small"
             type="daterange"
             align="right"
@@ -31,15 +31,15 @@
         </el-date-picker>
       </el-form-item>
 
-      <el-form-item label="机构名称" label-width="120px">
-        <el-input size="small" v-model="form.newPassword" placeholder="请输入机构名称">
+      <el-form-item label="机构名称">
+        <el-input size="small" v-model="form.mechanismName" placeholder="请输入机构名称">
         </el-input>
       </el-form-item>
-      <el-form-item label="日志内容" label-width="120px">
-        <el-input size="small" v-model="form.newPassword" placeholder="请输入日志内容">
+      <el-form-item label="日志内容">
+        <el-input size="small" v-model="form.content" placeholder="请输入日志内容">
         </el-input>
       </el-form-item>
-      <el-form-item label=" " label-width="120px">
+      <el-form-item label=" ">
         <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
         <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
       </el-form-item>
@@ -89,27 +89,27 @@ export default {
       columns: [
         {
           title: '用户名',
-          key: 'address'
+          key: 'username'
         },
         {
           title: '用户中文姓名',
-          key: 'address'
+          key: 'userChineseName'
         },
         {
           title: '机构名称',
-          key: 'address'
+          key: 'mechanismName'
         },
         {
           title: '操作时间',
-          key: 'address'
+          key: 'gmtCreate'
         },
         {
           title: '日志内容',
-          key: 'address'
+          key: 'content'
         },
         {
           title: '备注',
-          key: 'address'
+          key: 'remark'
         },
       ],
       options: [
@@ -176,9 +176,11 @@ export default {
         currentPage: 1,
       },
       form: {
-        oldPassword: '',
-        newPassword: '',
-        confirmPassword: '',
+        username: '',
+        userChineseName: '',
+        mechanismName: '',
+        operationTime: [],
+        content: '',
       },
       pickerOptions: {
         shortcuts: [

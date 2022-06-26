@@ -126,7 +126,7 @@ const systemRoutes = [
         name: 'advanced-setting',
         meta: {
             title: '高级设置列表',
-            activeMenuPath: '/management-approval'
+            activeMenuPath: '/advanced-setting'
         },
         component: () => import('../../../views/management-system/advanced-setting/AdvancedSetting'),
     },

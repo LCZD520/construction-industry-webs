@@ -90,23 +90,23 @@ export default {
       columns: [
         {
           title: '级别',
-          key: 'address'
+          key: 'level'
         },
         {
           title: '专业',
-          key: 'address'
+          key: 'major'
         },
         {
           title: '初始转注',
-          key: 'address'
+          key: 'initialConversion'
         },
         {
           title: '三类人员',
-          key: 'address'
+          key: 'classThreePersonnel'
         },
         {
           title: '数量',
-          key: 'address'
+          key: 'quantity'
         },
       ],
       options: [

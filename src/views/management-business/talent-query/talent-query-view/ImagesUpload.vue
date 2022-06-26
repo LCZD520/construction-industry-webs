@@ -61,109 +61,109 @@
       </el-upload>
     </div>
     <el-divider content-position="left">证件</el-divider>
-    <div>
-      <el-upload
-          class="upload-demo"
-          ref="upload"
-          list-type="picture-card"
-          action=" "
-          drag
-          accept="image/png, image/jpeg, image/jpg"
-          multiple
-          :http-request="uploadFile"
-          :on-change="onChange"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :file-list="fileList"
-          :before-upload="beforeUpload"
-          :auto-upload="false">
-        <i class="el-icon-upload"></i>
-        <div class="el-upload__text">您可以将一个或多个文件拖拽到此处，或<em>点击上传</em></div>
-        <!--        <div slot="tip" class="el-upload__tip">只能上传jpg/jpeg/png文件，且不超过2M</div>-->
-        <div slot="file" slot-scope="{file}">
-          <img
-              class="el-upload-list__item-thumbnail"
-              :src="file.url" alt=""
-          >
-          <span class="el-upload-list__item-actions">
-        <span
-            class="el-upload-list__item-preview"
-            @click="handlePreview(file)"
-        >
-          <el-button type="primary" size="mini" icon="el-icon-zoom-in" circle></el-button>
-        </span>
-        <span
-            class="el-upload-list__item-delete"
-            @click="handleRemove(file)"
-        >
-          <el-button type="primary" size="mini" icon="el-icon-download" circle></el-button>
-        </span>
-        <span
-            class="el-upload-list__item-delete"
-            @click="handleRemove(file)"
-        >
-          <el-button type="danger" size="mini" icon="el-icon-delete" circle></el-button>
-        </span>
-      </span>
-          <div
-              style="width: 100%;background: #fff;border-top: 1px solid #c0ccda;position:absolute;bottom: 0;text-align: center">
-            <el-checkbox label="复选框 C"></el-checkbox>
-          </div>
-        </div>
-      </el-upload>
-    </div>
+<!--    <div>-->
+<!--      <el-upload-->
+<!--          class="upload-demo"-->
+<!--          ref="upload"-->
+<!--          list-type="picture-card"-->
+<!--          action=" "-->
+<!--          drag-->
+<!--          accept="image/png, image/jpeg, image/jpg"-->
+<!--          multiple-->
+<!--          :http-request="uploadFile"-->
+<!--          :on-change="onChange"-->
+<!--          :on-preview="handlePreview"-->
+<!--          :on-remove="handleRemove"-->
+<!--          :file-list="fileList"-->
+<!--          :before-upload="beforeUpload"-->
+<!--          :auto-upload="false">-->
+<!--        <i class="el-icon-upload"></i>-->
+<!--        <div class="el-upload__text">您可以将一个或多个文件拖拽到此处，或<em>点击上传</em></div>-->
+<!--        &lt;!&ndash;        <div slot="tip" class="el-upload__tip">只能上传jpg/jpeg/png文件，且不超过2M</div>&ndash;&gt;-->
+<!--        <div slot="file" slot-scope="{file}">-->
+<!--          <img-->
+<!--              class="el-upload-list__item-thumbnail"-->
+<!--              :src="file.url" alt=""-->
+<!--          >-->
+<!--          <span class="el-upload-list__item-actions">-->
+<!--        <span-->
+<!--            class="el-upload-list__item-preview"-->
+<!--            @click="handlePreview(file)"-->
+<!--        >-->
+<!--          <el-button type="primary" size="mini" icon="el-icon-zoom-in" circle></el-button>-->
+<!--        </span>-->
+<!--        <span-->
+<!--            class="el-upload-list__item-delete"-->
+<!--            @click="handleRemove(file)"-->
+<!--        >-->
+<!--          <el-button type="primary" size="mini" icon="el-icon-download" circle></el-button>-->
+<!--        </span>-->
+<!--        <span-->
+<!--            class="el-upload-list__item-delete"-->
+<!--            @click="handleRemove(file)"-->
+<!--        >-->
+<!--          <el-button type="danger" size="mini" icon="el-icon-delete" circle></el-button>-->
+<!--        </span>-->
+<!--      </span>-->
+<!--          <div-->
+<!--              style="width: 100%;background: #fff;border-top: 1px solid #c0ccda;position:absolute;bottom: 0;text-align: center">-->
+<!--            <el-checkbox label="复选框 C"></el-checkbox>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </el-upload>-->
+<!--    </div>-->
     <el-divider content-position="left">转账凭证</el-divider>
-    <div>
-      <el-upload
-          class="upload-demo"
-          ref="upload"
-          list-type="picture-card"
-          action=" "
-          drag
-          accept="image/png, image/jpeg, image/jpg"
-          multiple
-          :http-request="uploadFile"
-          :on-change="onChange"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :file-list="fileList"
-          :before-upload="beforeUpload"
-          :auto-upload="false">
-        <i class="el-icon-upload"></i>
-        <div class="el-upload__text">您可以将一个或多个文件拖拽到此处，或<em>点击上传</em></div>
-        <!--        <div slot="tip" class="el-upload__tip">只能上传jpg/jpeg/png文件，且不超过2M</div>-->
-        <div slot="file" slot-scope="{file}">
-          <img
-              class="el-upload-list__item-thumbnail"
-              :src="file.url" alt=""
-          >
-          <span class="el-upload-list__item-actions">
-        <span
-            class="el-upload-list__item-preview"
-            @click="handlePreview(file)"
-        >
-          <el-button type="primary" size="mini" icon="el-icon-zoom-in" circle></el-button>
-        </span>
-        <span
-            class="el-upload-list__item-delete"
-            @click="handleRemove(file)"
-        >
-          <el-button type="primary" size="mini" icon="el-icon-download" circle></el-button>
-        </span>
-        <span
-            class="el-upload-list__item-delete"
-            @click="handleRemove(file)"
-        >
-          <el-button type="danger" size="mini" icon="el-icon-delete" circle></el-button>
-        </span>
-      </span>
-          <div
-              style="width: 100%;background: #fff;border-top: 1px solid #c0ccda;position:absolute;bottom: 0;text-align: center">
-            <el-checkbox label="复选框 C"></el-checkbox>
-          </div>
-        </div>
-      </el-upload>
-    </div>
+<!--    <div>-->
+<!--      <el-upload-->
+<!--          class="upload-demo"-->
+<!--          ref="upload"-->
+<!--          list-type="picture-card"-->
+<!--          action=" "-->
+<!--          drag-->
+<!--          accept="image/png, image/jpeg, image/jpg"-->
+<!--          multiple-->
+<!--          :http-request="uploadFile"-->
+<!--          :on-change="onChange"-->
+<!--          :on-preview="handlePreview"-->
+<!--          :on-remove="handleRemove"-->
+<!--          :file-list="fileList"-->
+<!--          :before-upload="beforeUpload"-->
+<!--          :auto-upload="false">-->
+<!--        <i class="el-icon-upload"></i>-->
+<!--        <div class="el-upload__text">您可以将一个或多个文件拖拽到此处，或<em>点击上传</em></div>-->
+<!--        &lt;!&ndash;        <div slot="tip" class="el-upload__tip">只能上传jpg/jpeg/png文件，且不超过2M</div>&ndash;&gt;-->
+<!--        <div slot="file" slot-scope="{file}">-->
+<!--          <img-->
+<!--              class="el-upload-list__item-thumbnail"-->
+<!--              :src="file.url" alt=""-->
+<!--          >-->
+<!--          <span class="el-upload-list__item-actions">-->
+<!--        <span-->
+<!--            class="el-upload-list__item-preview"-->
+<!--            @click="handlePreview(file)"-->
+<!--        >-->
+<!--          <el-button type="primary" size="mini" icon="el-icon-zoom-in" circle></el-button>-->
+<!--        </span>-->
+<!--        <span-->
+<!--            class="el-upload-list__item-delete"-->
+<!--            @click="handleRemove(file)"-->
+<!--        >-->
+<!--          <el-button type="primary" size="mini" icon="el-icon-download" circle></el-button>-->
+<!--        </span>-->
+<!--        <span-->
+<!--            class="el-upload-list__item-delete"-->
+<!--            @click="handleRemove(file)"-->
+<!--        >-->
+<!--          <el-button type="danger" size="mini" icon="el-icon-delete" circle></el-button>-->
+<!--        </span>-->
+<!--      </span>-->
+<!--          <div-->
+<!--              style="width: 100%;background: #fff;border-top: 1px solid #c0ccda;position:absolute;bottom: 0;text-align: center">-->
+<!--            <el-checkbox label="复选框 C"></el-checkbox>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </el-upload>-->
+<!--    </div>-->
   </div>
 </template>
 
@@ -176,20 +176,7 @@ export default {
   data() {
     return {
       // fileList: [],
-      fileList: [
-        {
-          url: 'http://localhost:8848/uploads/3/12/5c3c843e86074bc7bbd613504deb4ba3_404.png'
-        },
-        {
-          url: 'http://localhost:8848/uploads/0/7/000ab50a51854553ac42fac7f8bf78ab_empty-data.png'
-        },
-        {
-          url: 'http://localhost:8848/uploads/4/2/512640c1a0fc406da0e068253ade225a_goods-param.jpg'
-        },
-        {
-          url: 'http://localhost:8848/uploads/7/14/f25630b5b272481f9c725dd52c431111_sku.jpg'
-        }
-      ],
+      fileList: [],
       sourceImageObjects: [],
       formData: new FormData(),
       maxFileLength: 1,
@@ -238,21 +225,18 @@ export default {
     },
     submitUpload() {
       this.$refs.upload.submit()
-      return this.$http.post("/api/file/upload", this.formData, {
-        headers: {
-          Authorization: localStorage.getItem("access_token")
-        },
-      }).then(res => {
+      return this.$http.post("/api/file/upload", this.formData).then(res => {
         if (res.status) {
+          console.log(res.data)
           this.$message.success('上传成功')
           this.$refs.upload.clearFiles()
           this.uploadFileList = []
           this.formData = new FormData()
-          if (res.data.data.list.length > 0) {
-            res.data.data.list.forEach(k => {
+          if (res.data.length > 0) {
+            res.data.forEach(k => {
               this.fileList.push({
-                name: '1111',
-                url: k
+                name: k.name,
+                url: k.url
               })
             })
           }
