@@ -52,7 +52,7 @@ export default {
         gmtCreate: null,
         enabled: null,
         content: '',
-      }
+      },
     }
   },
   created() {
@@ -67,7 +67,8 @@ export default {
       }).catch(e => {
         console.log(e)
       })
-    }
+    },
+
   }
 }
 </script>

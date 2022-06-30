@@ -75,7 +75,10 @@ export default {
     getNoticeById(_id) {
       this.$http('/notice/detail/' + _id).then(res => {
             if (res.data !== null) {
-              this.form = res.data
+              this.form.content = res.data.content
+              this.form.id = res.data.id
+              this.form.title = res.data.title
+              this.form.enabled = res.data.enabled
             }
           }
       ).catch(e => {

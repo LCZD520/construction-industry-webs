@@ -4,28 +4,28 @@
 */
 <template>
   <div class="management-role-set-permissions">
-    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+    <el-checkbox
+        v-model="checkAll"
+        @change="handleCheckAllChange">
+      {{ checkAll ? '全不选' : '全选' }}
+    </el-checkbox>
     <br><br>
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <span>卡片名称</span>
-      </div>
-      <div v-for="o in 4" :key="o" class="content">
-        <div class="content-left">
-          <el-checkbox label="复选框"></el-checkbox>
-        </div>
-        <div class="content-right">
-          <el-row :gutter="20">
-            <el-col v-for="item in 30" :key="item" :span="6">
-              <el-checkbox :label="'复选框'+ item"></el-checkbox>
-            </el-col>
-          </el-row>
-        </div>
-      </div>
-    </el-card>
+    <el-tree
+        :data="listPermissions"
+        show-checkbox
+        check-on-click-node
+        :expand-on-click-node="false"
+        default-expand-all
+        node-key="permissionId"
+        ref="tree"
+        :props="defaultProps">
+    </el-tree>
+    <br>
+    <div class="buttons">
+      <el-button @click="getCheckedKeys">通过 key 获取</el-button>
+    </div>
   </div>
 </template>
-
 <script>
 
 export default {
@@ -33,50 +33,98 @@ export default {
   components: {},
   data() {
     return {
-      isIndeterminate: false,
-      checkAll: false
+      checkAll: false,
+      listPermissions: [],
+      defaultProps: {
+        children: 'subListPermissions',
+        label: 'permissionName'
+      }
     }
   },
-  mounted() {
+  created() {
+    this.getListPermissions()
   },
   methods: {
-    handleCheckAllChange() {
-      console.log('全选');
-    }
-  }
+    handleCheckAllChange(val) {
+      if (val) {
+        this.$refs.tree.setCheckedNodes(this.listPermissions);
+        return
+      }
+      this.$refs.tree.setCheckedKeys([])
+    },
+    getCheckedKeys() {
+      console.log(this.$refs.tree.getCheckedKeys());
+    },
+    getListPermissions() {
+      this.$http('/permission/get-list-permissions').then(res => {
+        if (res.status) {
+          if (res.data.listPermissions !== null) {
+            this.listPermissions = res.data.listPermissions
+          }
+        }
+      })
+    },
+  },
 }
 </script>
 
-<style scoped lang="less">
-.management-role-set-permissions {
-  padding: 10px;
-}
+<style lang="less">
+.el-tree {
+  color: #ff1089;
+  background: #eee;
 
-.box-card {
-  .content {
-    display: flex;
-    border-bottom: 1px solid #ddd;
-    padding: 10px;
+  .el-tree-node__label {
+    font: 800 20px/2 "Microsoft Yahei";
+  }
 
-    .content-left {
-      flex: 1;
-      padding-left: 10px;
-    }
+  .el-tree-node__content {
+    height: 46px;
 
-    .content-right {
-      flex: 6;
-      padding:0 40px;
-      border-left: 1px solid #ddd;
+    .el-tree-node__label {
+      font: 700 16px/2 "Microsoft Yahei";
     }
   }
 
+  .el-tree-node__children {
+    display: flex;
+    color: #409EFF;
+    background: #F8F9FB;
+    flex-wrap: wrap;
+    flex-direction: column;
+
+    .el-tree-node__content {
+      height: 36px;
+
+      .el-tree-node__label {
+        font: 600 14px/2 "Microsoft Yahei";
+      }
+
+      .el-tree-node__children {
+        padding: 10px;
+      }
+    }
+
+    .el-tree-node__children {
+      display: flex;
+      flex-direction: row;
+
+      .el-tree-node__content {
+        width: 310px;
+        height: 28px;
+        background: #fff;
+        color: #666;
+        border-left: 1px solid #abdcff;
+        padding-left: 0 !important;
+      }
+    }
+  }
 }
 
-/deep/ .el-card__header {
-  padding: 10px;
-  background: #fafafa;
+.el-tree-node__content:hover {
+  background: unset !important;
 }
-/deep/ .el-card__body{
-  padding: 0;
+
+.el-tree-node:focus > .el-tree-node__content {
+  background: unset;
 }
 </style>

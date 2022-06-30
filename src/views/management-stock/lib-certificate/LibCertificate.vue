@@ -218,7 +218,7 @@ export default {
     },
     handleView(_index, _row) {
       console.log(_index, _row)
-      this.$router.push('/lib-certificate-view-view')
+      this.$router.push('/lib-certificate-view')
     },
     /**
      * 表格翻页

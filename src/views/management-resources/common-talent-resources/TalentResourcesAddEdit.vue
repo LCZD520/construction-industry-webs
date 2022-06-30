@@ -8,7 +8,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="资源是否共享">
-            <el-radio-group v-model="form.name">
+            <el-radio-group v-model="form.shared">
               <el-radio :label="2">否</el-radio>
               <el-radio :label="1">是</el-radio>
             </el-radio-group>
@@ -18,12 +18,12 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="姓名">
-            <el-input placeholder="请输入联系人" size="small" v-model="form.name"/>
+            <el-input placeholder="请输入姓名" size="small" v-model="form.fullName"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="性别">
-            <el-radio-group v-model="form.name">
+            <el-radio-group v-model="form.sex">
               <el-radio :label="1">男</el-radio>
               <el-radio :label="2">女</el-radio>
               <el-radio :label="3">未知</el-radio>
@@ -51,7 +51,7 @@
                 class="width-full"
                 size="small"
                 clearable
-                placeholder="请选择地区"
+                placeholder="请选择社保"
                 :options="regionData"
                 v-model="form.newPassword"
                 @change="handleChange">
@@ -62,19 +62,19 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="电话号码">
-            <el-input placeholder="请输入电话号码" size="small" v-model="form.name"/>
+            <el-input placeholder="请输入电话号码" size="small" v-model="form.telephoneNumber"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="QQ号码">
-            <el-input placeholder="请输入QQ号码" size="small" v-model="form.name"/>
+            <el-input placeholder="请输入QQ号码" size="small" v-model="form.qqNumber"/>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="学历">
-            <el-select class="width-full" size="small" v-model="form.name" placeholder="请选择学历">
+            <el-select class="width-full" size="small" v-model="form.education" placeholder="请选择学历">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -86,7 +86,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="职称">
-            <el-select class="width-full" size="small" v-model="form.name" placeholder="请选择职称">
+            <el-select class="width-full" size="small" v-model="form.title" placeholder="请选择职称">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -100,7 +100,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="三类人员">
-            <el-select class="width-full" size="small" v-model="form.name" placeholder="请选择三类人员">
+            <el-select class="width-full" size="small" v-model="form.classThreePersonnel" placeholder="请选择三类人员">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -112,7 +112,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="招标出场">
-            <el-select class="width-full" size="small" v-model="form.name" placeholder="请选择招标出场">
+            <el-select class="width-full" size="small" v-model="form.tenderExit" placeholder="请选择招标出场">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -173,7 +173,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="证书状态">
-            <el-select class="width-full" size="small" v-model="form.name" placeholder="请选择证书状态">
+            <el-select class="width-full" size="small" v-model="form.certificateStatus" placeholder="请选择证书状态">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -185,7 +185,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="客户类型">
-            <el-select class="width-full" size="small" v-model="form.name" placeholder="请选择客户类型">
+            <el-select class="width-full" size="small" v-model="form.talentType" placeholder="请选择客户类型">
               <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -199,11 +199,11 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="价格">
-            <el-input-number controls-position="right" :min="0" size="small" v-model="form.name"/>
+            <el-input-number controls-position="right" :min="0" size="small" v-model="form.price"/>
             元
-            <el-input-number controls-position="right" :min="1" size="small" v-model="form.name"/>
+            <el-input-number controls-position="right" :min="1" size="small" v-model="form.priceNumber"/>
             &nbsp;
-            <el-select size="small" v-model="form.name" style="width: 80px;" placeholder="请选择">
+            <el-select size="small" v-model="form.numberUnit" style="width: 80px;" placeholder="请选择">
               <el-option label="年" value="1"></el-option>
               <el-option label="月" value="2"></el-option>
               <el-option label="日" value="3"></el-option>
@@ -212,17 +212,17 @@
         </el-col>
       </el-row>
       <el-form-item label="人才要求">
-        <el-input placeholder="请输入人才要求..." :rows="3" type="textarea">
+        <el-input v-model="form.talentRequirement" placeholder="请输入人才要求..." :rows="3" type="textarea">
 
         </el-input>
       </el-form-item>
       <el-form-item label="跟进情况">
-        <el-input placeholder="请输入跟进情况..." :rows="3" type="textarea">
+        <el-input v-model="form.followUpSituation" placeholder="请输入跟进情况..." :rows="3" type="textarea">
 
         </el-input>
       </el-form-item>
       <el-form-item label="备注">
-        <el-input placeholder="请输入备注..." :rows="3" type="textarea">
+        <el-input v-model="form.remark" placeholder="请输入备注..." :rows="3" type="textarea">
 
         </el-input>
       </el-form-item>
@@ -245,7 +245,32 @@ export default {
   data() {
     return {
       form: {
-        name: ''
+        area: null,
+        certificateStatus: null,
+        classThreePersonnel: null,
+        creatorId: null,
+        creatorName: null,
+        education: null,
+        followUpSituation: null,
+        fullName: null,
+        gmtCreate: null,
+        gmtModified: null,
+        id: null,
+        numberUnit: null,
+        price: null,
+        priceNumber: null,
+        qqNumber: null,
+        regeneratorId: null,
+        regeneratorName: null,
+        remark: null,
+        sex: null,
+        shared: null,
+        socialSecurity: null,
+        talentRequirement: null,
+        talentType: null,
+        telephoneNumber: null,
+        tenderExit: null,
+        title: null,
       },
       columns: [
         {

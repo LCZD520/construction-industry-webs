@@ -53,8 +53,6 @@
 
 <script>
 
-import axios from "axios";
-
 export default {
   name: 'Login',
   components: {},
@@ -87,20 +85,24 @@ export default {
     //   this.$refs.captcha.src = require('../../assets/images/backgroud.jpg')
     // },
     getCaptcha() {
-      this.$axios('/api/captcha/login').then(res => {
-        // console.log(res)
-        this.$refs.captcha.src = res.data
+      this.$axios('/captcha/login').then(res => {
+        if (res.status) {
+          this.$refs.captcha.src = res.data
+        }else {
+          this.$message.error('获取验证码失败')
+        }
       })
     },
     submitForm(_form) {
       this.$refs[_form].validate(valid => {
             if (valid) {
-              axios.post('/api/user/login', this.ruleForm).then(res => {
-                if (res.data.code === "200") {
-                  this.$store.dispatch("changeLoginStatus")
-                  this.$router.push('/home')
-                  this.$message.success("登录成功!")
-                  localStorage.setItem("access_token", res.data.data.token)
+              this.$axios.post('/user/login', this.ruleForm).then(res => {
+                console.log(res)
+                if (res.status) {
+                  // this.$router.push('/home')
+                  this.$message.success(res.message)
+                }else {
+                  this.$message.error(res.message)
                 }
               }).catch(err => {
                 console.log(err)
@@ -165,12 +167,12 @@ export default {
 
 /deep/ .el-input__inner {
   height: 40px;
-  font:  20px/2 "Microsoft Yahei";
+  font: 20px/2 "Microsoft Yahei";
   padding: 0 40px;
 }
 
 /deep/ .el-form-item__label {
-  font:  20px/2 "Microsoft Yahei";
+  font: 20px/2 "Microsoft Yahei";
 }
 
 </style>

@@ -305,6 +305,7 @@ export default {
     },
     handleChange(_val) {
       console.log(_val)
+      console.log(this.form)
     },
     /**
      * 表格翻页

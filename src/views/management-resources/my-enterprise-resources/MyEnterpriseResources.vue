@@ -152,12 +152,7 @@ export default {
           key: 'address'
         },
       ],
-      tableData: [
-        {
-          date: '2016-05-02',
-          username: '王小虎',
-          address: '上海市普陀区',
-        },],
+      tableData: [],
       pageInfo: {
         pageSize: 10,
         total: 0,

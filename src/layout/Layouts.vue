@@ -234,5 +234,9 @@ export default {
     margin-right: 4px;
   }
 }
+.el-cascader-menu__wrap{
+  height: 500px !important;
+  padding-bottom: 20px;
+}
 
 </style>

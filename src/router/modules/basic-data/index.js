@@ -94,6 +94,15 @@ const basicDataRoutes = [
         },
         component: () => import('../../../views/basic-data/management-organization/management-institution/InstitutionEdit'),
     },
+    {
+        path: '/management-permission',
+        name: 'management-permission',
+        meta: {
+            title: '权限数据管理',
+            activeMenuPath: '/management-permission',
+        },
+        component: () => import('../../../views/basic-data/management-permission/ManagementPermission'),
+    },
 ]
 
 export default basicDataRoutes

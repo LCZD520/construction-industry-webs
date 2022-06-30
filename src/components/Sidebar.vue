@@ -349,7 +349,7 @@ export default {
               id: '7-1',
               level2_title: '证件库',
               icon: 'el-icon-location',
-              route: '/lib-certificate-view',
+              route: '/lib-certificate',
             },
           ]
         },
@@ -401,6 +401,12 @@ export default {
               level2_title: '组织管理',
               icon: 'el-icon-location',
               route: '/management-organization',
+            },
+            {
+              id: '10-3',
+              level2_title: '权限数据管理',
+              icon: 'el-icon-location',
+              route: '/management-permission',
             },
           ]
         },

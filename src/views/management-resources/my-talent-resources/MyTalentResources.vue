@@ -152,12 +152,7 @@ export default {
           key: 'address'
         },
       ],
-      tableData: [
-        {
-          date: '2016-05-02',
-          username: '王小虎',
-          address: '上海市普陀区',
-        },],
+      tableData: [],
       pageInfo: {
         pageSize: 10,
         total: 0,
@@ -209,7 +204,17 @@ export default {
       },
     }
   },
+  created() {
+    this.getListTalentResources()
+  },
   methods: {
+    getListTalentResources() {
+      this.$http('/talent-resource/get-list').then(res => {
+        console.log(res)
+      }).catch(e => {
+        console.log(e)
+      })
+    },
     tableRowClassName({rowIndex}) {
       if (rowIndex === 1) {
         return 'warning-row';
