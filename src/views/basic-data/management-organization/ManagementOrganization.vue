@@ -14,7 +14,11 @@
             <el-button style="padding: 6px" size="mini" type="danger" @click="handleDelete">删除</el-button>
           </div>
           <div class="content-left-content">
-            <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+            <el-tree
+                :data="data"
+                :props="defaultProps"
+                highlight-current
+                @node-click="handleNodeClick"></el-tree>
           </div>
         </div>
       </el-col>
@@ -31,7 +35,7 @@
             <el-form-item label="是否在职" label-width="120px">
               <el-select size="small" v-model="form.oldPassword" placeholder="请选择是否在职">
                 <el-option
-                    v-for="item in options"
+                    v-for="item in $store.state.bool_options"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value">
@@ -290,6 +294,32 @@ export default {
     }
   },
   methods: {
+    getListPermissions() {
+      this.$http('/permission/get-list-permissions').then(res => {
+        if (res.status) {
+          console.log(res)
+          if (res.data.listPermissions !== null) {
+            this.options = res.data.listPermissions
+          }
+        }
+      })
+    },
+    /**
+     * 表格翻页
+     */
+    handleCurrentChange() {
+
+    },
+    /**
+     * 改变页数
+     * @param _pageSize
+     */
+    handleSizeChange(_pageSize) {
+      console.log(_pageSize)
+    },
+    handleNodeClick({label}) {
+      console.log(label)
+    },
     tableRowClassName({rowIndex}) {
       if (rowIndex === 1) {
         return 'warning-row';
@@ -322,12 +352,11 @@ export default {
 }
 </script>
 
-<style scoped lang="less">
+<style lang="less">
 @import "../../../assets/css/common-table-pagination";
 @import "../../../assets/css/common-el-table-scrollbar";
 @import "../../../assets/css/split-line";
 @import "../../../assets/css/common-el-input-inner-width";
-
 .management-organization {
   margin: -10px;
 

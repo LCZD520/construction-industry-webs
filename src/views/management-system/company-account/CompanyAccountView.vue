@@ -43,16 +43,36 @@ export default {
   data() {
     return {
       form: {
-        id: '',
+        enterpriseAccountId:null,
         bankName: null,
         openingBank: '',
         accountName: '',
         bankCardNo: '',
         remark: '',
-      }
+      },
+      options: [
+        {
+          value: 1,
+          label: '中国银行',
+        }
+      ]
     }
   },
-  methods: {}
+  created() {
+    this.getEnterpriseAccountById(this.$route.params.id / 1)
+  },
+  methods: {
+    getEnterpriseAccountById(_id) {
+      this.$http.get('/enterprise-account/detail/' + _id).then(res => {
+        if (res.status) {
+          this.form = res.data
+          return
+        }
+        this.$message.error(res.message)
+      })
+    },
+
+  }
 }
 </script>
 

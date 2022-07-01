@@ -24,12 +24,13 @@
     <div class="split-line">
       <div class="split-line-left">
         <el-button icon="el-icon-plus" size="small" type="primary"
-        @click="$router.push('/advanced-setting-add')">添加</el-button>
+                   @click="$router.push('/advanced-setting-add')">添加
+        </el-button>
       </div>
-      <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
+      <div class="split-line-right">共查询到 <b style="color: #409EFF">{{ pageInfo.total }}</b> 条记录</div>
     </div>
     <el-table
-        :data="tableData"
+        :data="list"
         stripe
         border
         highlight-current-row
@@ -39,22 +40,22 @@
         :row-class-name="tableRowClassName">
       <el-table-column
           min-width="180"
-          prop="address"
+          prop="configName"
           label="名称">
       </el-table-column>
       <el-table-column
           min-width="180"
-          prop="address"
+          prop="configCode"
           label="代码">
       </el-table-column>
       <el-table-column
           min-width="180"
-          prop="address"
+          prop="configValue"
           label="值">
       </el-table-column>
       <el-table-column
           min-width="180"
-          prop="address"
+          prop="configDescription"
           label="描述">
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="180">
@@ -99,12 +100,7 @@ export default {
   components: {},
   data() {
     return {
-      tableData: [
-        {
-          date: '2016-05-02',
-          username: '王小虎',
-          address: '上海市普陀区',
-        },],
+      list: [],
       pageInfo: {
         pageSize: 10,
         total: 0,
@@ -115,46 +111,10 @@ export default {
         newPassword: '',
         confirmPassword: '',
       },
-      pickerOptions: {
-        shortcuts: [
-          {
-            text: '今天',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '一周内',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '一个月内',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '三个月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit('pick', [start, end]);
-            }
-          }
-        ]
-      },
     }
+  },
+  created() {
+    this.getList()
   },
   methods: {
     tableRowClassName({rowIndex}) {
@@ -165,9 +125,42 @@ export default {
       }
       return '';
     },
+    /**
+     * 表格翻页
+     */
+    handleCurrentChange() {
+      this.getList()
+    },
+    /**
+     * 改变页数
+     * @param _pageSize
+     */
+    handleSizeChange(_pageSize) {
+      this.getList(_pageSize)
+    },
+    /**
+     * 获取高级设置列表
+     * @param _pageSize
+     */
+    getList(_pageSize) {
+      let url = ``
+      if (undefined !== _pageSize) {
+        url = `/advanced-setting/list?currentPage=${this.pageInfo.currentPage}&pageSize=${_pageSize}`
+      } else {
+        url = `/advanced-setting/list?currentPage=${this.pageInfo.currentPage}&pageSize=${this.pageInfo.pageSize}`
+      }
+      this.$http.get(url)
+          .then(res => {
+            console.log(res)
+            if (null !== res.data) {
+              this.pageInfo.total = res.data.total
+              this.list = res.data.list
+            }
+          })
+    },
     handleEdit(_index, _row) {
       console.log(_index, _row)
-      this.$router.push('/advanced-setting-edit')
+      this.$router.push('/advanced-setting-edit/' + _row.advancedSettingId)
     },
     handleDelete(_index, _row) {
       console.log(_index, _row)
@@ -176,10 +169,14 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '确定删除!'
-        });
+        this.$http.delete('/advanced-setting/delete/' + _row.advancedSettingId).then(res => {
+          if (res.status) {
+            this.$message.success(res.message)
+            this.getList()
+            return
+          }
+          this.$message.error(res.message)
+        })
       }).catch(() => {
       })
     },

@@ -53,6 +53,8 @@
 
 <script>
 
+import SparkMD5 from 'spark-md5'
+
 export default {
   name: 'Login',
   components: {},
@@ -85,10 +87,10 @@ export default {
     //   this.$refs.captcha.src = require('../../assets/images/backgroud.jpg')
     // },
     getCaptcha() {
-      this.$axios('/captcha/login').then(res => {
+      this.$http.get('/captcha/login', false).then(res => {
         if (res.status) {
           this.$refs.captcha.src = res.data
-        }else {
+        } else {
           this.$message.error('获取验证码失败')
         }
       })
@@ -96,12 +98,20 @@ export default {
     submitForm(_form) {
       this.$refs[_form].validate(valid => {
             if (valid) {
-              this.$axios.post('/user/login', this.ruleForm).then(res => {
+              let newData = {
+                username: this.ruleForm.username,
+                password: this.ruleForm.password,
+                captcha: this.ruleForm.captcha,
+              }
+              newData.password = SparkMD5.hash(this.ruleForm.password)
+
+              this.$http.post('/user/login', newData, false).then(res => {
                 console.log(res)
                 if (res.status) {
-                  // this.$router.push('/home')
+                  this.$router.push('/home')
+                  localStorage.setItem("access_token", res.data.token)
                   this.$message.success(res.message)
-                }else {
+                } else {
                   this.$message.error(res.message)
                 }
               }).catch(err => {
@@ -116,7 +126,7 @@ export default {
     resetForm(_form) {
       this.$refs[_form].resetFields()
     },
-  }
+  },
 }
 </script>
 

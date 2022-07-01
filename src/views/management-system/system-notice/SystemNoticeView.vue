@@ -60,7 +60,7 @@ export default {
   },
   methods: {
     getNoticeById(_id) {
-      this.$http('/notice/detail/' + _id).then(res => {
+      this.$http.get('/notice/detail/' + _id).then(res => {
         if (res.data !== null) {
           this.form = res.data
         }

@@ -196,6 +196,7 @@ export default {
 
 .el-scrollbar__wrap {
   overflow-x: hidden !important;
+  margin-bottom: 0 !important;
 }
 
 .dialog-content {

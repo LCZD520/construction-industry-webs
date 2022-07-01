@@ -3,8 +3,7 @@ import App from './App.vue'
 import store from './store'
 import router from "./router";
 import qs from 'qs'
-import {http} from './request/request'
-import axios from "axios";
+import Http from './request/request'
 // animate动画库
 import animated from "animate.css";
 import './assets/css/reset.css'
@@ -24,20 +23,10 @@ Vue.use(animated)
 Vue.use(Viewer)
 Vue.use(ElementUI)
 
-axios.interceptors.request.use(config => {
-    config.url = '/api' + config.url
-    return config
-})
-// 响应拦截器
-axios.interceptors.response.use(config => {
-    return config.data
-})
-
-Vue.prototype.$provinceAndCityData = provinceAndCityData;
-Vue.prototype.$echarts = echarts;
-Vue.prototype.$http = http;
-Vue.prototype.$axios = axios;
-Vue.prototype.$qs = qs;
+Vue.prototype.$provinceAndCityData = provinceAndCityData
+Vue.prototype.$echarts = echarts
+Vue.prototype.$qs = qs
+Vue.prototype.$http = new Http()
 
 Vue.config.productionTip = false
 

@@ -6,22 +6,22 @@
   <div class="management-role-add">
     <el-divider content-position="left">角色添加</el-divider>
     <div class="margin">
-      <el-form label-width="120px">
-        <el-form-item label="角色名称">
-          <el-input size="small" placeholder="请输入角色名称" v-model="form.roleName"/>
+      <el-form ref="form" label-width="120px" :rules="rules" :model="form">
+        <el-form-item label="角色名称" prop="roleName">
+          <el-input placeholder="请输入角色名称" v-model.trim="form.roleName"/>
         </el-form-item>
-        <el-form-item label="是否启用">
-          <el-select style="width: 100%" size="small" v-model="form.enabled" placeholder="请选择是否启用角色">
+        <el-form-item label="是否启用" prop="enabled">
+          <el-select clearable class="width-full" v-model="form.enabled" placeholder="请选择是否启用角色">
             <el-option
-                v-for="item in options"
+                v-for="item in $store.state.bool_options"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="数据权限">
-          <el-select style="width: 100%" size="small" v-model="form.dataPermission" placeholder="请选择数据权限">
+        <el-form-item label="数据权限" prop="dataPermission">
+          <el-select clearable class="width-full" v-model="form.dataPermission" placeholder="请选择数据权限">
             <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -31,13 +31,22 @@
           </el-select>
         </el-form-item>
         <el-form-item label="角色描述">
-          <el-input size="small" clearable placeholder="请填写角色描述......" type="textarea" :rows="3" v-model="form.roleDescription"/>
+          <el-input
+              maxlength="100"
+              show-word-limit
+              clearable
+              placeholder="请填写角色描述......"
+              type="textarea"
+              :rows="3"
+              v-model.trim="form.description"/>
         </el-form-item>
         <el-form-item label=" ">
-          <el-button icon="el-icon-plus" type="primary" size="small">
+          <el-button
+              icon="el-icon-plus" type="primary"
+              @click="handleSubmit">
             保存
           </el-button>
-          <el-button icon="el-icon-back" size="small" @click="$router.back()">
+          <el-button icon="el-icon-back" @click="$router.back()">
             返回
           </el-button>
         </el-form-item>
@@ -53,14 +62,56 @@ export default {
   data() {
     return {
       form: {
+        creatorId: 1,
+        regeneratorId: 1,
         roleName: '',
         enabled: null,
         dataPermission: null,
-        roleDescription: '',
-      }
+        description: '',
+      },
+      rules: {
+        roleName: [
+          {required: true, message: '不能为空', trigger: 'blur'}
+        ],
+        enabled: [
+          {required: true, message: '不能为空', trigger: 'change'}
+        ],
+        dataPermission: [
+          {required: true, message: '不能为空', trigger: 'change'}
+        ],
+      },
+      options: [
+        {
+          value: 1,
+          label: '全部',
+        },
+        {
+          value: 2,
+          label: '层级',
+        },
+        {
+          value: 3,
+          label: '个体',
+        },
+      ]
     }
   },
-  methods: {}
+  methods: {
+    handleSubmit() {
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.$axios.post('/role/insert', this.form).then(res => {
+            if (res.status) {
+              this.$message.success(res.message)
+              this.$router.back()
+            }
+          })
+          return
+        }
+        this.$message.error('输入的信息有误！提交失败')
+      })
+    },
+  }
 }
 </script>
 

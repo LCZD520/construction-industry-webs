@@ -86,7 +86,7 @@ const systemRoutes = [
         component: () => import('../../../views/management-system/company-account/CompanyAccount'),
     },
     {
-        path: '/company-account-view',
+        path: '/company-account-view/:id',
         name: 'company-account-view',
         meta: {
             title: '企业账户查看',
@@ -104,7 +104,7 @@ const systemRoutes = [
         component: () => import('../../../views/management-system/company-account/CompanyAccountAdd'),
     },
     {
-        path: '/company-account-edit',
+        path: '/company-account-edit/:id',
         name: 'company-account-edit',
         meta: {
             title: '企业账户编辑',
@@ -140,7 +140,7 @@ const systemRoutes = [
         component: () => import('../../../views/management-system/advanced-setting/AdvancedSettingAdd'),
     },
     {
-        path: '/advanced-setting-edit',
+        path: '/advanced-setting-edit/:id',
         name: 'advanced-setting-edit',
         meta: {
             title: '高级设置',

@@ -10,10 +10,10 @@
                    @click.stop="$router.push('/company-account-add')">添加
         </el-button>
       </div>
-      <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
+      <div class="split-line-right">共查询到 <b style="color: #409EFF">{{ pageInfo.total }}</b> 条记录</div>
     </div>
     <el-table
-        :data="tableData"
+        :data="list"
         stripe
         border
         highlight-current-row
@@ -78,56 +78,27 @@ export default {
     return {
       columns: [
         {
-          title: '订单编号',
-          key: 'address'
+          title: '银行名称',
+          key: 'bankName'
         },
         {
-          title: '企业名称',
-          key: 'address'
+          title: '开户行',
+          key: 'openingBank'
         },
         {
-          title: '人才名称',
-          key: 'address'
+          title: '户名',
+          key: 'accountName'
         },
         {
-          title: '企业合同价',
-          key: 'address'
+          title: '银行卡号',
+          key: 'bankCardNo'
         },
         {
-          title: '人才价格',
-          key: 'address'
-        },
-        {
-          title: '人才业绩',
-          key: 'address'
-        },
-        {
-          title: '企业业绩',
-          key: 'address'
-        },
-        {
-          title: '业绩生成时间',
-          key: 'address'
-        },
-        {
-          title: '业绩状态',
-          key: 'address'
-        },
-        {
-          title: '人才录入人',
-          key: 'address'
-        },
-        {
-          title: '企业录入人',
-          key: 'address'
-        },
+          title: '备注',
+          key: 'remark'
+        }
       ],
-      tableData: [
-        {
-          date: '2016-05-02',
-          username: '王小虎',
-          address: '上海市普陀区',
-        },],
+      list: [],
       pageInfo: {
         pageSize: 10,
         total: 0,
@@ -138,46 +109,10 @@ export default {
         newPassword: '',
         confirmPassword: '',
       },
-      pickerOptions: {
-        shortcuts: [
-          {
-            text: '今天',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '一周内',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '一个月内',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '三个月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit('pick', [start, end]);
-            }
-          }
-        ]
-      },
     }
+  },
+  created() {
+    this.getList()
   },
   methods: {
     tableRowClassName({rowIndex}) {
@@ -190,11 +125,44 @@ export default {
     },
     handleView(_index, _row) {
       console.log(_index, _row)
-      this.$router.push('/company-account-view')
+      this.$router.push('/company-account-view/'+_row.enterpriseAccountId)
+    },
+    /**
+     * 表格翻页
+     */
+    handleCurrentChange() {
+      this.getList()
+    },
+    /**
+     * 改变页数
+     * @param _pageSize
+     */
+    handleSizeChange(_pageSize) {
+      this.getList(_pageSize)
+    },
+    /**
+     * 获取企业账户列表
+     * @param _pageSize
+     */
+    getList(_pageSize) {
+      let url = ``
+      if (undefined !== _pageSize) {
+        url = `/enterprise-account/list?currentPage=${this.pageInfo.currentPage}&pageSize=${_pageSize}`
+      } else {
+        url = `/enterprise-account/list?currentPage=${this.pageInfo.currentPage}&pageSize=${this.pageInfo.pageSize}`
+      }
+      this.$http.get(url)
+          .then(res => {
+            console.log(res)
+            if (null !== res.data) {
+              this.pageInfo.total = res.data.total
+              this.list = res.data.list
+            }
+          })
     },
     handleEdit(_index, _row) {
-      this.$router.push('/company-account-edit')
       console.log(_index, _row)
+      this.$router.push('/company-account-edit/' + _row.enterpriseAccountId)
     },
     handleDelete(_index, _row) {
       console.log(_index, _row)
@@ -203,10 +171,14 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '确定删除!'
-        });
+        this.$http.delete('/enterprise-account/delete/' + _row.enterpriseAccountId).then(res => {
+          if (res.status) {
+            this.$message.success(res.message)
+            this.getList()
+            return
+          }
+          this.$message.error(res.message)
+        })
       }).catch(() => {
       })
     },

@@ -130,45 +130,6 @@ export default {
         newPassword: '',
         confirmPassword: '',
       },
-      pickerOptions: {
-        shortcuts: [
-          {
-            text: '今天',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '一周内',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '一个月内',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '三个月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit('pick', [start, end]);
-            }
-          }
-        ]
-      },
     }
   },
   mounted() {
@@ -199,7 +160,7 @@ export default {
       } else {
         url = `/notice/get-list-notices?currentPage=${this.pageInfo.currentPage}&pageSize=${this.pageInfo.pageSize}`
       }
-      this.$http(url)
+      this.$http.get(url)
           .then(res => {
             console.log(res)
             if (null !== res.data) {

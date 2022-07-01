@@ -62,7 +62,7 @@ export default {
   methods: {
     handleSubmit() {
       console.log(this.form)
-      this.$axios.put('/api/notice/update', this.form).then(res => {
+      this.$http.put('/api/notice/update', this.form).then(res => {
         console.log(res)
         if (res.status){
           this.$message.success(res.data.message)
@@ -73,7 +73,7 @@ export default {
       })
     },
     getNoticeById(_id) {
-      this.$http('/notice/detail/' + _id).then(res => {
+      this.$http.get('/notice/detail/' + _id).then(res => {
             if (res.data !== null) {
               this.form.content = res.data.content
               this.form.id = res.data.id

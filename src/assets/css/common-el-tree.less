@@ -1,0 +1,57 @@
+.el-tree {
+  color: #409EFF;
+  background: #f0faff;
+
+  .el-tree-node__label {
+    font: 800 20px/2 "Microsoft Yahei";
+  }
+
+  .el-tree-node__content {
+    height: 46px;
+
+    .el-tree-node__label {
+      font: 700 16px/2 "Microsoft Yahei";
+    }
+  }
+
+  .el-tree-node__children {
+    display: flex;
+    color: #45c0f6;
+    background: #F8F9FB;
+    flex-wrap: wrap;
+    flex-direction: column;
+
+    .el-tree-node__content {
+      height: 36px;
+
+      .el-tree-node__label {
+        font: 600 14px/2 "Microsoft Yahei";
+      }
+
+      .el-tree-node__children {
+        padding: 10px;
+      }
+    }
+
+    .el-tree-node__children {
+      display: flex;
+      flex-direction: row;
+
+      .el-tree-node__content {
+        width: 310px;
+        height: 28px;
+        background: #fff;
+        color: #666;
+        padding-left: 0 !important;
+      }
+    }
+  }
+}
+
+.el-tree-node__content:hover {
+  background: unset !important;
+}
+
+.el-tree-node:focus > .el-tree-node__content {
+  background: unset;
+}

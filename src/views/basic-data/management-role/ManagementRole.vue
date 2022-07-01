@@ -15,7 +15,7 @@
       <el-form-item label="是否启用" label-width="120px">
         <el-select size="small" v-model="form.oldPassword" placeholder="请选择是否启用">
           <el-option
-              v-for="item in options"
+              v-for="item in $store.state.bool_options"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -33,10 +33,10 @@
                    @click="$router.push('/management-role-add')">添加
         </el-button>
       </div>
-      <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
+      <div class="split-line-right">共查询到 <b style="color: #409EFF">{{ pageInfo.total }}</b> 条记录</div>
     </div>
     <el-table
-        :data="tableData"
+        :data="list"
         stripe
         border
         highlight-current-row
@@ -46,7 +46,7 @@
         :row-class-name="tableRowClassName">
       <el-table-column
           min-width="180"
-          prop="username"
+          prop="roleName"
           label="角色名称">
       </el-table-column>
       <el-table-column
@@ -63,7 +63,7 @@
       </el-table-column>
       <el-table-column
           min-width="200"
-          prop="username"
+          prop="description"
           label="角色描述">
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="300">
@@ -120,20 +120,7 @@ export default {
   components: {},
   data() {
     return {
-      tableData: [
-        {
-          date: '2016-05-02',
-          username: '王小虎',
-          address: '上海市普陀区',
-          enabled: true
-        },
-        {
-          date: '2016-05-02',
-          username: '王小',
-          address: '上海市普陀区',
-          enabled: false
-        },
-      ],
+      list: [],
       pageInfo: {
         pageSize: 10,
         total: 0,
@@ -144,48 +131,42 @@ export default {
         newPassword: '',
         confirmPassword: '',
       },
-      pickerOptions: {
-        shortcuts: [
-          {
-            text: '今天',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '一周内',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '一个月内',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '三个月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit('pick', [start, end]);
-            }
-          }
-        ]
-      },
     }
   },
+  created() {
+    this.getListRoles()
+  },
   methods: {
+    /**
+     * 表格翻页
+     */
+    handleCurrentChange() {
+      this.getListRoles()
+    },
+    /**
+     * 改变页数
+     * @param _pageSize
+     */
+    handleSizeChange(_pageSize) {
+      this.getListRoles(_pageSize)
+    },
+    getListRoles(_pageSize) {
+      let url = ``
+      if (undefined !== _pageSize) {
+        url = `/role/get-list-roles?currentPage=${this.pageInfo.currentPage}&pageSize=${_pageSize}`
+      } else {
+        url = `/role/get-list-roles?currentPage=${this.pageInfo.currentPage}&pageSize=${this.pageInfo.pageSize}`
+      }
+      this.$http.get(url).then(res => {
+        if (res.status) {
+          console.log(res)
+          if (res.data.listPermissions !== null) {
+            this.list = res.data.listRoles
+            this.pageInfo.total = res.data.total
+          }
+        }
+      })
+    },
     tableRowClassName({rowIndex}) {
       if (rowIndex === 1) {
         return 'warning-row';
@@ -196,11 +177,21 @@ export default {
     },
     handleEdit(_index, _row) {
       console.log(_index, _row)
-      this.$router.push('/management-role-edit')
+      this.$router.push({
+        path: '/management-role-edit',
+        query: {
+          id: _row.roleId
+        }
+      })
     },
     handleSetPermissions(_index, _row) {
       console.log(_index, _row)
-      this.$router.push('/management-role-set-permissions')
+      this.$router.push({
+        path: '/management-role-set-permissions',
+        query: {
+          id: _row.roleId
+        }
+      })
     },
     handleDisable(_index, _row) {
       console.log(_index, _row)

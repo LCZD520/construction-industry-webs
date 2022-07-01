@@ -4,36 +4,46 @@
 */
 <template>
   <div class="management-role-set-permissions">
-    <el-checkbox
-        v-model="checkAll"
-        @change="handleCheckAllChange">
-      {{ checkAll ? '全不选' : '全选' }}
-    </el-checkbox>
-    <br><br>
-    <el-tree
-        :data="listPermissions"
-        show-checkbox
-        check-on-click-node
-        :expand-on-click-node="false"
-        default-expand-all
-        node-key="permissionId"
-        ref="tree"
-        :props="defaultProps">
-    </el-tree>
-    <br>
-    <div class="buttons">
-      <el-button @click="getCheckedKeys">通过 key 获取</el-button>
+    <CommonLoading v-if="loading"/>
+    <div v-else>
+      <el-checkbox
+          v-model="checkAll"
+          @change="handleCheckAllChange">
+        {{ checkAll ? '全不选' : '全选' }}
+      </el-checkbox>
+      <br><br>
+      <el-tree
+          :data="listPermissions"
+          show-checkbox
+          check-on-click-node
+          :expand-on-click-node="false"
+          default-expand-all
+          node-key="permissionId"
+          ref="tree"
+          :props="defaultProps">
+      </el-tree>
+      <br>
+      <div class="buttons">
+        <el-button
+            @click="handleSubmit"
+            type="primary"
+            icon="el-icon-plus">提 交
+        </el-button>
+      </div>
     </div>
   </div>
 </template>
 <script>
 
+import CommonLoading from "../../../components/CommonLoading";
+
 export default {
   name: 'ManagementRoleSetPermissions',
-  components: {},
+  components: {CommonLoading},
   data() {
     return {
       checkAll: false,
+      loading: false,
       listPermissions: [],
       defaultProps: {
         children: 'subListPermissions',
@@ -52,79 +62,30 @@ export default {
       }
       this.$refs.tree.setCheckedKeys([])
     },
-    getCheckedKeys() {
-      console.log(this.$refs.tree.getCheckedKeys());
+    handleSubmit() {
+      this.$http.post('/role-permission/insert-batch', {
+        list: this.$refs.tree.getCheckedKeys(),
+        roleId: this.$route.query.id / 1
+      }).then(res => {
+        console.log(res)
+      })
     },
     getListPermissions() {
-      this.$http('/permission/get-list-permissions').then(res => {
+      this.loading = true
+      this.$http.get('/permission/get-list-permissions').then(res => {
         if (res.status) {
           if (res.data.listPermissions !== null) {
             this.listPermissions = res.data.listPermissions
           }
         }
+        this.loading = false
       })
+
     },
   },
 }
 </script>
 
 <style lang="less">
-.el-tree {
-  color: #ff1089;
-  background: #eee;
-
-  .el-tree-node__label {
-    font: 800 20px/2 "Microsoft Yahei";
-  }
-
-  .el-tree-node__content {
-    height: 46px;
-
-    .el-tree-node__label {
-      font: 700 16px/2 "Microsoft Yahei";
-    }
-  }
-
-  .el-tree-node__children {
-    display: flex;
-    color: #409EFF;
-    background: #F8F9FB;
-    flex-wrap: wrap;
-    flex-direction: column;
-
-    .el-tree-node__content {
-      height: 36px;
-
-      .el-tree-node__label {
-        font: 600 14px/2 "Microsoft Yahei";
-      }
-
-      .el-tree-node__children {
-        padding: 10px;
-      }
-    }
-
-    .el-tree-node__children {
-      display: flex;
-      flex-direction: row;
-
-      .el-tree-node__content {
-        width: 310px;
-        height: 28px;
-        background: #fff;
-        color: #666;
-        border-left: 1px solid #abdcff;
-        padding-left: 0 !important;
-      }
-    }
-  }
-}
-
-.el-tree-node__content:hover {
-  background: unset !important;
-}
-
-.el-tree-node:focus > .el-tree-node__content {
-  background: unset;
-}
+@import "../../../assets/css/common-el-tree";
 </style>

@@ -17,6 +17,17 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
+        bool_options: [
+            {
+                value: true,
+                label: '是'
+            },
+            {
+                value: false,
+                label: '否'
+            }
+        ],
+
         // 登录状态
         loginStatus: false,
         // 侧边栏菜单

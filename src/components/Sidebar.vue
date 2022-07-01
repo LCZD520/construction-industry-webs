@@ -33,8 +33,10 @@
             </span>
             </div>
           </template>
-          <el-menu-item style="transition: .5s" v-for="subItem in item.subMenuItems" :key="subItem.id"
-                        :index="subItem.route">
+          <el-menu-item
+              :disabled="subItem.disabled"
+              style="transition: .5s" v-for="subItem in item.subMenuItems" :key="subItem.id"
+              :index="subItem.route">
             <i :class="subItem.icon"></i>
             {{ subItem.level2_title }}
           </el-menu-item>
@@ -406,6 +408,7 @@ export default {
               id: '10-3',
               level2_title: '权限数据管理',
               icon: 'el-icon-location',
+              disabled: true,
               route: '/management-permission',
             },
           ]

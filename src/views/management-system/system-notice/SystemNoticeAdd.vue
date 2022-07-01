@@ -64,10 +64,10 @@ export default {
   methods: {
     handleSave() {
       console.log(this.form)
-      this.$axios.post('/api/notice/insert', this.form).then(res => {
-        console.log(res.data)
-        if (res.status && res.data.code === '00000') {
-          this.$message.success(res.data.message)
+      this.$http.post('/notice/insert', this.form).then(res => {
+        console.log(res)
+        if (res.status && res.code === '00000') {
+          this.$message.success(res.message)
           this.$refs['form'].resetFields()
           this.$refs.editor.d_value = ''
           this.$router.back()
@@ -106,11 +106,7 @@ export default {
       formData.append('files', $file)
 
       console.log(this.$refs.editor)
-      this.$http.post("/api/file/upload", formData, {
-        headers: {
-          Authorization: localStorage.getItem("access_token")
-        },
-      }).then(res => {
+      this.$http.post("/api/file/upload", formData).then(res => {
         console.log(res)
         res.data.data.forEach(k => {
           this.$refs.editor.$img2Url(pos, k);
