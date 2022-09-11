@@ -33,19 +33,16 @@
           <el-button
               size="mini"
               type="primary"
-              plain
               @click.stop="handleView(scope.$index, scope.row)">查看
           </el-button>
           <el-button
               size="mini"
               type="primary"
-              plain
               @click.stop="handleEdit(scope.$index, scope.row)">编辑
           </el-button>
           <el-button
               size="mini"
               type="danger"
-              plain
               @click.stop="handleDelete(scope.$index, scope.row)">删除
           </el-button>
         </template>
@@ -125,7 +122,7 @@ export default {
     },
     handleView(_index, _row) {
       console.log(_index, _row)
-      this.$router.push('/company-account-view/'+_row.enterpriseAccountId)
+      this.$router.push('/company-account-view/' + _row.enterpriseAccountId)
     },
     /**
      * 表格翻页
@@ -151,14 +148,13 @@ export default {
       } else {
         url = `/enterprise-account/list?currentPage=${this.pageInfo.currentPage}&pageSize=${this.pageInfo.pageSize}`
       }
-      this.$http.get(url)
-          .then(res => {
-            console.log(res)
-            if (null !== res.data) {
-              this.pageInfo.total = res.data.total
-              this.list = res.data.list
-            }
-          })
+      this.$http.get(url).then(res => {
+        console.log(res)
+        if (null !== res.data) {
+          this.pageInfo.total = res.data.total
+          this.list = res.data.list
+        }
+      })
     },
     handleEdit(_index, _row) {
       console.log(_index, _row)

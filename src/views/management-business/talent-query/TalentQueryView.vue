@@ -4,18 +4,18 @@
 */
 <template>
   <div class="talent-query-view">
-    <el-form v-show="isShowDetail" label-position="right" label-width="100px">
+    <el-form :model="form" v-show="isShowDetail" label-position="right" label-width="100px">
       <el-row>
         <el-col :span="8">
           <el-form-item label="姓名">
-            <el-input disabled size="small" v-model="form.name"/>
+            <el-input disabled v-model="form.fullName"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="性别">
-            <el-select disabled class="width-full" size="small" v-model="value" placeholder="请选择">
+            <el-select disabled class="width-full" v-model="form.sex" placeholder="请选择">
               <el-option
-                  v-for="item in options"
+                  v-for="item in this.$store.state.sex_options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -25,33 +25,33 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="地区">
-            <el-input disabled size="small" v-model="form.name"/>
+            <el-input disabled v-model="this.$CodeToText[form.area]"/>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="8">
           <el-form-item label="社保">
-            <el-input disabled size="small" v-model="form.name"/>
+            <el-input disabled v-model="this.$CodeToText[form.socialSecurity]"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="电话号码">
-            <el-input disabled size="small" v-model="form.name"/>
+            <el-input disabled v-model="form.telephoneNumber"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="QQ">
-            <el-input disabled size="small" v-model="form.name"/>
+            <el-input disabled v-model="form.qqNumber"/>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="8">
           <el-form-item label="学历">
-            <el-select class="width-full" size="small" disabled v-model="value" placeholder="请选择">
+            <el-select class="width-full" disabled v-model="form.education" placeholder="请选择">
               <el-option
-                  v-for="item in options"
+                  v-for="item in this.$store.state.education_options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -61,9 +61,9 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="职称">
-            <el-select class="width-full" size="small" disabled v-model="value" placeholder="请选择">
+            <el-select class="width-full" disabled v-model="form.title" placeholder="请选择">
               <el-option
-                  v-for="item in options"
+                  v-for="item in this.$store.state.title_options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -73,9 +73,9 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="三类人员">
-            <el-select class="width-full" size="small" disabled v-model="value" placeholder="请选择">
+            <el-select class="width-full" disabled v-model="form.classThreePersonnel" placeholder="请选择">
               <el-option
-                  v-for="item in options"
+                  v-for="item in this.$store.state.class_three_personnel_options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -90,8 +90,7 @@
             <el-date-picker
                 class="width-full"
                 disabled
-                size="small"
-                v-model="value"
+                v-model="form.issueCertTime"
                 type="date"
                 placeholder="选择日期">
             </el-date-picker>
@@ -102,8 +101,7 @@
             <el-date-picker
                 class="width-full"
                 disabled
-                size="small"
-                v-model="value"
+                v-model="form.continuingEducationDate"
                 type="date"
                 placeholder="选择日期">
             </el-date-picker>
@@ -111,9 +109,9 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="招标出场">
-            <el-select class="width-full" size="small" disabled v-model="value" placeholder="请选择">
+            <el-select class="width-full" disabled v-model="form.tenderExit" placeholder="请选择">
               <el-option
-                  v-for="item in options"
+                  v-for="item in this.$store.state.tender_exit_options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -125,9 +123,9 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label="证书状态">
-            <el-select class="width-full" size="small" disabled v-model="value" placeholder="请选择">
+            <el-select class="width-full" disabled v-model="form.certificateStatus" placeholder="请选择">
               <el-option
-                  v-for="item in options"
+                  v-for="item in this.$store.state.certificate_status_options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -137,9 +135,9 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="人才状态">
-            <el-select class="width-full" size="small" disabled v-model="value" placeholder="请选择">
+            <el-select class="width-full" disabled v-model="form.talentStatus" placeholder="请选择">
               <el-option
-                  v-for="item in options"
+                  v-for="item in this.$store.state.talent_status_options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -149,14 +147,21 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="人才要价">
-            <el-input disabled size="small" v-model="form.name"/>
+            <el-input disabled v-model="form.talentPrice"/>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="8">
           <el-form-item label="录入人">
-            <el-input disabled size="small" v-model="form.name"/>
+            <el-select class="width-full" disabled v-model="form.creatorId">
+              <el-option
+                  v-for="item in this.$store.state.user_options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -164,8 +169,7 @@
             <el-date-picker
                 class="width-full"
                 disabled
-                size="small"
-                v-model="value"
+                v-model="form.gmtCreate"
                 type="datetime"
                 placeholder="选择日期">
             </el-date-picker>
@@ -177,20 +181,39 @@
           <el-form-item label="证书">
             <el-table
                 size="mini"
-                :data="tableData"
+                :data="form.listCertificates"
                 stripe
                 border
-                highlight-current-row
                 :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
                 :cell-style="{textAlign:'center'}"
-                style="width: 100%"
-                :row-class-name="tableRowClassName">
+                style="width: 100%">
               <el-table-column
                   min-width="180"
-                  v-for="item in columns"
-                  :key="item.key"
-                  :prop="item.key"
-                  :label="item.title">
+                  label="级别专业">
+                <template slot-scope="scope">
+                  <span style="white-space:pre-line;">
+                    {{ scope.row.levelMajor[0] }}/{{ scope.row.levelMajor[1] }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                  min-width="180"
+                  label="初始转注">
+                <template slot-scope="scope">
+                  <span>
+                    {{ $valueToLabel(scope.row.initialConversion, $store.state.initial_conversion_options) }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                  min-width="180"
+                  prop="issueCertTime"
+                  label="发证时间">
+              </el-table-column>
+              <el-table-column
+                  min-width="180"
+                  prop="continuingEducationDate"
+                  label="继续教育时间（默认3年）">
               </el-table-column>
             </el-table>
           </el-form-item>
@@ -218,237 +241,148 @@
       <el-col :span="24">
         <el-form label-width="100px">
           <el-form-item label="备注">
-            <el-input disabled placeholder="备注......" :rows="5" type="textarea">
-
+            <el-input v-model="form.remark" disabled :rows="3" type="textarea">
             </el-input>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
-    <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
+    <el-tabs v-model="activeName">
       <el-tab-pane label="人才证件" name="first">
-        <TalentCertificate/>
+        <transition appear name="public">
+          <TalentCertificate v-show="activeName === 'first'"/>
+        </transition>
       </el-tab-pane>
       <el-tab-pane label="图片上传" name="second">
-        <ImagesUpload/>
+        <transition appear name="public">
+          <div v-show="activeName === 'second'">
+            <el-button type="primary" size="small" v-throttle="handleDownLoadBatch">下载图片</el-button>
+            <el-button type="primary" size="small" v-throttle="handleDeleteBatch">删除图片</el-button>
+            <el-divider content-position="left">合同</el-divider>
+            <ImagesUpload
+                @getCheckedList="(_list)=>{this.checkedList1 = _list}"
+                namespace="talent-query" type="contract"/>
+            <el-divider content-position="left">证件</el-divider>
+            <ImagesUpload
+                @getCheckedList="(_list)=>{this.checkedList2 = _list}"
+                namespace="talent-query" type="certificates"/>
+            <el-divider content-position="left">转账凭证</el-divider>
+            <ImagesUpload
+                @getCheckedList="(_list)=>{this.checkedList3 = _list}"
+                namespace="talent-query" type="transfer-voucher"/>
+          </div>
+        </transition>
       </el-tab-pane>
       <el-tab-pane label="申请转账" name="third">
-        <el-button type="primary" size="small">
-          申请转账
-        </el-button>
-        <br><br>
-        <el-table
-            :data="tableData"
-            stripe
-            border
-            highlight-current-row
-            :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
-            :cell-style="{textAlign:'center'}"
-            style="width: 100%"
-            :row-class-name="tableRowClassName">
-          <el-table-column
-              min-width="180"
-              prop="address"
-              label="申请转账金额">
-          </el-table-column>
-          <el-table-column
-              min-width="120"
-              prop="address"
-              label="账户户名">
-          </el-table-column>
-          <el-table-column
-              min-width="120"
-              prop="address"
-              label="款项用途">
-          </el-table-column>
-          <el-table-column
-              min-width="400"
-              prop="address"
-              label="申请备注">
-          </el-table-column>
-          <el-table-column
-              min-width="120"
-              prop="address"
-              label="申请状态">
-          </el-table-column>
-          <el-table-column
-              min-width="180"
-              prop="address"
-              label="申请时间">
-          </el-table-column>
-          <el-table-column fixed="right" label="操作" width="180">
-            <template slot-scope="scope">
-              <el-button
-                  size="mini"
-                  type="primary"
-                  plain
-                  @click="handleEdit(scope.$index, scope.row)">取消申请
-              </el-button>
-              <el-button
-                  size="mini"
-                  type="primary"
-                  plain
-                  @click="handleEdit(scope.$index, scope.row)">详情
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+        <transition appear name="public">
+          <TransferApplication v-show="activeName === 'third'"/>
+        </transition>
       </el-tab-pane>
       <el-tab-pane label="人才回访" name="fourth">
-        <el-button type="primary" size="small">
-          添加回访记录
-        </el-button>
-        <br><br>
-        <el-table
-            :data="tableData"
-            stripe
-            border
-            highlight-current-row
-            :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
-            :cell-style="{textAlign:'center'}"
-            style="width: 100%"
-            :row-class-name="tableRowClassName">
-          <el-table-column
-              min-width="180"
-              prop="address"
-              label="回访内容">
-          </el-table-column>
-          <el-table-column
-              min-width="180"
-              prop="address"
-              label="是否需要再次回访">
-          </el-table-column>
-          <el-table-column
-              min-width="180"
-              prop="address"
-              label="下次回访时间">
-          </el-table-column>
-          <el-table-column label="操作" width="100">
-            <template slot-scope="scope">
-              <el-button
-                  size="mini"
-                  type="primary"
-                  plain
-                  @click.stop="handleEdit(scope.$index, scope.row)">编辑
-              </el-button>
-              <el-button
-                  size="mini"
-                  type="danger"
-                  plain
-                  @click.stop="handleDelete(scope.$index, scope.row)">删除
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+        <transition appear name="public">
+          <TalentVisit v-show="activeName === 'fourth'"/>
+        </transition>
       </el-tab-pane>
       <el-tab-pane label="后勤申请" name="fifth">
-        <el-button type="primary" size="small">
-          添加后勤记录
-        </el-button>
-        <br><br>
-        <el-table
-            :data="tableData"
-            stripe
-            border
-            highlight-current-row
-            :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
-            :cell-style="{textAlign:'center'}"
-            style="width: 100%"
-            :row-class-name="tableRowClassName">
-          <el-table-column
-              min-width="180"
-              prop="address"
-              label="后勤项目">
-          </el-table-column>
-          <el-table-column
-              min-width="180"
-              prop="address"
-              label="申请备注">
-          </el-table-column>
-          <el-table-column
-              min-width="180"
-              prop="address"
-              label="提交时间">
-          </el-table-column>
-          <el-table-column
-              min-width="180"
-              prop="address"
-              label="状态">
-          </el-table-column>
-          <el-table-column label="操作" width="100">
-            <template slot-scope="scope">
-              <el-button
-                  size="mini"
-                  type="primary"
-                  plain
-                  @click="handleEdit(scope.$index, scope.row)">编辑
-              </el-button>
-              <el-button
-                  size="mini"
-                  type="danger"
-                  plain
-                  @click="handleEdit(scope.$index, scope.row)">删除
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+        <transition appear name="public">
+          <LogisticsApplication v-show="activeName === 'fifth'" :logistics-type="1"/>
+        </transition>
       </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script>
-import ImagesUpload from "./talent-query-view/ImagesUpload";
+import ImagesUpload from "../../../components/image-upload/ImagesUpload";
 import TalentCertificate from "./talent-query-view/TalentCertificate";
+import LogisticsApplication from "./talent-query-view/logistics-application/LogisticsApplication";
+import TalentVisit from "./talent-query-view/talent-visit/TalentVisit";
+import TransferApplication from "./talent-query-view/transfer-application/TransferApplication";
+// import _ from 'lodash'
 
 export default {
   name: 'TalentQueryView',
-  components: {TalentCertificate, ImagesUpload},
+  components: {TransferApplication, TalentVisit, LogisticsApplication, TalentCertificate, ImagesUpload},
   data() {
     return {
       visible: false,
       visible2: false,
       activeName: this.$route.query.activeTab ? this.$route.query.activeTab : 'first',
+      checkedList1: [],
+      checkedList2: [],
+      checkedList3: [],
       isShowDetail: false,
       form: {
-        name: ''
+        "talentId": null,
+        "fullName": '',
+        "sex": null,
+        "area": '',
+        "socialSecurity": '',
+        "telephoneNumber": '',
+        "qqNumber": '',
+        "education": null,
+        "title": null,
+        "classThreePersonnel": null,
+        "issueCertTime": null,
+        "continuingEducationDate": null,
+        "tenderExit": null,
+        "certificateStatus": null,
+        "talentStatus": 1,
+        "talentPrice": undefined,
+        "talentPriceNumber": undefined,
+        "numberUnit": null,
+        "remark": '',
+        "listCertificates": []
       },
-      columns: [
-        {
-          title: '级别专业',
-          key: 'address'
-        },
-        {
-          title: '初始转注',
-          key: 'address'
-        },
-        {
-          title: '发证时间',
-          key: 'address'
-        },
-        {
-          title: '继续教育时间（默认3年）',
-          key: 'address'
-        },
-      ],
-
-      tableData: [
-        {}
-      ],
-
     }
   },
-  mounted() {
-    console.log(this.$route.query)
+  created() {
+    this.getDetailById(this.$route.query.id / 1)
   },
   methods: {
-    tableRowClassName({rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row';
-      } else if (rowIndex === 3) {
-        return 'success-row';
+    /**
+     * 获取已选图片id
+     */
+    getCheckedList() {
+      return this.checkedList1
+          .concat(this.checkedList2)
+          .concat(this.checkedList3);
+    },
+    /**
+     * 批量下载文件
+     */
+    async handleDownLoadBatch() {
+      const arr = await this.getCheckedList()
+      if (arr.length > 0) {
+
+        return
       }
-      return '';
+      this.$message.warning('至少选择一张图片！')
+    },
+    /**
+     * 批量下载文件
+     */
+    async handleDeleteBatch() {
+      const arr = await this.getCheckedList()
+      if (arr.length > 0) {
+
+        return
+      }
+      this.$message.warning('至少选择一张图片！')
+    },
+    /**
+     * 根据id获取详情
+     * @param _id
+     */
+    getDetailById(_id) {
+      this.$http.get('/talent/detail/' + _id).then(res => {
+        if (res.status && res.data !== null) {
+          this.form = res.data
+          this.form.listCertificates.forEach(item => {
+            item.levelMajor = JSON.parse(item.levelMajor)
+          })
+        }
+      })
     },
     handleClick() {
 
@@ -470,6 +404,11 @@ export default {
         });
       }).catch(() => {
       })
+    }
+  },
+  watch: {
+    checkedList(newValue) {
+      console.log(newValue)
     }
   }
 }

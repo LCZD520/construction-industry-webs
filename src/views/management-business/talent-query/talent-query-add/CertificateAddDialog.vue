@@ -1,59 +1,63 @@
 /**
 * Created by Lv Cheng on 2022/6/23
-* Notes 添加证书弹窗
+* Notes 添加/编辑证书弹窗
 */
 <template>
   <div class="certificate-add-dialog">
     <el-dialog
         :close-on-click-modal=false
         width="50%"
-        title="添加证书"
+        :title="dialogTitle"
         :visible.sync="visible"
         :before-close="beforeClose">
       <div class="dialog-wrapper">
         <div class="dialog-content">
           <el-form
               ref="formData"
+              :rules="rules"
               label-width="120px"
-              :model="form">
-            <el-form-item label="级别专业">
+              :model="certificateForm">
+            <el-form-item label="级别专业" prop="levelMajor">
               <el-cascader
                   class="width-full"
                   clearable
-                  ref="cascader"
-                  @expand-change="cascaderClick"
-                  @visible-change="cascaderClick"
-                  :props="{ expandTrigger: 'hover' ,checkStrictly:true ,emitPath:false}"
+                  :props="{ expandTrigger: 'hover'
+                    ,value:'categoryName'
+                    ,label:'categoryName'
+                    ,children:'listCertificateCategory'}"
                   placeholder="请选择级别专业"
-                  :options="this.$provinceAndCityData"
-                  @change="handleChange"
-                  v-model="form.area">
+                  :options="this.$store.state.list_certificate_category"
+                  v-model="certificateForm.levelMajor">
               </el-cascader>
             </el-form-item>
-            <el-form-item label="初始转注">
+            <el-form-item prop="initialConversion" label="初始转注">
               <el-select
-                  class="width-full" v-model="form.name" placeholder="请选择初始转注">
+                  class="width-full" v-model="certificateForm.initialConversion" placeholder="请选择初始转注">
                 <el-option
-                    v-for="item in options"
+                    v-for="item in this.$store.state.initial_conversion_options"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value">
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="发证日期">
+            <el-form-item prop="issueCertTime" label="发证日期">
               <el-date-picker
                   class="width-full"
-                  v-model="form.name"
+                  v-model="certificateForm.issueCertTime"
                   type="date"
+                  format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd"
                   placeholder="请选择发证日期">
               </el-date-picker>
             </el-form-item>
-            <el-form-item label="继续教育日期">
+            <el-form-item prop="continuingEducationDate" label="继续教育日期">
               <el-date-picker
                   class="width-full"
-                  v-model="form.name"
+                  v-model="certificateForm.continuingEducationDate"
                   type="date"
+                  format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd"
                   placeholder="请选择继续教育日期">
               </el-date-picker>
             </el-form-item>
@@ -64,7 +68,7 @@
         <el-button
             size="small"
             type="primary"
-            @click="handleConfirm">确 认
+            @click="()=>$emit('handleConfirm',this.certificateForm)">确 认
         </el-button>
         <el-button size="small" @click="beforeClose">取 消</el-button>
       </div>
@@ -73,13 +77,26 @@
 </template>
 
 <script>
+
 export default {
   name: 'certificateAddDialog',
   components: {},
   data() {
     return {
-      form: {
-        name: ''
+      loading: false,
+      rules: {
+        levelMajor: [
+          {required: true, message: '请选择级别-专业', trigger: 'change'}
+        ],
+        initialConversion: [
+          {required: false, trigger: 'change'}
+        ],
+        issueCertTime: [
+          {required: false, trigger: 'change'}
+        ],
+        continuingEducationDate: [
+          {required: false, trigger: 'change'}
+        ],
       }
     }
   },
@@ -88,13 +105,19 @@ export default {
       type: Boolean,
       default: false
     },
+    dialogTitle: {
+      type: String,
+      default: ''
+    },
+    certificateForm: {
+      type: Object,
+      default: () => {
+      }
+    }
   },
   methods: {
     beforeClose() {
       this.$emit('closeDialog')
-    },
-    handleChange(_val) {
-      console.log(_val)
     },
   }
 }

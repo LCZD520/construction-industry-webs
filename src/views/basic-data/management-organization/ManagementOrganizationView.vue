@@ -13,19 +13,13 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="机构编号">
-                <el-input size="small" disabled v-model="form.name"/>
+                <el-input size="small" disabled :value="form.mechanismNumber"/>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="机构名称">
-                <el-select disabled style="width: 100%" size="small" v-model="form.name">
-                  <el-option
-                      v-for="item in options"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                  </el-option>
-                </el-select>
+                <el-input size="small" disabled
+                          :value="form.mechanism == null ? '' : form.mechanism.mechanismName"/>
               </el-form-item>
             </el-col>
           </el-row>
@@ -37,26 +31,26 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="用户名">
-                <el-input size="small" disabled v-model="form.name"/>
+                <el-input size="small" disabled :value="form.username"/>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="姓名">
-                <el-input size="small" disabled v-model="form.name"/>
+                <el-input size="small" disabled :value="form.fullName"/>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="联系方式">
-                <el-input size="small" disabled v-model="form.name"/>
+                <el-input size="small" disabled :value="form.telephoneNumber"/>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="用户性别">
-                <el-select disabled style="width: 100%" size="small" v-model="form.name">
+                <el-select disabled style="width: 100%" size="small" :value="form.sex">
                   <el-option
-                      v-for="item in options"
+                      v-for="item in $store.state.sex_options"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
@@ -68,14 +62,14 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="用户年龄">
-                <el-input size="small" disabled v-model="form.name"/>
+                <el-input size="small" disabled :value="form.age"/>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="是否在职">
-                <el-select disabled style="width: 100%" size="small" v-model="form.name">
+                <el-select disabled style="width: 100%" size="small" :value="form.onJob">
                   <el-option
-                      v-for="item in options"
+                      v-for="item in $store.state.bool_options"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
@@ -84,9 +78,6 @@
               </el-form-item>
             </el-col>
           </el-row>
-
-
-
         </el-card>
         <el-card shadow="hover">
           <div slot="header" class="clearfix">
@@ -121,12 +112,23 @@ export default {
   components: {},
   data() {
     return {
-      form: {
-        name: ''
-      }
+      form: {}
     }
   },
-  methods: {}
+  created() {
+    let userId = this.$route.params.id
+    if (userId != null) {
+      this.getDetailById(userId / 1)
+    }
+  },
+  methods: {
+    async getDetailById(_id) {
+      const res = await this.$http.get('/user/detail/' + _id)
+      if (res.status && res.data != null) {
+        this.form = res.data
+      }
+    }
+  }
 }
 </script>
 

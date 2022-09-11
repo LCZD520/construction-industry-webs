@@ -17,25 +17,32 @@
             size="small"
             clearable
             placeholder="请选择地区"
-            :options="regionData"
-            v-model="form.newPassword"
-            @change="handleChange">
+            :options="this.$provinceAndCityData"
+            v-model="form.newPassword">
         </el-cascader>
       </el-form-item>
       <el-form-item label="级别专业" label-width="120px">
         <el-cascader
             size="small"
             clearable
+            ref="cascader"
+            @expand-change="cascaderClick"
+            @visible-change="cascaderClick"
+            :props="{ expandTrigger: 'hover'
+                    ,value:'categoryName'
+                    ,label:'categoryName'
+                    ,checkStrictly:true
+                    ,emitPath:false
+                    ,children:'listCertificateCategory'}"
             placeholder="请选择级别专业"
-            :options="regionData"
-            v-model="form.newPassword"
-            @change="handleChange">
+            :options="this.$store.state.list_certificate_category"
+            v-model="form.newPassword">
         </el-cascader>
       </el-form-item>
       <el-form-item label="初始转注" label-width="120px">
         <el-select size="small" v-model="form.oldPassword" placeholder="请选择初始转注">
           <el-option
-              v-for="item in options"
+              v-for="item in this.$store.state.initial_conversion_options"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -43,9 +50,9 @@
         </el-select>
       </el-form-item>
       <el-form-item v-if="enableAdvancedSearch" label="职称" label-width="120px">
-        <el-select size="small" v-model="form.oldPassword" placeholder="请选择初始转注">
+        <el-select size="small" v-model="form.oldPassword" placeholder="请选择职称">
           <el-option
-              v-for="item in options"
+              v-for="item in this.$store.state.title_options"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -57,15 +64,14 @@
             size="small"
             clearable
             placeholder="请选择社保"
-            :options="regionData"
-            v-model="form.newPassword"
-            @change="handleChange">
+            :options="this.$provinceAndCityDataNull"
+            v-model="form.newPassword">
         </el-cascader>
       </el-form-item>
       <el-form-item v-if="enableAdvancedSearch" label="三类人员" label-width="120px">
         <el-select size="small" v-model="form.oldPassword" placeholder="请选择三类人员">
           <el-option
-              v-for="item in options"
+              v-for="item in this.$store.state.class_three_personnel_options"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -75,7 +81,7 @@
       <el-form-item label="招标出场" label-width="120px">
         <el-select size="small" v-model="form.oldPassword" placeholder="请选择招标出场">
           <el-option
-              v-for="item in options"
+              v-for="item in this.$store.state.tender_exit_options"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -85,7 +91,7 @@
       <el-form-item label="人才状态" label-width="120px">
         <el-select size="small" v-model="form.oldPassword" placeholder="请选择人才状态">
           <el-option
-              v-for="item in options"
+              v-for="item in this.$store.state.talent_status_options"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -95,7 +101,7 @@
       <el-form-item v-if="enableAdvancedSearch" label="录入人" label-width="120px">
         <el-select size="small" v-model="form.oldPassword" placeholder="请选择录入人">
           <el-option
-              v-for="item in options"
+              v-for="item in this.$store.state.user_options"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -127,52 +133,127 @@
         <el-button icon="el-icon-plus" size="small" type="primary" @click.stop="$router.push('/talent-query-add')">录入人才
         </el-button>
       </div>
-      <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
+      <div class="split-line-right">共查询到 <b style="color: #409EFF">{{ pageInfo.total }}</b> 条记录</div>
     </div>
     <el-table
-        :data="tableData"
+        :data="list"
+        v-loading="loading"
         stripe
         border
-        highlight-current-row
         :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
         :cell-style="{textAlign:'center'}"
-        style="width: 100%"
-        :row-class-name="tableRowClassName">
+        style="width: 100%">
       <el-table-column
           fixed="left"
-          min-width="180"
-          prop="username"
+          min-width="100"
+          prop="fullName"
           label="姓名">
       </el-table-column>
       <el-table-column
-          min-width="180"
-          v-for="item in columns"
-          :key="item.key"
-          :prop="item.key"
-          :label="item.title">
+          min-width="260"
+          label="级别-专业-初/转">
+        <template slot-scope="scope">
+          <el-tag size="mini" disable-transitions v-if="scope.row.listCertificates.length === 0" type="info">暂无证书
+          </el-tag>
+          <span v-else style="white-space:pre-line;">
+            <span v-for="item in scope.row.listCertificates" :key="item.id">
+              {{ item.levelMajor[0] }}/{{ item.levelMajor[1] }}
+              &nbsp;-&nbsp;
+              <el-tag size="mini" disable-transitions v-if="item.initialConversion === null" type="info">无</el-tag>
+              <span v-else>
+                {{ $valueToLabel(item.initialConversion, $store.state.initial_conversion_options) + "\n" }}
+              </span>
+            </span>
+          </span>
+        </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="220">
+      <el-table-column
+          label="地区">
+        <template slot-scope="scope">
+          <span> {{ $CodeToText[scope.row.area] }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          min-width="120"
+          label="招标出场">
+        <template slot-scope="scope">
+          <span> {{ $valueToLabel(scope.row.tenderExit, $store.state.tender_exit_options) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          label="社保">
+        <template slot-scope="scope">
+          <span> {{
+              scope.row.socialSecurity === '000000' ? '无'
+                  : $CodeToText[scope.row.socialSecurity]
+            }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          min-width="100"
+          label="人才状态">
+        <template slot-scope="scope">
+          <span> {{ $valueToLabel(scope.row.talentStatus, $store.state.talent_status_options) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          label="职称">
+        <template slot-scope="scope">
+          <span> {{ $valueToLabel(scope.row.title, $store.state.title_options) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          label="三类人员">
+        <template slot-scope="scope">
+          <span> {{ $valueToLabel(scope.row.classThreePersonnel, $store.state.class_three_personnel_options) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          min-width="100"
+          label="录入人">
+        <template slot-scope="scope">
+          <span> {{ $valueToLabel(scope.row.creatorId, $store.state.user_options) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          min-width="160"
+          prop="gmtCreate"
+          label="录入时间">
+      </el-table-column>
+      <el-table-column
+          min-width="160"
+          label="报价">
+        <template slot-scope="scope">
+          <span> {{ scope.row.talentPrice }}元&nbsp;/&nbsp;
+            {{ scope.row.talentPriceNumber }}&nbsp;*&nbsp;
+            {{ $valueToLabel(scope.row.numberUnit, $store.state.number_unit_options) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column fixed="right" label="操作" width="260">
         <template slot-scope="scope">
           <el-button
               style="padding: 5px"
               size="mini"
               type="primary"
-              plain
               @click.stop="handleView(scope.$index, scope.row,'second')">图片
           </el-button>
           <el-button
               style="padding: 5px"
               size="mini"
               type="primary"
-              plain
               @click.stop="handleView(scope.$index, scope.row,'first')">证件
           </el-button>
           <el-button
               size="mini"
               style="padding: 5px"
               type="primary"
-              plain
-              @click.stop="$router.push('/talent-query-view')">查看
+              @click.stop="handleView(scope.$index, scope.row,'first')">查看
+          </el-button>
+          <el-button
+              size="mini"
+              style="padding: 5px"
+              type="primary"
+              @click.stop="handleEdit(scope.$index, scope.row)">编辑
           </el-button>
           <p style="height: 10px"></p>
           <el-button
@@ -180,28 +261,24 @@
               v-if="true"
               style="padding: 5px"
               type="primary"
-              plain
               @click.stop="handleView(scope.$index, scope.row,'third')">转账
           </el-button>
           <el-button
               style="padding: 5px"
               size="mini"
               type="primary"
-              plain
               @click.stop="handleView(scope.$index, scope.row,'fourth')">人才回访
           </el-button>
           <el-button
               style="padding: 5px"
               size="mini"
               type="primary"
-              plain
               @click.stop="handleView(scope.$index, scope.row,'fifth')">后勤申请
           </el-button>
           <el-button
               style="padding: 5px"
               size="mini"
               type="danger"
-              plain
               @click.stop="handleDelete(scope.$index, scope.row)">删除
           </el-button>
         </template>
@@ -227,13 +304,13 @@
 </template>
 
 <script>
-import {provinceAndCityData} from "_element-china-area-data@5.0.2@element-china-area-data";
 
 export default {
   name: 'TalentQuery',
   components: {},
   data() {
     return {
+      loading: false,
       enableAdvancedSearch: false,
       fileList: [],
       file: "",
@@ -250,142 +327,36 @@ export default {
         "联系电话": "telephone",
         "身份证": "identityCard"
       },
-
-      regionData: provinceAndCityData,
       columns: [
         {
-          title: '级别-专业-初/转',
-          key: 'address'
-        },
-        {
-          title: '地区',
-          key: 'address'
-        },
-        {
           title: '招标出场',
-          key: 'address'
-        },
-        {
-          title: '状态',
-          key: 'address'
+          key: 'tenderExit'
         },
         {
           title: '社保',
-          key: 'address'
+          key: 'socialSecurity'
         },
         {
           title: '人才状态',
-          key: 'address'
+          key: 'talentStatus'
         },
         {
           title: '职称',
-          key: 'address'
+          key: 'title'
         },
         {
           title: '三类人员',
-          key: 'address'
+          key: 'classThreePersonnel'
         },
         {
           title: '录入人',
-          key: 'address'
+          key: 'creatorId'
         },
         {
           title: '录入时间',
-          key: 'address'
-        },
-        {
-          title: '报价',
-          key: 'address'
+          key: 'gmtCreate'
         },
       ],
-      options: [
-        {
-          id: "xxxx",
-          value: 1,
-          label: '录入企业数'
-        },
-        {
-          id: "xxxxx",
-          value: 2,
-          label: '录入人才数'
-        },
-        {
-          value: '选项3',
-          label: '资质收购录入数'
-        },
-        {
-          value: '选项4',
-          label: '资质转让录入数'
-        },
-        {
-          value: '选项5',
-          label: '资质代办录入数'
-        },
-        {
-          value: '选项6',
-          label: '职称评审录入数'
-        },
-        {
-          value: '选项7',
-          label: '三类人员录入数'
-        },
-        {
-          value: '选项8',
-          label: '学历提升录入数'
-        },
-        {
-          value: '选项9',
-          label: '录入总数'
-        },
-      ],
-      options2: [
-        {
-          label: '热门城市',
-          options: [{
-            value: 'Shanghai',
-            label: '上海'
-          }, {
-            value: 'Beijing',
-            label: '北京'
-          }]
-        }, {
-          label: '城市名',
-          options: [{
-            value: 'Chengdu',
-            label: '成都'
-          }, {
-            value: 'Shenzhen',
-            label: '深圳'
-          }, {
-            value: 'Guangzhou',
-            label: '广州'
-          }, {
-            value: 'Dalian',
-            label: '大连'
-          }]
-        }],
-      tableData: [
-        {
-          id: 111,
-          date: '2016-05-02',
-          username: '王小虎',
-          address: '上海市普陀区',
-        }, {
-          id: 222,
-          date: '2016-05-04',
-          username: '王小虎',
-          address: '上海市普陀区'
-        }, {
-          id: 333,
-          date: '2016-05-01',
-          username: '王小虎',
-          address: '上海市普陀区',
-        }, {
-          id: 444,
-          date: '2016-05-03',
-          username: '王小虎',
-          address: '上海市普陀区'
-        }],
       pageInfo: {
         pageSize: 10,
         total: 0,
@@ -437,24 +408,16 @@ export default {
       },
     }
   },
-  mounted() {
-
+  created() {
+    this.getListTalents()
   },
   methods: {
-    tableRowClassName({rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row';
-      } else if (rowIndex === 3) {
-        return 'success-row';
-      }
-      return '';
-    },
     handleChange(file, fileList) {
       this.fileList = [fileList[fileList.length - 1]]; // 只能上传一个Excel，重复上传会覆盖之前的
       this.file = file.raw;
       let reader = new FileReader()
       let _this = this
-      console.log(_this)
+      // console.log(_this)
       reader.readAsArrayBuffer(this.file)
       reader.onload = function () {
         let buffer = reader.result
@@ -475,12 +438,12 @@ export default {
             newObj[_this.mapObj[itemKey]] = item[itemKey]
           }
           _this.list.push(newObj)
-          console.log(_this.list)
+          // console.log(_this.list)
         })
       }
     },
     handleView(_index, _row, _activeTab) {
-      console.log(_index, _row)
+      // console.log(_index, _row)
       this.$router.push({
         path: '/talent-query-view',
         query: {
@@ -489,20 +452,42 @@ export default {
         }
       })
     },
+    getListTalents(_pageSize) {
+      let url = ``
+      if (undefined !== _pageSize) {
+        url = `/talent/list?currentPage=${this.pageInfo.currentPage}&pageSize=${_pageSize}`
+      } else {
+        url = `/talent/list?currentPage=${this.pageInfo.currentPage}&pageSize=${this.pageInfo.pageSize}`
+      }
+      this.loading = true
+      this.$http.get(url).then(res => {
+        if (null !== res.data) {
+          this.pageInfo.total = res.data.total
+          this.list = res.data.list
+          this.list.forEach(item => {
+            item.listCertificates.forEach(certificate => {
+              certificate.levelMajor = JSON.parse(certificate.levelMajor)
+            })
+          })
+        }
+      })
+      this.loading = false
+    },
     /**
      * 表格翻页
      */
     handleCurrentChange() {
-
+      this.getListTalents()
     },
     /**
      * 改变页数
      */
     handleSizeChange(_pageSize) {
-      console.log(_pageSize)
+      this.getListTalents(_pageSize)
     },
+    // eslint-disable-next-line no-unused-vars
     handleDelete(_index, _row) {
-      console.log(_index, _row)
+      // console.log(_index, _row)
       this.$confirm('确定要删除这条记录吗？', '温馨提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -514,6 +499,28 @@ export default {
         });
       }).catch(() => {
       })
+    },
+    handleEdit(_index, _row) {
+      console.log(_index, _row)
+      this.$router.push('/talent-query-edit/' + _row.id)
+    },
+    cascaderClick() {
+      let that = this
+      setTimeout(() => {
+        document.querySelectorAll('.el-cascader-node__label').forEach(el => {
+          el.onclick = function () {
+            this.previousElementSibling.click()
+            that.$refs.cascader.dropDownVisible = false
+          }
+        })
+        document
+            .querySelectorAll('.el-cascader-panel .el-radio')
+            .forEach(el => {
+              el.onclick = function () {
+                that.$refs.cascader.dropDownVisible = false
+              }
+            })
+      }, 1)
     },
   }
 }

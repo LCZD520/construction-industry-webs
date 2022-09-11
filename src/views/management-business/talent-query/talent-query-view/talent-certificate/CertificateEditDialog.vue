@@ -15,30 +15,33 @@
           label-position="right">
         <el-form-item class="required" label="证件所在分支">
           <el-cascader
-              class="width-full"
               size="small"
+              class="width-full"
               clearable
               ref="cascader"
               @expand-change="cascaderClick"
               @visible-change="cascaderClick"
-              :props="{ expandTrigger: 'hover' ,checkStrictly:true ,emitPath:false}"
-              placeholder="请选择证件所在分支"
-              :options="this.$provinceAndCityData"
+              :props="{ expandTrigger: 'hover' ,checkStrictly:true
+              ,emitPath:false,value:'mechanismId',label:'mechanismName'
+              ,children:'subListMechanisms'}"
+              :options="listMechanismsTree"
               @change="handleChange"
-              v-model="form.name">
+              v-model="form.mechanismId">
           </el-cascader>
         </el-form-item>
         <el-form-item label="证件类型">
-          <el-select class="width-full" size="small" v-model="form.name">
+          <el-select
+              clearable
+              class="width-full" size="small" v-model="form.certificatesType">
             <el-option
-                v-for="item in options"
+                v-for="item in this.$store.state.certificates_category_options"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="统一备注">
+        <el-form-item label="备注">
           <el-input size="small" type="textarea" :rows="3" v-model="form.remark"/>
         </el-form-item>
       </el-form>
@@ -58,21 +61,37 @@ export default {
   name: 'CertificateAddEditDialog',
   components: {},
   data() {
-    return {
-      form: {
-        name: ''
-      }
-    }
+    return {}
   },
   props: {
     visible: {
       type: Boolean,
       default: false
+    },
+    form: {
+      type: Object,
+      default: () => {
+      }
+    },
+    listMechanismsTree: {
+      type: Array,
+      default: () => []
     }
+  },
+  created() {
   },
   methods: {
     handleSubmit() {
-      this.$message.success('提交')
+      this.$http.put('/talent-certificates/update', this.form).then(res => {
+        if (res.status) {
+          this.$message.success(res.message)
+
+          this.$emit('closeDialog')
+          this.$emit('getListCertificates')
+          return
+        }
+        this.$message.error(res.message)
+      })
     },
     cascaderClick() {
       let that = this

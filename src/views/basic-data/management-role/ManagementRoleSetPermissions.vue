@@ -25,7 +25,7 @@
       <br>
       <div class="buttons">
         <el-button
-            @click="handleSubmit"
+            v-throttle="handleSubmit"
             type="primary"
             icon="el-icon-plus">提 交
         </el-button>

@@ -10,12 +10,17 @@
           <div class="content-left-header">
             <el-button style="padding: 6px" size="mini" type="primary" @click="$router.push('/institution-add')">添加
             </el-button>
-            <el-button style="padding: 6px" size="mini" @click="handleEditMenu">编辑</el-button>
-            <el-button style="padding: 6px" size="mini" type="danger" @click="handleDelete">删除</el-button>
+            <el-button style="padding: 6px" size="mini" @click="handleEditMechanism"
+                       :disabled="currentMechanismId === null">
+              编辑
+            </el-button>
+            <el-button style="padding: 6px" size="mini" type="danger" :disabled="currentMechanismId === null"
+                       @click="handleDeleteMechanism">删除
+            </el-button>
           </div>
           <div class="content-left-content">
             <el-tree
-                :data="data"
+                :data="$store.state.mechanisms.listMechanisms"
                 :props="defaultProps"
                 highlight-current
                 @node-click="handleNodeClick"></el-tree>
@@ -35,7 +40,7 @@
             <el-form-item label="是否在职" label-width="120px">
               <el-select size="small" v-model="form.oldPassword" placeholder="请选择是否在职">
                 <el-option
-                    v-for="item in $store.state.bool_options"
+                    v-for="item in this.$store.state.bool_options"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value">
@@ -53,17 +58,16 @@
                          @click="$router.push('/management-organization-add')">添加
               </el-button>
             </div>
-            <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
+            <div class="split-line-right">共查询到 <b style="color: #409EFF">{{ pageInfo.total }}</b> 条记录</div>
           </div>
           <el-table
               :data="tableData"
               stripe
+              height="400"
               border
-              highlight-current-row
               :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
               :cell-style="{textAlign:'center'}"
-              style="width: 100%"
-              :row-class-name="tableRowClassName">
+              style="width: 100%">
             <el-table-column
                 min-width="180"
                 prop="username"
@@ -102,8 +106,10 @@
             </el-table-column>
             <el-table-column
                 min-width="180"
-                prop="username"
                 label="机构名称">
+              <template slot-scope="scope">
+                {{ scope.row.mechanism.mechanismName }}
+              </template>
             </el-table-column>
             <el-table-column
                 min-width="180"
@@ -127,25 +133,21 @@
                 <el-button
                     size="mini"
                     type="primary"
-                    plain
                     @click="handleView(scope.$index, scope.row)">查看
                 </el-button>
                 <el-button
                     size="mini"
                     type="primary"
-                    plain
                     @click="handleEdit(scope.$index, scope.row)">编辑
                 </el-button>
                 <el-button
                     size="mini"
                     type="danger"
-                    plain
                     @click="handleDelete(scope.$index, scope.row)">删除
                 </el-button>
                 <el-button
                     size="mini"
                     type="primary"
-                    plain
                     @click="handleResetPassword(scope.$index, scope.row)">重置密码
                 </el-button>
               </template>
@@ -156,11 +158,10 @@
             <div class="pagination-right">
               <el-pagination
                   ref="pagination"
-                  :page-sizes="[10, 20, 30, 50]"
+                  :page-sizes="[10]"
                   :page-size="pageInfo.pageSize"
                   :current-page.sync="pageInfo.currentPage"
                   @current-change="handleCurrentChange"
-                  @size-change="handleSizeChange"
                   background
                   layout="sizes, prev, pager, next, jumper"
                   :total="pageInfo.total">
@@ -179,29 +180,8 @@ export default {
   components: {},
   data() {
     return {
-      tableData: [
-        {
-          date: '2016-05-02',
-          username: '王小虎',
-          address: '上海市普陀区',
-          sex: 1,
-          enabled: true
-        },
-        {
-          date: '2016-05-02',
-          username: '王小',
-          sex: 2,
-          address: '上海市普陀区',
-          enabled: false
-        },
-        {
-          date: '2016-05-02',
-          username: '王小',
-          sex: 3,
-          address: '上海市普陀区',
-          enabled: false
-        },
-      ],
+      currentMechanismId: null,
+      tableData: [],
       pageInfo: {
         pageSize: 10,
         total: 0,
@@ -212,95 +192,40 @@ export default {
         newPassword: '',
         confirmPassword: '',
       },
-      pickerOptions: {
-        shortcuts: [
-          {
-            text: '今天',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '一周内',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '一个月内',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '三个月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit('pick', [start, end]);
-            }
-          }
-        ]
-      },
-      data: [
-        {
-          label: '一级 1',
-          children: [
-            {
-              label: '二级 1-1',
-              children: [
-                {
-                  label: '三级 1-1-1'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          label: '一级 2',
-          children: [
-            {
-              label: '二级 2-1',
-              children: [
-                {
-                  label: '三级 2-1-1'
-                }
-              ]
-            },
-            {
-              label: '二级 2-2',
-              children: [
-                {
-                  label: '三级 2-2-1'
-                }
-              ]
-            }
-          ]
-        }
-      ],
+      listRoles: [],
       defaultProps: {
-        children: 'children',
-        label: 'label'
+        children: 'subListMechanisms',
+        label: 'mechanismName'
       }
     }
   },
+  created() {
+    this.getListUsers()
+    this.getListMechanisms()
+  },
   methods: {
-    getListPermissions() {
-      this.$http('/permission/get-list-permissions').then(res => {
+    async getListUsers(_pageSize) {
+      let url = ``
+      if (undefined !== _pageSize) {
+        url = `/user/list?currentPage=${this.pageInfo.currentPage}&pageSize=${_pageSize}`
+      } else {
+        url = `/user/list?currentPage=${this.pageInfo.currentPage}&pageSize=${this.pageInfo.pageSize}`
+      }
+      try {
+        const res = await this.$http.get(url)
         if (res.status) {
-          console.log(res)
-          if (res.data.listPermissions !== null) {
-            this.options = res.data.listPermissions
-          }
+          this.tableData = res.data.list
+          this.pageInfo.total = res.data.total
+        }
+        // eslint-disable-next-line no-empty
+      } catch (e) {
+
+      }
+    },
+    async getListMechanisms() {
+      await this.$http.get('/mechanism/list').then(res => {
+        if (res.status && res.data.listMechanisms != null) {
+          this.$store.dispatch('mechanisms/initListMechanisms', res.data.listMechanisms)
         }
       })
     },
@@ -308,41 +233,47 @@ export default {
      * 表格翻页
      */
     handleCurrentChange() {
-
+      this.currentMechanismId == null ? this.getListUsers() : this.getListUsersByMechanismId(this.currentMechanismId)
     },
-    /**
-     * 改变页数
-     * @param _pageSize
-     */
-    handleSizeChange(_pageSize) {
-      console.log(_pageSize)
+    async handleNodeClick({mechanismId}) {
+      this.currentMechanismId = mechanismId
+      this.pageInfo.currentPage = 1
+      await this.getListUsersByMechanismId(mechanismId)
     },
-    handleNodeClick({label}) {
-      console.log(label)
-    },
-    tableRowClassName({rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row';
-      } else if (rowIndex === 3) {
-        return 'success-row';
+    async getListUsersByMechanismId(mechanismId) {
+      let url = `/user/list-condition?mechanismId=${mechanismId}&currentPage=${this.pageInfo.currentPage}&pageSize=${this.pageInfo.pageSize}`
+      try {
+        const res = await this.$http.get(url)
+        if (res.status) {
+          this.tableData = res.data.list
+          this.pageInfo.total = res.data.total
+        }
+        // eslint-disable-next-line no-empty
+      } catch (e) {
       }
-      return '';
     },
     handleView(_index, _row) {
       console.log(_index, _row)
-      this.$router.push('/management-organization-view')
+      this.$router.push('/management-organization-view/' + _row.userId)
     },
     handleEdit(_index, _row) {
-      console.log(_index, _row)
-      this.$router.push('/management-organization-edit')
+      this.$router.push('/management-organization-edit/' + _row.userId)
+    },
+    handleDeleteMechanism() {
+      this.$http.delete('/mechanism/delete/' + this.currentMechanismId).then(res => {
+        if (res.status) {
+          this.$message.success(res.message)
+          this.getList()
+          return
+        }
+        this.$message.error(res.message)
+      })
     },
     handleDelete(_index, _row) {
-      console.log(_index, _row)
-      this.$message.success('删除')
+      this.$message.success('删除' + _row)
     },
-    handleEditMenu(_index, _row) {
-      console.log(_index, _row)
-      this.$router.push('/institution-edit')
+    handleEditMechanism() {
+      this.$router.push('/institution-edit/' + this.currentMechanismId)
     },
     handleResetPassword(_index, _row) {
       console.log(_index, _row)
@@ -352,11 +283,12 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style scoped lang="less">
 @import "../../../assets/css/common-table-pagination";
 @import "../../../assets/css/common-el-table-scrollbar";
 @import "../../../assets/css/split-line";
 @import "../../../assets/css/common-el-input-inner-width";
+
 .management-organization {
   margin: -10px;
 

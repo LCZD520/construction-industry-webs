@@ -73,7 +73,13 @@ export default {
 
 <style scoped lang="less">
 
-.loading{
-  height: 500px;
+.loading {
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(171, 220, 255, .1);
 }
 </style>

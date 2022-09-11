@@ -17,9 +17,7 @@
             size="small"
             clearable
             placeholder="请选择资质需求"
-            :options="regionData"
-            v-model="form.newPassword"
-            @change="handleChange">
+            v-model="form.newPassword">
         </el-cascader>
       </el-form-item>
       <el-form-item label="所在地区" label-width="100px">
@@ -27,9 +25,7 @@
             size="small"
             clearable
             placeholder="请输入所在地区"
-            :options="regionData"
-            v-model="form.newPassword"
-            @change="handleChange">
+            v-model="form.newPassword">
         </el-cascader>
       </el-form-item>
       <el-form-item label="状态" label-width="100px">
@@ -80,34 +76,69 @@
       <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
     </div>
     <el-table
-        :data="tableData"
+        :data="list"
         stripe
         border
-        highlight-current-row
         :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
         :cell-style="{textAlign:'center'}"
-        style="width: 100%"
-        :row-class-name="tableRowClassName">
+        style="width: 100%">
       <el-table-column
-          min-width="180"
-          v-for="item in columns"
-          :key="item.key"
-          :prop="item.key"
-          :label="item.title">
+          min-width="160"
+          prop="transferCustomers"
+          label="收购意向客户">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="180">
+      <el-table-column
+          min-width="200"
+          label="资质需求">
+        <template slot-scope="scope">
+          <p v-for="(item,index) in scope.row.qualificationRequirements" :key="index">{{ item }}</p>
+        </template>
+      </el-table-column>
+      <el-table-column
+          label="所在地区">
+        <template slot-scope="scope">
+          <span> {{ $CodeToText[scope.row.area] }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          label="状态">
+        <template slot-scope="scope">
+          <span> {{ $valueToLabel(scope.row.status, $store.state.qualification_transfer_status_options) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          label="录入人">
+        <template slot-scope="scope">
+          <span> {{ $valueToLabel(scope.row.creatorId, $store.state.user_options) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          min-width="160"
+          prop="gmtCreate"
+          label="录入时间">
+      </el-table-column>
+      <el-table-column fixed="right" label="操作" width="300">
         <template slot-scope="scope">
           <el-button
               size="mini"
               type="primary"
-              plain
-              @click="handleView(scope.$index, scope.row,'first')">订单
+              @click.stop="handleEdit(scope.$index, scope.row)">订单
           </el-button>
           <el-button
               size="mini"
               type="primary"
-              plain
-              @click="handleView(scope.$index, scope.row,'second')">图片
+              @click.stop="handleView(scope.$index, scope.row,'first')">图片
+          </el-button>
+          <el-button
+              size="mini"
+              type="primary"
+              @click.stop="handleStrippe(scope.$index, scope.row,'second')">编辑
+          </el-button>
+          <el-button
+              v-if="true"
+              size="mini"
+              type="danger"
+              @click.stop="handleDelete(scope.$index, scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
@@ -132,16 +163,14 @@
 </template>
 
 <script>
-// 省市区数据源
-// eslint-disable-next-line no-unused-vars
-import {provinceAndCityData, CodeToText} from 'element-china-area-data'
 
 export default {
   name: 'QualificationTransfer',
   components: {},
   data() {
     return {
-      regionData: provinceAndCityData,
+      list: [],
+      loading: false,
       columns: [
         {
           title: '客户名称',
@@ -240,24 +269,6 @@ export default {
             label: '大连'
           }]
         }],
-      tableData: [
-        {
-          date: '2016-05-02',
-          username: '王小虎',
-          address: '上海市普陀区',
-        }, {
-          date: '2016-05-04',
-          username: '王小虎',
-          address: '上海市普陀区'
-        }, {
-          date: '2016-05-01',
-          username: '王小虎',
-          address: '上海市普陀区',
-        }, {
-          date: '2016-05-03',
-          username: '王小虎',
-          address: '上海市普陀区'
-        }],
       pageInfo: {
         pageSize: 10,
         total: 0,
@@ -309,36 +320,40 @@ export default {
       },
     }
   },
-  mounted() {
-    console.log(this.$route)
+  created() {
+    this.getListEnterpriseResources()
   },
   methods: {
-    tableRowClassName({rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row';
-      } else if (rowIndex === 3) {
-        return 'success-row';
-      }
-      return '';
-    },
-    handleChange(_val) {
-      console.log(_val)
-      _val.forEach(k => {
-        console.log(CodeToText[k])
+    getListEnterpriseResources(_pageSize) {
+      let url = `/qualification-transfer/list`
+      this.loading = true
+      this.$http.get(url, {
+        params: {
+          currentPage: this.pageInfo.currentPage,
+          pageSize: _pageSize ? _pageSize : this.pageInfo.pageSize,
+        }
+      }).then(res => {
+        if (null !== res.data) {
+          this.pageInfo.total = res.data.total
+          this.list = res.data.list
+          this.list.forEach(item => {
+            item.qualificationRequirements = JSON.parse(item.qualificationRequirements)
+          })
+        }
       })
-      this.ruleForm.area = JSON.stringify(_val)
+      this.loading = false
     },
     /**
      * 表格翻页
      */
     handleCurrentChange() {
-
+      this.getListEnterpriseResources()
     },
     /**
      * 改变页数
      */
     handleSizeChange(_pageSize) {
-      console.log(_pageSize)
+      this.getListEnterpriseResources(_pageSize)
     },
     handleView(_index, _row, _activeTab) {
       console.log(_index, _row)

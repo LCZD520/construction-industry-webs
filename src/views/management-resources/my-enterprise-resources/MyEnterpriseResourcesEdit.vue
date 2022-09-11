@@ -5,7 +5,7 @@
 */
 <template>
   <div class="my-enterprise-resources-edit">
-    <EnterpriseResourcesAddEdit/>
+    <EnterpriseResourcesAddEdit resource-mode="edit"/>
   </div>
 </template>
 

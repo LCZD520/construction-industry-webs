@@ -86,11 +86,87 @@
               </template>
             </el-table-column>
             <el-table-column
-                width="180"
-                v-for="item in columns"
-                :key="item.key"
-                :prop="item.key"
-                :label="item.title">
+                prop="fullName"
+                label="姓名">
+            </el-table-column>
+            <el-table-column
+                label="地区">
+              <template slot-scope="scope">
+                <el-tag disable-transitions type="info" size="mini" v-if="scope.row.area === null">未填</el-tag>
+                <span v-else> {{ $CodeToText[scope.row.area] }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+                label="社保">
+              <template slot-scope="scope">
+                <el-tag disable-transitions type="info" size="mini" v-if="scope.row.socialSecurity === null">未填</el-tag>
+                <span> {{
+                    scope.row.socialSecurity === '000000' ? '无'
+                        : $CodeToText[scope.row.socialSecurity]
+                  }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+                prop="telephoneNumber"
+                label="电话号码">
+              <template slot-scope="scope">
+                <el-tag disable-transitions type="info" size="mini" v-if="scope.row.telephoneNumber === null">未填
+                </el-tag>
+                <span v-else>{{ scope.row.telephoneNumber }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+                label="职称">
+              <template slot-scope="scope">
+                <el-tag disable-transitions type="info" size="mini" v-if="scope.row.title === null">未填</el-tag>
+                <span v-else> {{ $valueToLabel(scope.row.title, $store.state.title_options) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+                label="三类人员">
+              <template slot-scope="scope">
+                <el-tag disable-transitions type="info" size="mini" v-if="scope.row.classThreePersonnel === null">未填
+                </el-tag>
+                <span v-else> {{
+                    $valueToLabel(scope.row.classThreePersonnel, $store.state.class_three_personnel_options)
+                  }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+                label="招标出场">
+              <template slot-scope="scope">
+                <el-tag disable-transitions type="info" size="mini" v-if="scope.row.tenderExit === null">未填</el-tag>
+                <span v-else> {{ $valueToLabel(scope.row.tenderExit, $store.state.tender_exit_options) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+                min-width="260"
+                label="级别-专业-初/转">
+              <template slot-scope="scope">
+                <el-tag size="mini" disable-transitions v-if="scope.row.listCertificates.length === 0" type="info">暂无证书
+                </el-tag>
+                <span v-else style="white-space:pre-line;">
+            <span v-for="item in scope.row.listCertificates" :key="item.id">
+              {{ item.levelMajor[0] }}/{{ item.levelMajor[1] }}
+              &nbsp;-&nbsp;
+              <el-tag size="mini" disable-transitions v-if="item.initialConversion === null" type="info">无</el-tag>
+              <span v-else>
+                {{ $valueToLabel(item.initialConversion, $store.state.initial_conversion_options) + "\n" }}
+              </span>
+            </span>
+          </span>
+              </template>
+            </el-table-column>
+            <el-table-column
+                min-width="160"
+                label="报价">
+              <template slot-scope="scope">
+                <el-tag type="info" size="mini" v-if="scope.row.talentPrice === null">未填</el-tag>
+                <span v-else> {{ scope.row.talentPrice }}元&nbsp;/&nbsp;
+                  {{ scope.row.talentPriceNumber }}&nbsp;*&nbsp;
+                  {{ $valueToLabel(scope.row.numberUnit, $store.state.number_unit_options) }}
+                </span>
+              </template>
             </el-table-column>
           </el-table>
           <div class="pagination">
@@ -136,89 +212,8 @@ export default {
         name: '',
         area: ''
       },
-      columns: [
-        {
-          title: '姓名',
-          key: 'username'
-        },
-        {
-          title: '地区',
-          key: 'address'
-        },
-        {
-          title: '社保',
-          key: 'address2'
-        },
-        {
-          title: '电话号码',
-          key: 'address3'
-        },
-        {
-          title: '职称',
-          key: 'address4'
-        },
-        {
-          title: '三类人员',
-          key: 'address5'
-        },
-        {
-          title: '招标出场',
-          key: 'address6'
-        },
-        {
-          title: '级别-专业-初/转',
-          key: 'address7'
-        },
-        {
-          title: '报价',
-          key: 'address8'
-        },
-      ],
       options: [
-        {
-          id: "xxxx",
-          value: 1,
-          label: '录入企业数'
-        },
-        {
-          id: "xxxxx",
-          value: 2,
-          label: '录入人才数'
-        },
-        {
-          value: '选项3',
-          label: '资质收购录入数'
-        },
-        {
-          value: '选项4',
-          label: '资质转让录入数'
-        },
-        {
-          value: '选项5',
-          label: '资质代办录入数'
-        },
-        {
-          value: '选项6',
-          label: '职称评审录入数'
-        },
-        {
-          value: '选项7',
-          label: '三类人员录入数'
-        },
-        {
-          value: '选项8',
-          label: '学历提升录入数'
-        },
-        {
-          value: '选项9',
-          label: '录入总数'
-        },
       ],
-      pageInfo: {
-        pageSize: 10,
-        total: 0,
-        currentPage: 1,
-      },
     }
   },
   props: {
@@ -233,6 +228,9 @@ export default {
     dialogTitle: {
       type: String,
       default: ''
+    },
+    pageInfo: {
+      type: Object
     }
   },
   methods: {
@@ -270,8 +268,7 @@ export default {
      */
     handleConfirm() {
       if (this.currentSelectId) {
-
-
+        this.$emit('confirm', this.currentIndex)
         this.$emit('closeDialog')
         this.cancelSelect()
         return
@@ -311,13 +308,13 @@ export default {
      * 表格翻页
      */
     handleCurrentChange() {
-
+      this.$emit('handleCurrentChange')
     },
     /**
      * 改变页数
      */
     handleSizeChange(_pageSize) {
-      console.log(_pageSize)
+      this.$emit('handleSizeChange', _pageSize)
     }
   },
 }

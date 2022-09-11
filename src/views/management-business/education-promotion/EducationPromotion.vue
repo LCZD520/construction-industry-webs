@@ -66,65 +66,7 @@
       </div>
       <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
     </div>
-    <el-table
-        :data="tableData"
-        stripe
-        border
-        highlight-current-row
-        :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
-        :cell-style="{textAlign:'center'}"
-        style="width: 100%"
-        :row-class-name="tableRowClassName">
-      <el-table-column
-          min-width="180"
-          v-for="item in columns"
-          :key="item.key"
-          :prop="item.key"
-          :label="item.title">
-      </el-table-column>
-      <el-table-column fixed="right" label="操作" width="400">
-        <template slot-scope="scope">
-          <el-button
-              v-if="false"
-              size="mini"
-              type="primary"
-              plain
-              @click.stop="handleEdit(scope.$index, scope.row)">完成
-          </el-button>
-          <el-button
-              size="mini"
-              type="primary"
-              plain
-              @click.stop="handleEdit(scope.$index, scope.row)">订单
-          </el-button>
-          <el-button
-              size="mini"
-              type="primary"
-              plain
-              @click.stop="handleEdit(scope.$index, scope.row)">图片
-          </el-button>
-          <el-button
-              size="mini"
-              type="primary"
-              plain
-              @click.stop="handleEdit(scope.$index, scope.row)">查看
-          </el-button>
-          <el-button
-              size="mini"
-              type="primary"
-              plain
-              @click.stop="handleEdit(scope.$index, scope.row)">编辑
-          </el-button>
-          <el-button
-              v-if="true"
-              size="mini"
-              type="danger"
-              plain
-              @click.stop="handleDelete(scope.$index, scope.row)">删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+
     <div class="pagination">
       <div class="pagination-total">共<span class="total"> {{ pageInfo.total }} </span>条</div>
       <div class="pagination-right">

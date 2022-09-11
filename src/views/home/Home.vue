@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <el-tabs v-model="activeName" @tab-click="handleClick">
+    <el-tabs v-model="activeName">
       <el-tab-pane label="系统公告" name="one">
         <div v-if="activeName === 'one'">
           <el-table
@@ -35,33 +35,7 @@
       </el-tab-pane>
       <el-tab-pane label="人才订单公示确认" name="two">
         <div v-if="activeName === 'two'">
-          <el-table
-              :data="tableData"
-              stripe
-              border
-              highlight-current-row
-              :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
-              :cell-style="{textAlign:'center'}"
-              style="width: 100%"
-              :row-class-name="tableRowClassName">
-            <el-table-column
-                min-width="200px"
-                v-for="item in columns2"
-                :key="item.key"
-                :prop="item.key"
-                :label="item.title">
-            </el-table-column>
-            <el-table-column label="操作" fixed="right" width="200">
-              <template slot-scope="scope">
-                <el-button
-                    size="mini"
-                    icon="el-icon-check"
-                    type="primary"
-                    @click="handleConfirm(scope.$index, scope.row)">确认
-                </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
+          <TalentOrderPublicity/>
         </div>
       </el-tab-pane>
       <el-tab-pane label="资质转让订单确认" name="three">
@@ -166,34 +140,17 @@
         </div>
       </el-tab-pane>
     </el-tabs>
-    <div class="pagination">
-      <div class="pagination-total">共<span class="total"> {{ pageInfo.total }} </span>条</div>
-      <div class="pagination-right">
-        <el-pagination
-            ref="pagination"
-            :page-sizes="[10, 20, 30, 50]"
-            :page-size="pageInfo.pageSize"
-            :current-page.sync="pageInfo.currentPage"
-            @current-change="handleCurrentChange"
-            @size-change="handleSizeChange"
-            background
-            layout="sizes, prev, pager, next, jumper"
-            :total="pageInfo.total">
-        </el-pagination>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
 
+import TalentOrderPublicity from "./talent-order/TalentOrderPublicity";
 export default {
   name: 'Home',
-  components: {},
+  components: {TalentOrderPublicity},
   data() {
-    let homeTempStr = localStorage.getItem("homeTemp")
-    let homeTempObj = homeTempStr ? JSON.parse(homeTempStr) : {}
-    return Object.assign({
+    return {
       activeName: 'one',
       pageInfo: {
         pageSize: 10,
@@ -208,48 +165,6 @@ export default {
         },
         {
           title: '发布时间',
-          key: 'address'
-        },
-      ],
-      columns2: [
-        {
-          title: '订单编号',
-          key: 'name',
-        },
-        {
-          title: '企业名称',
-          key: 'address'
-        },
-        {
-          title: '人才名称',
-          key: 'address'
-        },
-        {
-          title: '级别-专业-初/转',
-          key: 'address'
-        },
-        {
-          title: '三类人员',
-          key: 'address'
-        },
-        {
-          title: '人才价格',
-          key: 'address'
-        },
-        {
-          title: '订单需求',
-          key: 'address'
-        },
-        {
-          title: '订单时间',
-          key: 'address'
-        },
-        {
-          title: '人才录入人',
-          key: 'address'
-        },
-        {
-          title: '企业录入人',
           key: 'address'
         },
       ],
@@ -383,11 +298,24 @@ export default {
           name: '王小虎',
           address: '上海市普陀区'
         }],
-    }, homeTempObj)
+    }
   },
   mounted() {
   },
   methods: {
+    add() {
+      this.$http.post('/test',
+          {
+            name: '睡大觉',
+            age: 12
+          }).then(() => {
+        this.$http.get('/get').then(res => {
+          let obj = JSON.parse(res.data)
+          console.log(obj)
+        })
+      })
+
+    },
     tableRowClassName({rowIndex}) {
       if (rowIndex === 1) {
         return 'warning-row';
@@ -402,9 +330,6 @@ export default {
     },
     handleConfirm(_index, _row) {
       console.log(_index, _row)
-    },
-    handleClick() {
-
     },
     /**
      * 表格翻页

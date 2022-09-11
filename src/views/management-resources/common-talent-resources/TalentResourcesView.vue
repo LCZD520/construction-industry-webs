@@ -9,8 +9,11 @@
         <el-col :span="12">
           <el-form-item label="资源是否共享">
             <el-radio-group disabled v-model="form.shared">
-              <el-radio :label="2">否</el-radio>
-              <el-radio :label="1">是</el-radio>
+              <el-radio
+                  v-for="item in this.$store.state.bool_options"
+                  :key="item.value"
+                  :label="item.value">{{ item.label }}
+              </el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -18,15 +21,17 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="姓名">
-            <el-input disabled placeholder="请输入联系人" size="small" v-model="form.fullName"/>
+            <el-input disabled size="small" v-model="form.fullName"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="性别">
             <el-radio-group disabled v-model="form.sex">
-              <el-radio :label="1">男</el-radio>
-              <el-radio :label="2">女</el-radio>
-              <el-radio :label="3">未知</el-radio>
+              <el-radio
+                  v-for="item in this.$store.state.sex_options"
+                  :key="item.value"
+                  :label="item.value">{{ item.label }}
+              </el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -36,13 +41,13 @@
           <el-form-item label="地区">
             <el-cascader
                 disabled
-                class="width-full"
                 size="small"
+                class="width-full"
                 clearable
-                placeholder="请选择地区"
-                :options="regionData"
-                v-model="form.newPassword"
-                @change="handleChange">
+                :props="{ expandTrigger: 'hover' ,checkStrictly:true ,emitPath:false}"
+                placeholder=" "
+                :options="this.$provinceAndCityData"
+                v-model="form.area">
             </el-cascader>
           </el-form-item>
         </el-col>
@@ -50,13 +55,13 @@
           <el-form-item label="社保">
             <el-cascader
                 disabled
-                class="width-full"
                 size="small"
+                class="width-full"
                 clearable
-                placeholder="请选择社保"
-                :options="regionData"
-                v-model="form.socialSecurity"
-                @change="handleChange">
+                placeholder=" "
+                :props="{ expandTrigger: 'hover' ,checkStrictly:true ,emitPath:false}"
+                :options="this.$provinceAndCityDataNull"
+                v-model="form.socialSecurity">
             </el-cascader>
           </el-form-item>
         </el-col>
@@ -64,21 +69,21 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="电话号码">
-            <el-input disabled placeholder="请输入电话号码" size="small" v-model="form.telephoneNumber"/>
+            <el-input disabled size="small" v-model="form.telephoneNumber"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="QQ号码">
-            <el-input disabled placeholder="请输入QQ号码" size="small" v-model="form.qqNumber"/>
+            <el-input disabled size="small" v-model="form.qqNumber"/>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="学历">
-            <el-select disabled class="width-full" size="small" v-model="form.education" placeholder="请选择学历">
+            <el-select placeholder=" " disabled class="width-full" size="small" v-model="form.education">
               <el-option
-                  v-for="item in options"
+                  v-for="item in this.$store.state.education_options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -88,9 +93,9 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="职称">
-            <el-select disabled class="width-full" size="small" v-model="form.title" placeholder="请选择职称">
+            <el-select placeholder=" " disabled class="width-full" size="small" v-model="form.title">
               <el-option
-                  v-for="item in options"
+                  v-for="item in this.$store.state.title_options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -102,9 +107,9 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="三类人员">
-            <el-select disabled class="width-full" size="small" v-model="form.classThreePersonnel" placeholder="请选择三类人员">
+            <el-select placeholder=" " disabled class="width-full" size="small" v-model="form.classThreePersonnel">
               <el-option
-                  v-for="item in options"
+                  v-for="item in this.$store.state.class_three_personnel_options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -114,9 +119,9 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="招标出场">
-            <el-select disabled class="width-full" size="small" v-model="form.tenderExit" placeholder="请选择招标出场">
+            <el-select placeholder=" " disabled class="width-full" size="small" v-model="form.tenderExit">
               <el-option
-                  v-for="item in options"
+                  v-for="item in this.$store.state.tender_exit_options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -127,23 +132,54 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="证书">
+          <el-form-item prop="listCertificates" label="证书">
             <el-table
                 size="mini"
-                :data="tableData"
+                :data="form.listCertificates"
                 stripe
                 border
-                highlight-current-row
                 :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
                 :cell-style="{textAlign:'center'}"
-                style="width: 100%"
-                :row-class-name="tableRowClassName">
+                style="width: 100%">
               <el-table-column
                   min-width="200"
-                  v-for="item in columns"
-                  :key="item.key"
-                  :prop="item.key"
-                  :label="item.title">
+                  label="级别专业">
+                <template slot-scope="scope">
+                  {{ scope.row.levelMajor[0] }}&nbsp;-&nbsp;{{ scope.row.levelMajor[1] }}
+                </template>
+              </el-table-column>
+              <el-table-column
+                  min-width="200"
+                  label="初始转注">
+                <template slot-scope="scope">
+                  {{ $valueToLabel(scope.row.initialConversion, $store.state.initial_conversion_options) }}
+                </template>
+              </el-table-column>
+              <el-table-column
+                  min-width="200"
+                  prop="issueCertTime"
+                  label="发证时间">
+              </el-table-column>
+              <el-table-column
+                  min-width="200"
+                  prop="continuingEducationDate"
+                  label="继续教育时间（默认3年）">
+              </el-table-column>
+              <el-table-column fixed="right" label="操作" width="120">
+                <template slot-scope="scope">
+                  <el-button
+                      style="padding: 5px"
+                      size="mini"
+                      type="primary"
+                      @click.stop="handleEdit(scope.$index, scope.row)">编辑
+                  </el-button>
+                  <el-button
+                      style="padding: 5px"
+                      size="mini"
+                      type="danger"
+                      @click.stop="handleDelete(scope.$index, scope.row)">删除
+                  </el-button>
+                </template>
               </el-table-column>
             </el-table>
           </el-form-item>
@@ -152,9 +188,9 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="证书状态">
-            <el-select disabled class="width-full" size="small" v-model="form.certificateStatus" placeholder="请选择证书状态">
+            <el-select placeholder=" " disabled class="width-full" size="small" v-model="form.certificateStatus">
               <el-option
-                  v-for="item in options"
+                  v-for="item in this.$store.state.certificate_status_options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -164,9 +200,9 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="客户类型">
-            <el-select disabled class="width-full" size="small" v-model="form.talentType" placeholder="请选择客户类型">
+            <el-select placeholder=" " disabled class="width-full" size="small" v-model="form.talentType">
               <el-option
-                  v-for="item in options"
+                  v-for="item in this.$store.state.customer_type_options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -179,7 +215,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="录入人">
-            <el-input disabled size="small" v-model="form.name"/>
+            <el-input disabled size="small" :value="$valueToLabel(form.creatorId,this.$store.state.user_options)"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -197,31 +233,25 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="价格">
-            <el-input-number disabled controls-position="right" :min="0" size="small" v-model="form.price"/>
-            元
-            <el-input-number disabled controls-position="right" :min="1" size="small" v-model="form.priceNumber"/>
-            &nbsp;
-            <el-select disabled class="width-full" size="small" v-model="form.numberUnit" style="width: 80px;"
-                       placeholder="请选择">
-              <el-option label="年" value="1"></el-option>
-              <el-option label="月" value="2"></el-option>
-              <el-option label="日" value="3"></el-option>
-            </el-select>
+            <span v-if="form.talentPrice !== null">
+              {{ form.talentPrice }}&nbsp;元&nbsp;/&nbsp;{{ form.talentPriceNumber }}
+            &nbsp;*&nbsp;
+            {{ $valueToLabel(form.numberUnit, $store.state.number_unit_options) }}
+            </span>
           </el-form-item>
         </el-col>
       </el-row>
       <el-form-item label="人才要求">
-        <el-input disabled v-model="form.talentRequirement" placeholder="请输入人才要求..." :rows="3" type="textarea">
-
+        <el-input disabled v-model="form.talentRequirement" :rows="3" type="textarea">
         </el-input>
       </el-form-item>
       <el-form-item label="跟进情况">
-        <el-input disabled v-model="form.followUpSituation" placeholder="请输入跟进情况..." :rows="3" type="textarea">
+        <el-input disabled v-model="form.followUpSituation" :rows="3" type="textarea">
 
         </el-input>
       </el-form-item>
       <el-form-item label="备注">
-        <el-input disabled v-model="form.remark" placeholder="请输入备注..." :rows="3" type="textarea">
+        <el-input disabled v-model="form.remark" :rows="3" type="textarea">
 
         </el-input>
       </el-form-item>
@@ -241,32 +271,27 @@ export default {
   data() {
     return {
       form: {
-        area: null,
-        certificateStatus: null,
-        classThreePersonnel: null,
-        creatorId: null,
-        creatorName: null,
-        education: null,
-        followUpSituation: null,
-        fullName: null,
-        gmtCreate: null,
-        gmtModified: null,
         id: null,
-        numberUnit: null,
-        price: null,
-        priceNumber: null,
-        qqNumber: null,
-        regeneratorId: null,
-        regeneratorName: null,
-        remark: null,
-        sex: null,
         shared: null,
+        fullName: null,
+        sex: null,
+        area: null,
         socialSecurity: null,
-        talentRequirement: null,
-        talentType: null,
         telephoneNumber: null,
-        tenderExit: null,
+        qqNumber: null,
+        education: null,
         title: null,
+        classThreePersonnel: null,
+        tenderExit: null,
+        certificateStatus: null,
+        talentType: null,
+        talentPrice: null,
+        talentPriceNumber: null,
+        numberUnit: null,
+        talentRequirement: null,
+        followUpSituation: null,
+        remark: null,
+        listCertificates: []
       },
       columns: [
         {
@@ -287,19 +312,29 @@ export default {
         },
       ],
       tableData: [{}]
-
+    }
+  },
+  created() {
+    if (this.$route.params.id !== null) {
+      this.getDetailById(this.$route.params.id / 1)
     }
   },
   methods: {
-    tableRowClassName({rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row';
-      } else if (rowIndex === 3) {
-        return 'success-row';
+    async getDetailById(_id) {
+      try {
+        const res = await this.$http.get('/talent-resource/detail/' + _id)
+        if (res.status && res.data !== null) {
+          this.form = res.data
+          this.form.listCertificates.forEach(item => {
+            item.levelMajor = JSON.parse(item.levelMajor)
+          })
+        }
+      } catch (e) {
+        console.log(e)
       }
-      return '';
-    },
+    }
   }
+
 }
 </script>
 

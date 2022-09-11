@@ -41,13 +41,22 @@ const entryRoutes = [
         component: () => import('../../../views/management-entry/entry-talent-contract/EntryTalentContract'),
     },
     {
-        path: '/entry-talent-contract-view',
+        path: '/entry-talent-contract-view/:id',
         name: 'entry-talent-contract-view',
         meta: {
             title: '人才合同价入账查看',
             activeMenuPath: '/entry-talent-contract',
         },
         component: () => import('../../../views/management-entry/entry-talent-contract/EntryTalentContractView'),
+    },
+    {
+        path: '/entry-talent-contract-approval/:id',
+        name: 'entry-talent-contract-approval',
+        meta: {
+            title: '人才合同价入账审核',
+            activeMenuPath: '/entry-talent-contract',
+        },
+        component: () => import('../../../views/management-entry/entry-talent-contract/EntryTalentContractApproval'),
     },
     {
         path: '/entry-qualification-transfer',

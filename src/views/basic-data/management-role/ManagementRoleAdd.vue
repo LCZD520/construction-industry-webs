@@ -43,7 +43,7 @@
         <el-form-item label=" ">
           <el-button
               icon="el-icon-plus" type="primary"
-              @click="handleSubmit">
+              v-throttle="handleSubmit">
             保存
           </el-button>
           <el-button icon="el-icon-back" @click="$router.back()">
@@ -62,8 +62,6 @@ export default {
   data() {
     return {
       form: {
-        creatorId: 1,
-        regeneratorId: 1,
         roleName: '',
         enabled: null,
         dataPermission: null,
@@ -100,7 +98,7 @@ export default {
     handleSubmit() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          this.$axios.post('/role/insert', this.form).then(res => {
+          this.$http.post('/role/insert', this.form).then(res => {
             if (res.status) {
               this.$message.success(res.message)
               this.$router.back()

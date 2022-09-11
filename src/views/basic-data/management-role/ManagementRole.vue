@@ -39,11 +39,9 @@
         :data="list"
         stripe
         border
-        highlight-current-row
         :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
         :cell-style="{textAlign:'center'}"
-        style="width: 100%"
-        :row-class-name="tableRowClassName">
+        style="width: 100%">
       <el-table-column
           min-width="180"
           prop="roleName"
@@ -71,25 +69,21 @@
           <el-button
               size="mini"
               type="primary"
-              plain
               @click="handleEdit(scope.$index, scope.row)">编辑
           </el-button>
           <el-button
               size="mini"
               type="primary"
-              plain
               @click="handleSetPermissions(scope.$index, scope.row)">设置权限
           </el-button>
           <el-button
               size="mini"
               type="primary"
-              plain
               @click="handleDisable(scope.$index, scope.row)">禁用
           </el-button>
           <el-button
               size="mini"
               type="danger"
-              plain
               @click="handleDelete(scope.$index, scope.row)">删除
           </el-button>
         </template>
@@ -153,30 +147,18 @@ export default {
     getListRoles(_pageSize) {
       let url = ``
       if (undefined !== _pageSize) {
-        url = `/role/get-list-roles?currentPage=${this.pageInfo.currentPage}&pageSize=${_pageSize}`
+        url = `/role/list?currentPage=${this.pageInfo.currentPage}&pageSize=${_pageSize}`
       } else {
-        url = `/role/get-list-roles?currentPage=${this.pageInfo.currentPage}&pageSize=${this.pageInfo.pageSize}`
+        url = `/role/list?currentPage=${this.pageInfo.currentPage}&pageSize=${this.pageInfo.pageSize}`
       }
       this.$http.get(url).then(res => {
         if (res.status) {
-          console.log(res)
-          if (res.data.listPermissions !== null) {
-            this.list = res.data.listRoles
-            this.pageInfo.total = res.data.total
-          }
+          this.list = res.data.list
+          this.pageInfo.total = res.data.total
         }
       })
     },
-    tableRowClassName({rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row';
-      } else if (rowIndex === 3) {
-        return 'success-row';
-      }
-      return '';
-    },
     handleEdit(_index, _row) {
-      console.log(_index, _row)
       this.$router.push({
         path: '/management-role-edit',
         query: {
@@ -185,7 +167,6 @@ export default {
       })
     },
     handleSetPermissions(_index, _row) {
-      console.log(_index, _row)
       this.$router.push({
         path: '/management-role-set-permissions',
         query: {
@@ -193,12 +174,12 @@ export default {
         }
       })
     },
+    // eslint-disable-next-line no-unused-vars
     handleDisable(_index, _row) {
-      console.log(_index, _row)
       this.$message.success('禁用')
     },
+    // eslint-disable-next-line no-unused-vars
     handleDelete(_index, _row) {
-      console.log(_index, _row)
       this.$message.success('禁用')
     },
   }
@@ -207,8 +188,6 @@ export default {
 
 <style scoped lang="less">
 @import "../../../assets/css/common-table-pagination";
-@import "../../../assets/css/common-el-table-scrollbar";
 @import "../../../assets/css/split-line";
-@import "../../../assets/css/common-el-input-inner-width";
 </style>
 

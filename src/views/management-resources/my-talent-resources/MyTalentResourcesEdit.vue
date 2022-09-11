@@ -4,12 +4,13 @@
 */
 <template>
   <div class="my-talent-resources-edit">
-    <TalentResourcesAddEdit/>
+    <TalentResourcesAddEdit talent-resource-mode="edit"/>
   </div>
 </template>
 
 <script>
 import TalentResourcesAddEdit from "../common-talent-resources/TalentResourcesAddEdit";
+
 export default {
   name: 'MyTalentResourcesEdit',
   components: {TalentResourcesAddEdit},

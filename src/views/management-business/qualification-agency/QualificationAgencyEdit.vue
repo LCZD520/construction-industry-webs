@@ -4,7 +4,7 @@
 */
 <template>
   <div class="qualification-agency-edit">
-    <QualificationAgencyAddEditCommonForm/>
+    <QualificationAgencyAddEditCommonForm qualification-mode="edit"/>
   </div>
 </template>
 

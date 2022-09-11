@@ -50,12 +50,12 @@
               <div slot="title">
                 <el-row :gutter="20">
                   <el-col :span="22">
-                    <el-select class="width-full" size="small" v-model="value1">
+                    <el-select class="width-full" size="small" v-model="item.roleId">
                       <el-option
-                          v-for="item in options"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
+                          v-for="item in $store.state.roleList"
+                          :key="item.roleId"
+                          :label="item.roleName"
+                          :value="item.roleId">
                       </el-option>
                     </el-select>
                   </el-col>
@@ -103,12 +103,13 @@
               <div slot="title">
                 <el-row :gutter="20">
                   <el-col :span="22">
-                    <el-select class="width-full" size="small" v-model="value1">
+                    <el-select class="width-full" size="small" v-model="item.roleId">
                       <el-option
                           v-for="item in options"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
+                          :disabled="item.disabled"
+                          :key="item.roleId"
+                          :label="item.roleName"
+                          :value="item.roleId">
                       </el-option>
                     </el-select>
                   </el-col>
@@ -156,12 +157,12 @@
               <div slot="title">
                 <el-row :gutter="20">
                   <el-col :span="22">
-                    <el-select class="width-full" size="small" v-model="value1">
+                    <el-select class="width-full" size="small" v-model="item.roleId">
                       <el-option
-                          v-for="item in options"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
+                          v-for="item in $store.state.roleList"
+                          :key="item.roleId"
+                          :label="item.roleName"
+                          :value="item.roleId">
                       </el-option>
                     </el-select>
                   </el-col>
@@ -197,50 +198,21 @@ export default {
       visible: false,
       visible2: false,
       visible3: false,
-      value1: null,
-      options: [
-        {
-          id: "xxxx",
-          value: 1,
-          label: '录入企业数'
-        },
-        {
-          id: "xxxxx",
-          value: 2,
-          label: '录入人才数'
-        },
-        {
-          value: '选项3',
-          label: '资质收购录入数'
-        },
-        {
-          value: '选项4',
-          label: '资质转让录入数'
-        },
-        {
-          value: '选项5',
-          label: '资质代办录入数'
-        },
-        {
-          value: '选项6',
-          label: '职称评审录入数'
-        },
-        {
-          value: '选项7',
-          label: '三类人员录入数'
-        },
-        {
-          value: '选项8',
-          label: '学历提升录入数'
-        },
-        {
-          value: '选项9',
-          label: '录入总数'
-        },
-      ],
       entryList: [],
       transferList: [],
       achievementList: [],
+    }
+  },
+  computed: {
+    options() {
+      this.$store.state.roleList.forEach(item => item.disabled = false)
+      return this.$store.state.roleList.filter(item => {
+        return !this.transferList.some(ele => {
+          if (item.roleId === ele.roleId) {
+            item.disabled = true
+          }
+        })
+      })
     }
   },
   methods: {
@@ -254,7 +226,9 @@ export default {
           this.$message.warning(' 业绩/入账审批节点只能为0或1个')
           return
         }
-        this.entryList.push({})
+        this.entryList.push(JSON.parse(JSON.stringify({
+          roleId: null,
+        })))
         return
       }
       if (_list === 'transferList') {
@@ -262,7 +236,9 @@ export default {
           this.$message.warning(' 转账审批节点不能超过5个')
           return
         }
-        this.transferList.push({})
+        this.transferList.push(JSON.parse(JSON.stringify({
+          roleId: null,
+        })))
         return
       }
       if (_list === 'achievementList') {
@@ -270,7 +246,9 @@ export default {
           this.$message.warning(' 业绩/入账审批节点只能为0或1个')
           return
         }
-        this.achievementList.push({})
+        this.achievementList.push(JSON.parse(JSON.stringify({
+          roleId: null,
+        })))
       }
     },
     handleDelete(_index, _list) {
@@ -289,7 +267,7 @@ export default {
 
       }
     },
-    handleSave(_list) {
+    async handleSave(_list) {
       if (_list === 'entryList') {
 
 
@@ -297,7 +275,22 @@ export default {
         return
       }
       if (_list === 'transferList') {
-
+        let isEmpty = false
+        this.transferList.forEach(item => {
+          if (item.roleId == null) {
+            isEmpty = true
+          }
+        })
+        if (isEmpty) {
+          this.$message.error("转账审批节点选项不能为空")
+          return
+        }
+        try {
+          let res = await this.$http.put(`/approval-setting/save/${2}`, this.transferList)
+          console.log(res)
+        } catch (e) {
+          console.log(e)
+        }
 
         this.visible2 = false
         return
@@ -307,7 +300,7 @@ export default {
 
         this.visible3 = false
       }
-    }
+    },
   }
 }
 </script>
@@ -326,11 +319,6 @@ export default {
 
     /deep/ .el-card__body {
       border-radius: 5px;
-    }
-
-    /deep/ .el-card__body:hover {
-      transform: scale(1.1);
-      transition: 1s;
     }
 
   }

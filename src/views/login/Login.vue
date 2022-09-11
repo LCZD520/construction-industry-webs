@@ -98,11 +98,8 @@ export default {
     submitForm(_form) {
       this.$refs[_form].validate(valid => {
             if (valid) {
-              let newData = {
-                username: this.ruleForm.username,
-                password: this.ruleForm.password,
-                captcha: this.ruleForm.captcha,
-              }
+              let {username, password, captcha} = this.ruleForm
+              let newData = {username, password, captcha}
               newData.password = SparkMD5.hash(this.ruleForm.password)
 
               this.$http.post('/user/login', newData, false).then(res => {
@@ -167,7 +164,7 @@ export default {
         height: 30px;
         position: absolute;
         right: 0;
-        margin-top: 5px;
+        margin-top: -20px;
         cursor: pointer;
       }
 

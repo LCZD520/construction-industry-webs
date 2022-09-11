@@ -8,25 +8,30 @@
     <div class="margin">
       <el-form label-width="120px">
         <el-form-item label="用户名">
-          <el-input size="small" disabled placeholder="请输入用户中文姓名" v-model="form.name"/>
+          <el-input disabled v-model="form.username"/>
         </el-form-item>
         <el-form-item label="机构">
-          <el-select style="width: 100%" size="small" v-model="form.name" placeholder="请选择所在机构">
-            <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-            </el-option>
-          </el-select>
+          <el-cascader
+              class="width-full"
+              clearable
+              ref="cascader"
+              @expand-change="cascaderClick"
+              @visible-change="cascaderClick"
+              :props="{ expandTrigger: 'hover' ,checkStrictly:true
+              ,emitPath:false,value:'mechanismId',label:'mechanismName'
+              ,children:'subListMechanisms'}"
+              placeholder="请选择机构"
+              :options="$store.state.mechanisms.listMechanisms"
+              v-model="form.mechanismId">
+          </el-cascader>
         </el-form-item>
         <el-form-item label="姓名">
-          <el-input size="small" placeholder="请输入用户中文姓名" v-model="form.name"/>
+          <el-input placeholder="请输入用户中文姓名" v-model="form.fullName"/>
         </el-form-item>
         <el-form-item label="是否在职">
-          <el-select style="width: 100%" size="small" v-model="form.name">
+          <el-select style="width: 100%" v-model="form.onJob">
             <el-option
-                v-for="item in options"
+                v-for="item in $store.state.bool_options"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">
@@ -34,22 +39,22 @@
           </el-select>
         </el-form-item>
         <el-form-item label="设置角色">
-          <el-select style="width: 100%" multiple size="small" v-model="form.name" placeholder="请选择用户角色">
+          <el-select style="width: 100%" multiple v-model="form.listRoleIds" placeholder="请选择用户角色">
             <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                v-for="item in $store.state.roleList"
+                :key="item.roleId"
+                :label="item.roleName"
+                :value="item.roleId">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="联系方式">
-          <el-input size="small" placeholder="请输入联系方式" v-model="form.name"/>
+          <el-input placeholder="请输入联系方式" v-model="form.telephoneNumber"/>
         </el-form-item>
         <el-form-item label="用户性别">
-          <el-select style="width: 100%" size="small" v-model="form.name" placeholder="请选择用户角色">
+          <el-select style="width: 100%" v-model="form.sex" placeholder="请选择用户性别">
             <el-option
-                v-for="item in options"
+                v-for="item in $store.state.sex_options"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">
@@ -57,14 +62,14 @@
           </el-select>
         </el-form-item>
         <el-form-item label="用户年龄">
-          <el-input-number style="width: 100%" size="small" placeholder="请输入用户年龄"
-                           v-model="form.name" controls-position="right" min="0"/>
+          <el-input-number style="width: 100%" placeholder="请输入用户年龄"
+                           v-model="form.age" controls-position="right" :min="0"/>
         </el-form-item>
         <el-form-item label=" ">
-          <el-button icon="el-icon-plus" type="primary" size="small">
+          <el-button icon="el-icon-plus" type="primary">
             保存
           </el-button>
-          <el-button icon="el-icon-back" size="small" @click="$router.back()">
+          <el-button icon="el-icon-back" @click="$router.back()">
             返回
           </el-button>
         </el-form-item>
@@ -80,11 +85,44 @@ export default {
   data() {
     return {
       form: {
-        name: ''
-      }
+        listRoleIds: []
+      },
+
     }
   },
-  methods: {}
+  created() {
+    let userId = this.$route.params.id
+    if (userId != null) {
+      this.getDetailById(userId / 1)
+    }
+
+  },
+  methods: {
+    async getDetailById(_id) {
+      const res = await this.$http.get('/user/detail/' + _id)
+      if (res.status && res.data != null) {
+        this.form = res.data
+      }
+    },
+    cascaderClick() {
+      let that = this
+      setTimeout(() => {
+        document.querySelectorAll('.el-cascader-node__label').forEach(el => {
+          el.onclick = function () {
+            this.previousElementSibling.click()
+            that.$refs.cascader.dropDownVisible = false
+          }
+        })
+        document
+            .querySelectorAll('.el-cascader-panel .el-radio')
+            .forEach(el => {
+              el.onclick = function () {
+                that.$refs.cascader.dropDownVisible = false
+              }
+            })
+      }, 1)
+    },
+  }
 }
 </script>
 

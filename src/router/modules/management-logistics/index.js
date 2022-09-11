@@ -14,7 +14,7 @@ const logisticsRoutes = [
         component: () => import('../../../views/management-logistics/confirm-logistics/ConfirmLogistics'),
     },
     {
-        path: '/confirm-logistics-view',
+        path: '/confirm-logistics-view/:id',
         name: 'confirm-logistics-view',
         meta: {
             title: '后勤确认查看',

@@ -33,11 +33,9 @@
         :data="list"
         stripe
         border
-        highlight-current-row
         :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
         :cell-style="{textAlign:'center'}"
-        style="width: 100%"
-        :row-class-name="tableRowClassName">
+        style="width: 100%">
       <el-table-column
           min-width="180"
           prop="configName"
@@ -63,13 +61,11 @@
           <el-button
               size="mini"
               type="primary"
-              plain
               @click.stop="handleEdit(scope.$index, scope.row)">编辑
           </el-button>
           <el-button
               size="mini"
               type="danger"
-              plain
               @click.stop="handleDelete(scope.$index, scope.row)">删除
           </el-button>
         </template>
@@ -117,14 +113,6 @@ export default {
     this.getList()
   },
   methods: {
-    tableRowClassName({rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row';
-      } else if (rowIndex === 3) {
-        return 'success-row';
-      }
-      return '';
-    },
     /**
      * 表格翻页
      */

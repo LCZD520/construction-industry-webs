@@ -9,13 +9,13 @@
         inline
         :model="form">
       <el-row :gutter="20">
-        <el-col span="7">
+        <el-col :span="7">
           <el-form-item label="客户名称" label-width="100px">
             <el-input size="small" v-model="form.newPassword" placeholder="请输入客户名称">
             </el-input>
           </el-form-item>
         </el-col>
-        <el-col span="7">
+        <el-col :span="7">
           <el-form-item label="客户类型" label-width="100px">
             <el-select size="small" v-model="form.newPassword" placeholder="请选择客户类型">
               <el-option
@@ -27,7 +27,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col span="7">
+        <el-col :span="7">
           <el-form-item label="状态" label-width="100px">
             <el-select size="small" v-model="form.newPassword" placeholder="请选择状态">
               <el-option
@@ -39,7 +39,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col span="7">
+        <el-col :span="7">
           <el-form-item label="录入人" label-width="100px">
             <el-select size="small" v-model="form.newPassword" placeholder="请选择录入人">
               <el-option
@@ -51,7 +51,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col span="7">
+        <el-col :span="7">
           <el-form-item label="录入日期" label-width="100px">
             <el-date-picker
                 v-model="form.oldPassword"
@@ -66,7 +66,7 @@
             </el-date-picker>
           </el-form-item>
         </el-col>
-        <el-col span="7">
+        <el-col :span="7">
           <el-form-item label=" " label-width="100px">
             <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
             <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
@@ -77,7 +77,8 @@
     <div class="split-line">
       <div class="split-line-left">
         <el-button icon="el-icon-plus" size="small" type="primary"
-        @click.stop="$router.push('/title-evaluation-add')">添加</el-button>
+                   @click.stop="$router.push('/title-evaluation-add')">添加
+        </el-button>
       </div>
       <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
     </div>
@@ -85,17 +86,52 @@
         :data="tableData"
         stripe
         border
-        highlight-current-row
         :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
-        :cell-style="{textAlign:'center'}"
-        style="width: 100%"
-        :row-class-name="tableRowClassName">
+        :cell-style="cellStyle"
+        style="width: 100%">
       <el-table-column
           min-width="180"
-          v-for="item in columns"
-          :key="item.key"
-          :prop="item.key"
-          :label="item.title">
+          prop=""
+          label="客户名称">
+      </el-table-column>
+      <el-table-column
+          min-width="150"
+          label="客户类型">
+        <template slot-scope="scope">
+          <span> {{ $valueToLabel(scope.row.username, $store.state.class_three_personnel_options) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          min-width="150"
+          label="状态">
+        <template slot-scope="scope">
+          <span> {{ $valueToLabel(scope.row.username, $store.state.class_three_personnel_options) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          min-width="150"
+          prop=""
+          label="人员数">
+      </el-table-column>
+      <el-table-column
+          min-width="180"
+          align="right"
+          label="代办总金额">
+        <template slot-scope="scope">
+          {{ scope.row.username }}
+        </template>
+      </el-table-column>
+      <el-table-column
+          min-width="100"
+          label="录入人名称">
+        <template slot-scope="scope">
+          <span> {{ $valueToLabel(scope.row.creatorId, $store.state.user_options) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          min-width="160"
+          prop="gmtCreate"
+          label="录入时间">
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="400">
         <template slot-scope="scope">
@@ -103,38 +139,32 @@
               v-if="false"
               size="mini"
               type="primary"
-              plain
               @click.stop="handleComplete(scope.$index, scope.row)">完成
           </el-button>
           <el-button
               size="mini"
               type="primary"
-              plain
               @click.stop="handleView(scope.$index, scope.row,'first')">订单
           </el-button>
           <el-button
               size="mini"
               type="primary"
-              plain
               @click.stop="handleView(scope.$index, scope.row,'second')">图片
           </el-button>
           <el-button
               size="mini"
               type="primary"
-              plain
               @click.stop="handleView(scope.$index, scope.row)">查看
           </el-button>
           <el-button
               size="mini"
               type="primary"
-              plain
               @click.stop="handleEdit(scope.$index, scope.row)">编辑
           </el-button>
           <el-button
               v-if="true"
               size="mini"
               type="danger"
-              plain
               @click.stop="handleDelete(scope.$index, scope.row)">删除
           </el-button>
         </template>
@@ -165,40 +195,6 @@ export default {
   components: {},
   data() {
     return {
-      columns: [
-        {
-          title: '客户名称',
-          key: 'address'
-        },
-        {
-          title: '客户类型',
-          key: 'address'
-        },
-        {
-          title: '资质转让录入数',
-          key: 'address'
-        },
-        {
-          title: '状态',
-          key: 'address'
-        },
-        {
-          title: '人员数',
-          key: 'address'
-        },
-        {
-          title: '代办总金额',
-          key: 'address'
-        },
-        {
-          title: '录入人名称',
-          key: 'address'
-        },
-        {
-          title: '录入时间',
-          key: 'address'
-        },
-      ],
       options: [
         {
           value: '选项1',
@@ -242,19 +238,7 @@ export default {
           date: '2016-05-02',
           username: '王小虎',
           address: '上海市普陀区',
-        }, {
-          date: '2016-05-04',
-          username: '王小虎',
-          address: '上海市普陀区'
-        }, {
-          date: '2016-05-01',
-          username: '王小虎',
-          address: '上海市普陀区',
-        }, {
-          date: '2016-05-03',
-          username: '王小虎',
-          address: '上海市普陀区'
-        }],
+        },],
       pageInfo: {
         pageSize: 10,
         total: 0,
@@ -307,16 +291,14 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$route)
   },
   methods: {
-    tableRowClassName({rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row';
-      } else if (rowIndex === 3) {
-        return 'success-row';
+    cellStyle({columnIndex}) {
+      let columns = [4]
+      if (columns.indexOf(columnIndex) > -1) {
+        return 'text-align:right'
       }
-      return '';
+      return 'text-align:center'
     },
     /**
      * 表格翻页

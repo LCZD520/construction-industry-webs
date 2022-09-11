@@ -1,5 +1,5 @@
 <template>
-  <div class="layout">
+  <div class="layout" @click="logout" @mouseleave="logout">
     <el-container>
       <el-aside :width="isCollapse ? '64px' : '200px'">
         <Sidebar :is-collapse="isCollapse"/>
@@ -121,10 +121,29 @@ export default {
           {required: true, message: '确认密码不能为空！', trigger: 'blur'}
         ],
       },
+      timer: null
     }
   },
   computed: {},
+  created() {
+    this.getListUsers()
+    this.getListRolesAll()
+  },
   methods: {
+    logout() {
+      // if (this.timer) {
+      //   clearTimeout(this.timer)
+      // }
+      // this.timer = setTimeout(() => {
+      //   this.$message({
+      //     message: '由于您未进行操作超过15分钟，请重新登录',
+      //     type: "error",
+      //     duration: 0,
+      //     showClose: true
+      //   })
+      //   this.$router.push('/login')
+      // }, 1000 * 60 * 15)
+    },
     handleCommand(command) {
       if (command === 'logout') {
         this.$confirm('确认退出登录吗?', '温馨提示', {
@@ -151,6 +170,28 @@ export default {
     beforeClose() {
       this.visible = false
       this.$refs['formData'].resetFields();
+    },
+    getListUsers() {
+      this.$http.get('/user/list-all').then(res => {
+        if (res.status && res.data !== null) {
+          this.$store.dispatch('initListUsers', res.data)
+        }
+      })
+    },
+    async getListRolesAll() {
+      try {
+        const res = await this.$http.get('/role/list-all')
+        if (res.status) {
+          await this.$store.dispatch('initRoleList', res.data)
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    },
+  },
+  beforeDestroy() {
+    if (this.timer !== null) {
+      clearTimeout(this.timer)
     }
   }
 }
@@ -227,17 +268,54 @@ export default {
   width: 100% !important;
 }
 
-.required {
-  .el-form-item__label:before {
-    content: '*';
-    display: inline-block;
-    color: #F56C6C;
-    margin-right: 4px;
-  }
-}
-.el-cascader-menu__wrap{
-  height: 500px !important;
+.el-cascader-menu__wrap {
+  height: 360px !important;
   padding-bottom: 20px;
 }
 
+.el-select-dropdown__item.selected {
+  background: #d7ffd7;
+}
+
+.el-select-dropdown__item.hover, .el-select-dropdown__item:hover {
+  background: #d7ffd7 !important;
+}
+
+input:disabled, input[disabled] {
+  color: unset !important;
+}
+
+.el-textarea.is-disabled .el-textarea__inner {
+  color: unset !important;
+}
+
+.el-input__suffix-inner {
+  margin-top: -2px;
+  display: inline-block;
+}
+
+.el-scrollbar__bar.is-horizontal {
+  display: none;
+}
+
+.public-enter-active {
+  animation: fadeIn .6s
+}
+
+.el-tag.el-tag--info {
+  background: #e3f2fd !important;
+  color: #039be5 !important;
+}
+
+.el-tag--dark.el-tag--info {
+  border: unset;
+}
+
+.el-tag.el-tag--info .el-tag__close {
+  color: #039be5 !important;
+}
+
+.el-select .el-tag__close.el-icon-close {
+  background: unset !important;
+}
 </style>

@@ -20,19 +20,22 @@
               ref="cascader"
               @expand-change="cascaderClick"
               @visible-change="cascaderClick"
-              :props="{ expandTrigger: 'hover' ,checkStrictly:true ,emitPath:false,value:'mechanismId',label:'mechanismName'}"
+              :props="{ expandTrigger: 'hover' ,checkStrictly:true
+              ,emitPath:false,value:'mechanismId',label:'mechanismName'
+              ,children:'subListMechanisms'}"
               placeholder="请选择上一级机构"
-              :options="options"
+              :options="$store.state.mechanisms.listMechanisms"
+              @change="handleChange"
               v-model="form.parentId">
           </el-cascader>
         </el-form-item>
         <el-form-item label="机构名称" prop="mechanismName">
           <el-input size="small" placeholder="请输入机构名称" v-model.trim="form.mechanismName"/>
         </el-form-item>
-        <el-form-item label="机构编号">
+        <el-form-item label="机构编号" prop="mechanismNumber">
           <el-input size="small" placeholder="请输入机构编号" v-model.trim="form.mechanismNumber"/>
         </el-form-item>
-        <el-form-item label="机构描述">
+        <el-form-item label="机构描述" prop="description">
           <el-input type="textarea" :rows="3" size="small" placeholder="请输入机构描述" v-model.trim="form.description"/>
         </el-form-item>
         <el-form-item label=" ">
@@ -55,8 +58,6 @@ export default {
   data() {
     return {
       form: {
-        creatorId: 1,
-        regeneratorId: 1,
         parentId: null,
         mechanismName: '',
         mechanismNumber: '',
@@ -69,33 +70,37 @@ export default {
         mechanismName: [
           {required: true, message: '不能为空', trigger: 'blur'}
         ],
+        mechanismNumber: [
+          {required: false}
+        ],
+        description: [
+          {required: false}
+        ],
       },
-      options: []
     }
   },
-  created() {
-    this.getListMechanisms()
-  },
   methods: {
-    getListMechanisms() {
-      this.$http('/mechanism/get-list-mechanisms').then(res => {
-        if (res.status) {
-          console.log(res)
-          if (res.data.listPermissions !== null) {
-            this.options = res.data.listMechanisms
-          }
-        }
-      })
-    },
     handleSubmit() {
       console.log(this.form)
-      // this.$axios.post('/mechanism/insert', this.form).then(res => {
-      //   if (res.status) {
-      // this.$message.success(res.message)
-      this.$refs['form'].resetFields()
-      //   }
-      // })
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.$http.post('/mechanism/insert', this.form).then(res => {
+            if (res.status) {
+              this.$message.success(res.message)
+              this.$router.back()
+              return
+            }
+            this.$message.error(res.message)
+          })
+          return
+        }
+        this.$message.error('输入有误')
+      })
 
+
+    },
+    handleChange(_val) {
+      console.log(_val)
     },
     cascaderClick() {
       let that = this

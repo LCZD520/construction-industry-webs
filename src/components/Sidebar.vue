@@ -500,7 +500,7 @@ export default {
   overflow-y: auto;
 
   &::-webkit-scrollbar {
-    //display: none;
+    display: none;
   }
 
   .logo-container {

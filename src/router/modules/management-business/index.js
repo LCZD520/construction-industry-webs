@@ -32,6 +32,15 @@ const businessRoutes = [
         component: () => import('../../../views/management-business/talent-query/TalentQueryAdd'),
     },
     {
+        path: '/talent-query-edit/:id',
+        name: 'talent-query-edit',
+        meta: {
+            title: '人才查询编辑',
+            activeMenuPath: '/talent-query',
+        },
+        component: () => import('../../../views/management-business/talent-query/TalentQueryEdit'),
+    },
+    {
         path: '/enterprise-query',
         name: 'enterprise-query',
         meta: {
@@ -50,7 +59,7 @@ const businessRoutes = [
         component: () => import('../../../views/management-business/enterprise-query/EnterpriseAdd'),
     },
     {
-        path: '/enterprise-query-edit',
+        path: '/enterprise-query-edit/:id',
         name: 'enterprise-query-edit',
         meta: {
             title: '企业查询编辑',
@@ -149,13 +158,22 @@ const businessRoutes = [
         component: () => import('../../../views/management-business/qualification-agency/QualificationAgency'),
     },
     {
-        path: '/qualification-agency-view',
+        path: '/qualification-agency-view/:id',
         name: 'qualification-agency-view',
         meta: {
             title: '资质代办详细信息查看',
             activeMenuPath: '/qualification-agency',
         },
         component: () => import('../../../views/management-business/qualification-agency/QualificationAgencyView'),
+    },
+    {
+        path: '/qualification-agency-detail',
+        name: 'qualification-agency-detail',
+        meta: {
+            title: '资质代办详细信息查看',
+            activeMenuPath: '/qualification-agency',
+        },
+        component: () => import('../../../views/management-business/qualification-agency/QualificationAgencyDetail'),
     },
     {
         path: '/qualification-agency-add',
@@ -167,7 +185,7 @@ const businessRoutes = [
         component: () => import('../../../views/management-business/qualification-agency/QualificationAgencyAdd'),
     },
     {
-        path: '/qualification-agency-edit',
+        path: '/qualification-agency-edit/:id',
         name: 'qualification-agency-edit',
         meta: {
             title: '资质代办编辑',

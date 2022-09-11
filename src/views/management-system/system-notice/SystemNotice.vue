@@ -40,11 +40,9 @@
         height="460"
         stripe
         border
-        highlight-current-row
         :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
         :cell-style="{textAlign:'center'}"
-        style="width: 100%"
-        :row-class-name="tableRowClassName">
+        style="width: 100%">
       <el-table-column
           min-width="300"
           prop="title"
@@ -57,8 +55,10 @@
       </el-table-column>
       <el-table-column
           min-width="180"
-          prop="username"
           label="发布人">
+        <template slot-scope="scope">
+          <span> {{ $valueToLabel(scope.row.creatorId, $store.state.user_options) }}</span>
+        </template>
       </el-table-column>
       <el-table-column
           min-width="180"
@@ -75,19 +75,16 @@
           <el-button
               size="mini"
               type="primary"
-              plain
               @click.stop="handleView(scope.$index, scope.row)">查看
           </el-button>
           <el-button
               size="mini"
               type="primary"
-              plain
               @click.stop="handleEdit(scope.$index, scope.row)">编辑
           </el-button>
           <el-button
               size="mini"
               type="danger"
-              plain
               @click.stop="handleDelete(scope.$index, scope.row)">删除
           </el-button>
         </template>
@@ -168,14 +165,6 @@ export default {
               this.listNotices = res.data.listNotices
             }
           })
-    },
-    tableRowClassName({rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row';
-      } else if (rowIndex === 3) {
-        return 'success-row';
-      }
-      return '';
     },
     handleView(_index, _row) {
       this.$router.push({

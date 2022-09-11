@@ -17,9 +17,7 @@
             size="small"
             clearable
             placeholder="请选择办理地区"
-            :options="regionData"
-            v-model="form.newPassword"
-            @change="handleChange">
+            v-model="form.newPassword">
         </el-cascader>
       </el-form-item>
       <el-form-item label="代办资质" label-width="100px">
@@ -27,9 +25,7 @@
             size="small"
             clearable
             placeholder="请选择代办资质"
-            :options="regionData"
-            v-model="form.newPassword"
-            @change="handleChange">
+            v-model="form.newPassword">
         </el-cascader>
       </el-form-item>
       <el-form-item label="录入人" label-width="100px">
@@ -47,76 +43,85 @@
                    @click.stop="$router.push('/qualification-agency-add')">添加
         </el-button>
       </div>
-      <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
+      <div class="split-line-right">共查询到 <b style="color: #409EFF">{{ pageInfo.total }}</b> 条记录</div>
     </div>
     <el-table
-        :data="tableData"
+        v-loading="loading"
+        :data="list"
         stripe
         border
-        highlight-current-row
         :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
         :cell-style="{textAlign:'center'}"
-        style="width: 100%"
-        :row-class-name="tableRowClassName">
+        style="width: 100%">
       <el-table-column
-          min-width="180"
-          v-for="item in columns"
-          :key="item.key"
-          :prop="item.key"
-          :label="item.title">
+          min-width="160"
+          prop="agencyCompany"
+          label="代办公司">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="400">
+      <el-table-column
+          label="办理地区">
+        <template slot-scope="scope">
+          <span> {{ $CodeToText[scope.row.area] }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          min-width="200"
+          label="代办资质">
+        <template slot-scope="scope">
+          <p v-for="(item,index) in scope.row.agencyQualification" :key="index">{{ item }}</p>
+        </template>
+      </el-table-column>
+      <el-table-column
+          min-width="200"
+          label="代办金额">
+        <template slot-scope="scope">
+          {{ scope.row.agencyAmount }}
+        </template>
+      </el-table-column>
+      <el-table-column
+          label="状态">
+        <template slot-scope="scope">
+          <span> {{ $valueToLabel(scope.row.status, $store.state.qualification_transfer_status_options) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          label="录入人">
+        <template slot-scope="scope">
+          <span> {{ $valueToLabel(scope.row.creatorId, $store.state.user_options) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          min-width="160"
+          prop="gmtCreate"
+          label="录入时间">
+      </el-table-column>
+      <el-table-column fixed="right" label="操作" width="340">
         <template slot-scope="scope">
           <el-button
-              v-if="false"
               size="mini"
               type="primary"
-              plain
-              @click.stop="handleConfirm(scope.$index, scope.row)">执行确认
+              @click.stop="handleView(scope.row,'second')">图片
           </el-button>
           <el-button
               size="mini"
               type="primary"
-              plain
-              @click.stop="handleView(scope.$index, scope.row,'second')">图片
+              @click.stop="handleEdit(scope.row)">编辑
           </el-button>
           <el-button
               size="mini"
               type="primary"
-              plain
-              @click.stop="handleEdit(scope.$index, scope.row)">编辑
-          </el-button>
-          <el-button
-              size="mini"
-              type="primary"
-              plain
-              @click.stop="handleView(scope.$index, scope.row)">查看
-          </el-button>
-          <el-button
-              size="mini"
-              type="primary"
-              plain
-              @click.stop="handleView(scope.$index, scope.row,'third')">代办入账
-          </el-button>
-          <el-button
-              size="mini"
-              type="primary"
-              plain
-              @click.stop="handleView(scope.$index, scope.row,'fourth')">转账
-          </el-button>
-          <el-button
-              size="mini"
-              type="primary"
-              plain
-              @click.stop="handleView(scope.$index, scope.row,'first')">人才订单
-          </el-button>
-          <el-button
-              v-if="true"
-              size="mini"
-              type="danger"
-              plain
-              @click.stop="handleDelete(scope.$index, scope.row)">删除
-          </el-button>
+              @click.stop="handleView(scope.row,'fourth')">转账
+          </el-button>&nbsp;
+          <el-dropdown size="mini" split-button type="primary" @command="handleCommand($event,scope.row.id)">
+            更多
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item icon="el-icon-info" command="view">查看</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-check">执行确认</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-wallet">代办入账</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-s-order">人才订单</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-finished">申请完成确认</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -140,50 +145,13 @@
 </template>
 
 <script>
-// 省市区数据源
-// eslint-disable-next-line no-unused-vars
-import {provinceAndCityData, CodeToText} from 'element-china-area-data'
 
 export default {
   name: 'QualificationAgency',
   components: {},
   data() {
     return {
-      regionData: provinceAndCityData,
-      columns: [
-        {
-          title: '客户名称',
-          key: 'address'
-        },
-        {
-          title: '客户类型',
-          key: 'address'
-        },
-        {
-          title: '资质转让录入数',
-          key: 'address'
-        },
-        {
-          title: '状态',
-          key: 'address'
-        },
-        {
-          title: '人员数',
-          key: 'address'
-        },
-        {
-          title: '代办总金额',
-          key: 'address'
-        },
-        {
-          title: '录入人名称',
-          key: 'address'
-        },
-        {
-          title: '录入时间',
-          key: 'address'
-        },
-      ],
+      loading: false,
       options: [
         {
           value: '选项1',
@@ -248,24 +216,7 @@ export default {
             label: '大连'
           }]
         }],
-      tableData: [
-        {
-          date: '2016-05-02',
-          username: '王小虎',
-          address: '上海市普陀区',
-        }, {
-          date: '2016-05-04',
-          username: '王小虎',
-          address: '上海市普陀区'
-        }, {
-          date: '2016-05-01',
-          username: '王小虎',
-          address: '上海市普陀区',
-        }, {
-          date: '2016-05-03',
-          username: '王小虎',
-          address: '上海市普陀区'
-        }],
+      list: [],
       pageInfo: {
         pageSize: 10,
         total: 0,
@@ -317,52 +268,61 @@ export default {
       },
     }
   },
-  mounted() {
-    console.log(this.$route)
+  created() {
+    this.getListQualificationAgencys()
   },
   methods: {
-    tableRowClassName({rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row';
-      } else if (rowIndex === 3) {
-        return 'success-row';
-      }
-      return '';
-    },
-    handleChange(_val) {
-      console.log(_val)
-      _val.forEach(k => {
-        console.log(CodeToText[k])
+    getListQualificationAgencys(_pageSize) {
+      let url = `/qualification-agency/list`
+      this.loading = true
+      this.$http.get(url, {
+        params: {
+          currentPage: this.pageInfo.currentPage,
+          pageSize: _pageSize ? _pageSize : this.pageInfo.pageSize,
+        }
+      }).then(res => {
+        if (null !== res.data) {
+          this.pageInfo.total = res.data.total
+          this.list = res.data.list
+          console.log(this.list)
+          this.list.forEach(item => {
+            item.agencyQualification = JSON.parse(item.agencyQualification)
+          })
+        }
       })
-      this.ruleForm.area = JSON.stringify(_val)
+      this.loading = false
     },
     /**
      * 表格翻页
      */
     handleCurrentChange() {
-
+      this.getListQualificationAgencys()
     },
     /**
      * 改变页数
      */
     handleSizeChange(_pageSize) {
-      console.log(_pageSize)
+      this.getListQualificationAgencys(_pageSize)
     },
     handleConfirm(_index, _row) {
       console.log(_index, _row)
       this.$message.success('执行确认')
     },
-    handleEdit(_index, _row) {
-      console.log(_index, _row)
-      this.$router.push('/qualification-agency-edit')
+    handleEdit(_row) {
+      this.$router.push('/qualification-agency-edit/' + _row.id)
     },
-    handleView(_index, _row, _activeTab) {
-      console.log(_index, _row)
+    handleCommand(_command, _id) {
+      if (_command === 'view') {
+        this.$router.push('/qualification-agency-view/' + _id)
+        // return
+      }
+    },
+    handleView(_row, _tab) {
       this.$router.push({
-        path: '/qualification-agency-view',
+        path: '/qualification-agency-detail/',
         query: {
-          activeTab: _activeTab,
-          id: _row.id
+          id: _row.id,
+          activeTab: _tab
         }
       })
     },

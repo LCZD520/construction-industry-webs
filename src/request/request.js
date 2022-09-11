@@ -4,6 +4,7 @@
  */
 
 import axios from "axios";
+import {Message} from 'element-ui'
 
 export default class Http {
     instance
@@ -24,6 +25,10 @@ export default class Http {
         // 响应拦截器
         this.instance.interceptors.response.use(config => {
             return config.data
+        }, (error) => {
+            console.log(error)
+            // Message.error("服务器出现异常，请联系管理员！")
+            // return Promise.reject(error)
         })
 
         this.instance2 = axios.create({
@@ -37,15 +42,18 @@ export default class Http {
         // 响应拦截器
         this.instance2.interceptors.response.use(config => {
             return config.data
+        }, (error) => {
+            Message.error("服务器出现异常，请联系管理员！")
+            return Promise.reject(error)
         })
     }
 
 
-    get(url, isNeedToken = true) {
+    get(url, config, isNeedToken = true) {
         if (isNeedToken) {
-            return this.instance.get(url)
+            return this.instance.get(url, config)
         }
-        return this.instance2.get(url)
+        return this.instance2.get(url, config)
     }
 
     post(url, data = {}, isNeedToken = true) {

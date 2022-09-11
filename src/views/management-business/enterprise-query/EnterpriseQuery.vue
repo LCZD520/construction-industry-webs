@@ -18,8 +18,7 @@
             clearable
             placeholder="请选择地区"
             :options="regionData"
-            v-model="form.newPassword"
-            @change="handleChange">
+            v-model="form.newPassword">
         </el-cascader>
       </el-form-item>
       <el-form-item label="录入人" label-width="100px">
@@ -51,8 +50,7 @@
             clearable
             placeholder="请选择级别专业"
             :options="regionData"
-            v-model="form.newPassword"
-            @change="handleChange">
+            v-model="form.newPassword">
         </el-cascader>
       </el-form-item>
       <el-form-item label="初始转注" label-width="100px">
@@ -80,23 +78,72 @@
                    @click.stop="$router.push('/enterprise-query-add')">录入企业
         </el-button>
       </div>
-      <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
+      <div class="split-line-right">共查询到 <b style="color: #409EFF">{{ pageInfo.total }}</b> 条记录</div>
     </div>
     <el-table
-        :data="tableData"
+        :data="list"
+        v-loading="loading"
+        element-loading-text="拼命加载中"
+        element-loading-spinner="el-icon-loading"
         stripe
         border
-        highlight-current-row
         :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
         :cell-style="{textAlign:'center'}"
-        style="width: 100%"
-        :row-class-name="tableRowClassName">
+        style="width: 100%">
+      <el-table-column
+          fixed="left"
+          min-width="180"
+          prop="enterpriseName"
+          label="企业名称">
+      </el-table-column>
+      <el-table-column
+          min-width="120"
+          label="地区">
+        <template slot-scope="scope">
+          <span> {{ $CodeToText[scope.row.area] }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          min-width="270"
+          label="级别-专业-初/转">
+        <template slot-scope="scope">
+          <el-tag size="mini" disable-transitions v-if="scope.row.listEnterpriseDemands.length === 0" type="info">未填
+          </el-tag>
+          <div
+              v-else
+              :style="{whiteSpace:'pre-line',marginBottom:'5px',
+              borderRadius:'5px',
+              color: index % 2 === 1? '#409EFF' : '#F56C6C'}"
+              v-for="(item,index) in scope.row.listEnterpriseDemands"
+              :key="index">
+            <span v-for="(subItem,index) in item.levelMajorInitialConversion"
+                  :key="index">
+              {{ subItem.levelMajor[0] }}&nbsp;/&nbsp;{{ subItem.levelMajor[1] }}
+                &nbsp;-&nbsp;{{
+                $valueToLabel(subItem.initialConversion, $store.state.initial_conversion_options) + '\n'
+              }}
+            </span>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column
           min-width="180"
-          v-for="item in columns"
-          :key="item.key"
-          :prop="item.key"
-          :label="item.title">
+          label="企业状态">
+        <template slot-scope="scope">
+          <span> {{ $valueToLabel(scope.row.enterpriseStatus, $store.state.enterprise_status_options) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          min-width="180"
+          label="录入人">
+        <template slot-scope="scope">
+          <span> {{ $valueToLabel(scope.row.creatorId, $store.state.user_options) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          min-width="180"
+          prop="gmtCreate"
+          label="录入时间">
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="280">
         <template slot-scope="scope">
@@ -104,22 +151,32 @@
               style="padding: 5px"
               size="mini"
               type="primary"
-              plain
               @click.stop="handleView(scope.$index, scope.row,'first')">订单
           </el-button>
           <el-button
               style="padding: 5px"
               size="mini"
               type="primary"
-              plain
               @click.stop="handleView(scope.$index, scope.row,'second')">图片
+          </el-button>
+          <el-button
+              v-if="scope.row.enterpriseStatus === 1"
+              size="mini"
+              style="padding: 5px"
+              type="primary"
+              @click.stop="handleEdit(scope.$index, scope.row)">编辑
           </el-button>
           <el-button
               size="mini"
               style="padding: 5px"
               type="primary"
-              plain
-              @click.stop="handleEdit(scope.$index, scope.row)">编辑
+              @click.stop="handleView(scope.$index, scope.row)">查看
+          </el-button>
+          <el-button
+              size="mini"
+              style="padding: 5px"
+              type="primary"
+              @click.stop="handleView(scope.$index, scope.row,'third')">转账
           </el-button>
           <p style="height: 10px"></p>
           <el-button
@@ -127,28 +184,26 @@
               v-if="true"
               style="padding: 5px"
               type="primary"
-              plain
               @click.stop="handleView(scope.$index, scope.row,'fourth')">企业回访
           </el-button>
           <el-button
               style="padding: 5px"
               size="mini"
               type="primary"
-              plain
               @click.stop="handleView(scope.$index, scope.row,'fifth')">后勤申请
           </el-button>
           <el-button
               style="padding: 5px"
+              v-if="scope.row.enterpriseStatus === 2"
               size="mini"
               type="primary"
-              plain
               @click.stop="handleCompleteConfirm(scope.$index, scope.row)">完成确认
           </el-button>
           <el-button
+              v-if="scope.row.enterpriseStatus === 1"
               style="padding: 5px"
               size="mini"
               type="danger"
-              plain
               @click.stop="handleDelete(scope.$index, scope.row)">删除
           </el-button>
         </template>
@@ -184,40 +239,7 @@ export default {
   data() {
     return {
       regionData: provinceAndCityData,
-      columns: [
-        {
-          title: '客户名称',
-          key: 'address'
-        },
-        {
-          title: '客户类型',
-          key: 'address'
-        },
-        {
-          title: '资质转让录入数',
-          key: 'address'
-        },
-        {
-          title: '状态',
-          key: 'address'
-        },
-        {
-          title: '人员数',
-          key: 'address'
-        },
-        {
-          title: '代办总金额',
-          key: 'address'
-        },
-        {
-          title: '录入人名称',
-          key: 'address'
-        },
-        {
-          title: '录入时间',
-          key: 'address'
-        },
-      ],
+      loading: false,
       options: [
         {
           value: '选项1',
@@ -282,24 +304,7 @@ export default {
             label: '大连'
           }]
         }],
-      tableData: [
-        {
-          date: '2016-05-02',
-          username: '王小虎',
-          address: '上海市普陀区',
-        }, {
-          date: '2016-05-04',
-          username: '王小虎',
-          address: '上海市普陀区'
-        }, {
-          date: '2016-05-01',
-          username: '王小虎',
-          address: '上海市普陀区',
-        }, {
-          date: '2016-05-03',
-          username: '王小虎',
-          address: '上海市普陀区'
-        }],
+      list: [],
       pageInfo: {
         pageSize: 10,
         total: 0,
@@ -351,24 +356,36 @@ export default {
       },
     }
   },
-  mounted() {
-    console.log(this.$route)
+  created() {
+    this.getList()
   },
   methods: {
-    tableRowClassName({rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row';
-      } else if (rowIndex === 3) {
-        return 'success-row';
+    async getList(_pageSize) {
+      let url = ``
+      if (undefined !== _pageSize) {
+        url = `/enterprise/list?currentPage=${this.pageInfo.currentPage}&pageSize=${_pageSize}`
+      } else {
+        url = `/enterprise/list?currentPage=${this.pageInfo.currentPage}&pageSize=${this.pageInfo.pageSize}`
       }
-      return '';
-    },
-    handleChange(_val) {
-      console.log(_val)
-      _val.forEach(k => {
-        console.log(CodeToText[k])
-      })
-      this.ruleForm.area = JSON.stringify(_val)
+      try {
+        this.loading = true
+        const res = await this.$http.get(url)
+        if (res.status) {
+          this.pageInfo.total = res.data.total
+          this.list = res.data.list
+          this.list.forEach(item => {
+            item.listEnterpriseDemands.forEach(enterpriseDemand => {
+              enterpriseDemand.levelMajorInitialConversion
+                  = JSON.parse(enterpriseDemand.levelMajorInitialConversion)
+            })
+          })
+        }
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.loading = false
+      }
+
     },
     /**
      * 表格翻页
@@ -393,8 +410,7 @@ export default {
       })
     },
     handleEdit(_index, _row) {
-      this.$router.push('/enterprise-query-edit')
-      console.log(_index, _row)
+      this.$router.push('/enterprise-query-edit/' + _row.id)
     },
     handleDelete(_index, _row) {
       console.log(_index, _row)

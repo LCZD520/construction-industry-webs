@@ -19,7 +19,7 @@
       <el-form-item label="申请人" label-width="120px">
         <el-select size="small" v-model="form.oldPassword" placeholder="请选择创建人姓名">
           <el-option
-              v-for="item in options"
+              v-for="item in []"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -49,27 +49,99 @@
       </el-form-item>
     </el-form>
     <el-table
-        :data="tableData"
+        :data="list"
         stripe
         border
-        highlight-current-row
         :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
         :cell-style="{textAlign:'center'}"
-        style="width: 100%"
-        :row-class-name="tableRowClassName">
+        style="width: 100%">
       <el-table-column
           min-width="180"
-          v-for="item in columns"
-          :key="item.key"
-          :prop="item.key"
-          :label="item.title">
-      </el-table-column>
-      <el-table-column fixed="right" label="操作" width="90">
+          label="订单编号">
         <template slot-scope="scope">
+          {{ scope.row.talentEntry.talentOrder.orderno }}
+        </template>
+      </el-table-column>
+      <el-table-column
+          min-width="180"
+          label="企业名称">
+        <template slot-scope="scope">
+          {{ scope.row.talentEntry.talentOrder.enterpriseName }}
+        </template>
+      </el-table-column>
+      <el-table-column
+          prop="fullName"
+          min-width="180"
+          label="人才姓名">
+      </el-table-column>
+      <el-table-column
+          prop="entryAmount"
+          min-width="180"
+          label="申请转入金额">
+      </el-table-column>
+      <el-table-column
+          min-width="180"
+          label="申请状态">
+        <template slot-scope="scope">
+          <el-tag effect="dark" :type="scope.row.status === 1 ? 'info'
+            : scope.row.status === 2 ? 'success' : 'danger' "
+                  size="mini">
+            {{ $valueToLabel(scope.row.status, $store.state.talent_entry_status_options) }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+          min-width="180"
+          label="转账方信息">
+        <template slot-scope="scope">
+          {{ scope.row.talentEntry.transferorInfo }}
+        </template>
+      </el-table-column>
+      <el-table-column
+          min-width="100"
+          label="申请人">
+        <template slot-scope="scope">
+          <span> {{ $valueToLabel(scope.row.creatorId, $store.state.user_options) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          min-width="160"
+          prop="gmtCreate"
+          label="录入时间">
+      </el-table-column>
+      <el-table-column
+          min-width="180"
+          label="到账日期">
+        <template slot-scope="scope">
+          {{ scope.row.talentEntry.transferDate }}
+        </template>
+      </el-table-column>
+      <el-table-column
+          min-width="100"
+          label="人才录入人">
+        <template slot-scope="scope">
+          <span> {{ $valueToLabel(scope.row.creatorId, $store.state.user_options) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          min-width="100"
+          label="企业录入人">
+        <template slot-scope="scope">
+          <span> {{ $valueToLabel(scope.row.creatorId, $store.state.user_options) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column fixed="right" label="操作" width="200">
+        <template slot-scope="scope">
+          <el-button
+              v-if="scope.row.status === 1"
+              size="mini"
+              type="primary"
+              icon="el-icon-check"
+              @click.stop="handleExamine(scope.row)">审核
+          </el-button>
           <el-button
               size="mini"
               type="primary"
-              plain
               @click.stop="handleView(scope.$index, scope.row)">查看
           </el-button>
         </template>
@@ -100,58 +172,7 @@ export default {
   components: {},
   data() {
     return {
-      columns: [
-        {
-          title: '订单编号',
-          key: 'address'
-        },
-        {
-          title: '企业名称',
-          key: 'address'
-        },
-        {
-          title: '人才姓名',
-          key: 'address'
-        },
-        {
-          title: '申请转入金额',
-          key: 'address'
-        },
-        {
-          title: '申请状态',
-          key: 'address'
-        },
-        {
-          title: '转账方信息',
-          key: 'address'
-        },
-        {
-          title: '到账日期',
-          key: 'address'
-        },
-        {
-          title: '申请人',
-          key: 'address'
-        },
-        {
-          title: '申请时间',
-          key: 'address'
-        },
-        {
-          title: '人才录入人',
-          key: 'address'
-        },
-        {
-          title: '企业录入人',
-          key: 'address'
-        },
-      ],
-      tableData: [
-        {
-          date: '2016-05-02',
-          username: '王小虎',
-          address: '上海市普陀区',
-        },],
+      list: [],
       pageInfo: {
         pageSize: 10,
         total: 0,
@@ -203,19 +224,47 @@ export default {
       },
     }
   },
+  created() {
+    this.getList()
+  },
   methods: {
-    tableRowClassName({rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row';
-      } else if (rowIndex === 3) {
-        return 'success-row';
+    async getList(_pageSize) {
+      try {
+        const res = await this.$http.get('/talent-entry-record/list', {
+          params: {
+            pageSize: _pageSize === undefined ? this.pageInfo.pageSize : _pageSize,
+            currentPage: this.pageInfo.currentPage
+          }
+        })
+        if (res.status && res.data !== null) {
+          this.list = res.data.list
+          this.pageInfo.total = res.data.total
+        }
+      } catch (e) {
+        console.log(e)
       }
-      return '';
     },
-    handleView(_index,_row){
-      console.log(_index,_row)
-      this.$router.push('/entry-talent-contract-view')
-    }
+    /**
+     * 审核
+     * @param _row
+     */
+    handleExamine(_row) {
+      this.$router.push('/entry-talent-contract-approval/' + _row.id)
+    },
+    /**
+     * 查看
+     * @param _index
+     * @param _row
+     */
+    handleView(_index, _row) {
+      this.$router.push('/entry-talent-contract-view/' + _row.id)
+    },
+    handleCurrentChange() {
+      this.getList()
+    },
+    handleSizeChange() {
+      this.getList(this.pageInfo.pageSize)
+    },
   }
 }
 </script>

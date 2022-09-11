@@ -20,21 +20,24 @@
                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
               </el-input>
               <div style="float: right">
-                <el-button size="small" plain @click="visible = true">新增</el-button>
+                <el-button @click="handleAddEditCategory(0,'add')" size="small">新增</el-button>
               </div>
             </div>
             <el-scrollbar style="height: 450px">
               <ul class="list-item-content">
-                <li v-for="item in 20" :key="item">
-                  <el-tooltip class="item" :open-delay="300" effect="dark" :content="item+''" placement="top">
-                    <span class="title">{{ item }} </span>
+                <li v-for="item in list" :key="item.id" @click="searchSubCategory(item.id)">
+                  <el-tooltip class="item" :open-delay="300" effect="dark" :content="item.categoryName" placement="top">
+                    <span class="title">{{ item.categoryName }} </span>
                   </el-tooltip>
                   <div class="button-group">
-                    <el-button style="padding: 5px" size="mini" plain type="primary" icon="el-icon-plus"
-                               @click.stop="visible2 = true"></el-button>
-                    <el-button style="padding: 5px" size="mini" plain type="primary" icon="el-icon-edit"
-                               @click.stop="visible2 = true"></el-button>
-                    <el-button style="padding: 5px" size="mini" plain type="danger" icon="el-icon-delete"></el-button>
+                    <el-button
+                        style="padding: 5px" size="mini"
+                        @click.stop="handleAddEditCategory(item.id,'add')" type="primary"
+                        icon="el-icon-plus"></el-button>
+                    <el-button
+                        style="padding: 5px" size="mini" type="primary"
+                        @click.stop="handleAddEditCategory(item.id)" icon="el-icon-edit"></el-button>
+                    <el-button style="padding: 5px" size="mini" type="danger" icon="el-icon-delete"></el-button>
                   </div>
                 </li>
               </ul>
@@ -55,16 +58,17 @@
             </div>
             <el-scrollbar style="height: 450px">
               <ul class="list-item-content">
-                <li v-for="item in 20" :key="item">
-                  <el-tooltip class="item" :open-delay="300" effect="dark" :content="item+''" placement="top">
-                    <span class="title">{{ item }} </span>
+                <li v-for="item in subList" :key="item.id" @click="searchSubCategory2(item.id)">
+                  <el-tooltip class="item" :open-delay="300" effect="dark" :content="item.categoryName" placement="top">
+                    <span class="title">{{ item.categoryName }} </span>
                   </el-tooltip>
                   <div class="button-group">
-                    <el-button style="padding: 5px" size="mini" plain type="primary" icon="el-icon-plus"
-                               @click.stop="visible2 = true"></el-button>
-                    <el-button style="padding: 5px" size="mini" plain type="primary" icon="el-icon-edit"
-                               @click.stop="visible2 = true"></el-button>
-                    <el-button style="padding: 5px" size="mini" plain type="danger" icon="el-icon-delete"></el-button>
+                    <el-button
+                        style="padding: 5px" size="mini"
+                        @click.stop="handleAddEditCategory2(item.id,'add')" type="primary"
+                        icon="el-icon-plus"></el-button>
+                    <el-button style="padding: 5px" size="mini" type="primary" icon="el-icon-edit"></el-button>
+                    <el-button style="padding: 5px" size="mini" type="danger" icon="el-icon-delete"></el-button>
                   </div>
                 </li>
               </ul>
@@ -85,52 +89,48 @@
             </div>
             <el-scrollbar style="height: 450px">
               <ul class="list-item-content">
-                <li v-for="item in 20" :key="item">
-                  <el-tooltip class="item" :open-delay="300" effect="dark" :content="item+''" placement="top">
-                    <span class="title">{{ item }} </span>
+                <li v-for="item in subList2" :key="item.id" @click="searchSubCategory(item.id)">
+                  <el-tooltip class="item" :open-delay="300" effect="dark" :content="item.categoryName"
+                              placement="top">
+                    <span class="title">{{ item.categoryName }} </span>
                   </el-tooltip>
                   <div class="button-group">
-                    <el-button style="padding: 5px" size="mini" plain type="primary" icon="el-icon-plus"
-                               @click.stop="visible2 = true"></el-button>
-                    <el-button style="padding: 5px" size="mini" plain type="primary" icon="el-icon-edit"
-                               @click.stop="visible2 = true"></el-button>
-                    <el-button style="padding: 5px" size="mini" plain type="danger" icon="el-icon-delete"></el-button>
+                    <el-button style="padding: 5px" size="mini" type="primary" icon="el-icon-edit"></el-button>
+                    <el-button style="padding: 5px" size="mini" type="danger" icon="el-icon-delete"></el-button>
                   </div>
                 </li>
               </ul>
             </el-scrollbar>
           </div>
         </el-col>
-        <el-col :span="6">
-          <div class="list-item">
-            <div class="list-item-header">
-              <el-input
-                  size="small"
-                  style="width: 180px;"
-                  placeholder="搜索"
-                  @input="searchKeyword4"
-                  v-model="keyword4">
-                <i slot="prefix" class="el-input__icon el-icon-search"></i>
-              </el-input>
-            </div>
-            <el-scrollbar style="height: 450px">
-              <ul class="list-item-content">
-                <li v-for="item in 20" :key="item">
-                  <el-tooltip class="item" :open-delay="300" effect="dark" :content="item" placement="top">
-                    <span class="title">{{ item }} </span>
-                  </el-tooltip>
-                  <div class="button-group">
-                    <el-button style="padding: 5px" size="mini" plain type="primary"
-                               icon="el-icon-edit" @click.stop="visible2 = true"></el-button>
-                    <el-button style="padding: 5px" size="mini" plain type="danger"
-                               icon="el-icon-delete"></el-button>
-                  </div>
-                </li>
-              </ul>
-            </el-scrollbar>
-            <!--            <el-empty :image-size="200"></el-empty>-->
+<el-col :span="6">
+  <div class="list-item">
+    <div class="list-item-header">
+      <el-input
+          size="small"
+          style="width: 180px;"
+          placeholder="搜索"
+          @input="searchKeyword4"
+          v-model="keyword4">
+        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+      </el-input>
+    </div>
+    <el-scrollbar style="height: 450px">
+      <ul class="list-item-content">
+        <li v-for="item in subList3" :key="item.id" @click="searchSubCategory(item.id)">
+          <el-tooltip class="item" :open-delay="300" effect="dark" :content="item.categoryName" placement="top">
+            <span class="title">{{ item.categoryName }} </span>
+          </el-tooltip>
+          <div class="button-group">
+            <el-button style="padding: 5px" size="mini" type="primary" icon="el-icon-edit"></el-button>
+            <el-button style="padding: 5px" size="mini" type="danger" icon="el-icon-delete"></el-button>
           </div>
-        </el-col>
+        </li>
+      </ul>
+    </el-scrollbar>
+    <!--            <el-empty :image-size="200"></el-empty>-->
+  </div>
+</el-col>
       </el-row>
     </div>
     <el-dialog
@@ -138,60 +138,40 @@
         width="30%"
         title="资质类别"
         :visible.sync="visible"
-        :before-close="()=>this.visible = false">
+        :before-close="beforeClose">
       <div class="dialog-content">
         <el-form
+            ref="form"
+            :rules="rules"
+            :model="form"
             label-width="80px"
             label-position="right">
-          <el-form-item label="上级类别">
-            <el-select class="width-full" disabled size="small" v-model="form.parentId">
-              <el-option label="无" :value="null"></el-option>
-            </el-select>
+          <el-form-item label="上级类别" prop="parentId">
+            <el-cascader
+                size="small"
+                disabled
+                ref="cascader"
+                :props="{emitPath:false,value:'id',label:'categoryName',children:'listQualificationCategory'}"
+                class="width-full"
+                :options="options"
+                v-model="form.parentId"/>
           </el-form-item>
-          <el-form-item label="类别名称">
-            <el-input v-model="form.categoryName" size="small"></el-input>
+          <el-form-item label="类别名称" prop="categoryName">
+            <el-input v-model.trim="form.categoryName" size="small"/>
           </el-form-item>
-          <el-form-item label="排序">
-            <el-input-number class="width-full" controls-position="right" v-model="form.categoryName"
-                             size="small"></el-input-number>
+          <el-form-item label="排序" prop="sort">
+            <el-input-number
+                :min="0"
+                class="width-full" controls-position="right" v-model="form.sort"
+                size="small">
+            </el-input-number>
           </el-form-item>
         </el-form>
       </div>
       <div slot="footer">
-        <el-button size="small" @click="visible = false">取 消</el-button>
+        <el-button size="small" @click="beforeClose">取 消</el-button>
         <el-button
-            size="small"
-            type="primary">提 交
-        </el-button>
-      </div>
-    </el-dialog>
-    <el-dialog
-        :close-on-click-modal=false
-        width="30%"
-        title="资质类别"
-        :visible.sync="visible2"
-        :before-close="()=>this.visible2 = false">
-      <div class="dialog-content">
-        <el-form
-            label-width="80px"
-            label-position="right">
-          <el-form-item label="上级类别">
-            <el-select class="width-full" disabled size="small" v-model="form.parentId">
-              <el-option label="无" :value="null"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="类别名称">
-            <el-input v-model="form.categoryName" size="small"></el-input>
-          </el-form-item>
-          <el-form-item label="排序">
-            <el-input-number class="width-full" controls-position="right" v-model="form.sort"
-                             size="small"></el-input-number>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div slot="footer">
-        <el-button size="small" @click="visible2 = false">取 消</el-button>
-        <el-button
+            @click="handleSubmit"
             size="small"
             type="primary">提 交
         </el-button>
@@ -207,20 +187,166 @@ export default {
   components: {},
   data() {
     return {
-      visible: false,
-      visible2: false,
+      mode: '',
+      list: [],
+      subList: [],
+      subList2: [],
+      subList3: [],
       form: {
-        parentId: '',
+        id: null,
+        parentId: null,
         categoryName: '',
-        sort: '',
+        sort: undefined,
+      },
+      rules: {
+        parentId: [
+          {required: false}
+        ],
+        categoryName: [
+          {required: true, message: '请输入分类名称', trigger: 'blur'}
+        ],
+        sort: [
+          {required: true, message: '请输入排序', trigger: 'blur'}
+        ],
       },
       keyword1: '',
       keyword2: '',
       keyword3: '',
       keyword4: '',
+      visible: false,
+      options: [
+        {
+          id: 0,
+          categoryName: '无'
+        }
+      ]
+
     }
   },
+  created() {
+    this.getList()
+  },
   methods: {
+    async getList() {
+      try {
+        const res = await this.$http.get('/qualification-category/list-tree')
+        if (res.status && res.data !== null) {
+          this.list = res.data
+          await this.$store.dispatch('initListQualificationCategory', res.data)
+          this.options = this.options.concat(res.data)
+          return
+        }
+        this.$message.error(res.message)
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    handleSubmit() {
+      this.$refs.form.validate(async valid => {
+        if (valid) {
+          if (this.mode === 'add') {
+            delete this.form.id
+            try {
+              const res = await this.$http.post('/qualification-category/insert', this.form)
+              if (res.status) {
+                this.$message.success(res.message)
+                this.visible = false
+                await this.getList()
+                return
+              }
+              this.$message.error(res.message)
+            } catch (e) {
+              console.log(e)
+            }
+            return
+          }
+
+
+        }
+        this.$message.error('输入有误')
+      })
+    },
+    beforeClose() {
+      this.visible = false
+    },
+    searchSubCategory(_id) {
+      this.list.map(item => {
+        if (_id === item.id) {
+          this.subList = item.listQualificationCategory
+        }
+      })
+    },
+    searchSubCategory2(_id) {
+      console.log(_id)
+      this.subList.map(item => {
+        if (_id === item.id) {
+          this.subList2 = item.listQualificationCategory
+        }
+      })
+    },
+
+    handleAddEditCategory(_id, _mode) {
+      this.mode = _mode
+      this.visible = true
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.$refs.cascader.inputValue
+              = this.options.find(item => item.id === _id).categoryName
+        }, 0)
+        this.form.parentId = _id
+      })
+      if (_mode === 'add') {
+        this.$nextTick(() => {
+          this.$refs.form.resetFields()
+          this.form.parentId = _id
+        })
+        return
+      }
+      this.getDetailById(_id)
+    },
+    handleAddEditCategory2(_id, _mode) {
+      this.mode = _mode
+      this.visible = true
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.$refs.cascader.inputValue
+              = this.subList.find(item => item.id === _id).categoryName
+        }, 0)
+        this.form.parentId = _id
+      })
+      if (_mode === 'add') {
+        this.$nextTick(() => {
+          this.$refs.form.resetFields()
+          this.form.parentId = _id
+        })
+        return
+      }
+      this.getDetailById(_id)
+    },
+    async getDetailById(_id) {
+      try {
+        const res = await this.$http.get('/qualification-category/detail/' + _id)
+        if (res.status && res.data !== null) {
+          for (let dataKey in res.data) {
+            for (let formKey in this.form) {
+              if (dataKey === formKey) {
+                this.form[formKey] = res.data[dataKey]
+              }
+            }
+          }
+          this.$nextTick(() => {
+            setTimeout(() => {
+              this.$refs.cascader.inputValue
+                  = this.options.find(item => item.id === _id).categoryName
+            }, 0)
+          })
+          return
+        }
+        this.$message.error(res.message)
+      } catch (e) {
+        console.log(e)
+      }
+    },
     searchKeyword1(_keyword) {
       console.log(_keyword)
     },
@@ -241,11 +367,10 @@ export default {
 
 .qualification-category {
   .container {
-    margin: 50px 60px;
+    margin: 40px 60px;
 
     .list-item {
-      min-height: 480px;
-      max-height: 480px;
+      height: 480px;
       padding: 15px;
       border: 1px solid #eee;
       box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
@@ -287,5 +412,6 @@ export default {
   }
 
 }
+
 
 </style>

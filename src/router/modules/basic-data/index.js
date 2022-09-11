@@ -50,7 +50,7 @@ const basicDataRoutes = [
         component: () => import('../../../views/basic-data/management-organization/ManagementOrganization'),
     },
     {
-        path: '/management-organization-view',
+        path: '/management-organization-view/:id',
         name: 'management-organization-view',
         meta: {
             title: '用户查看',
@@ -68,7 +68,7 @@ const basicDataRoutes = [
         component: () => import('../../../views/basic-data/management-organization/ManagementOrganizationAdd'),
     },
     {
-        path: '/management-organization-edit',
+        path: '/management-organization-edit/:id',
         name: 'management-organization-edit',
         meta: {
             title: '用户编辑',
@@ -86,7 +86,7 @@ const basicDataRoutes = [
         component: () => import('../../../views/basic-data/management-organization/management-institution/InstitutionAdd'),
     },
     {
-        path: '/institution-edit',
+        path: '/institution-edit/:id',
         name: 'institution-edit',
         meta: {
             title: '机构编辑',

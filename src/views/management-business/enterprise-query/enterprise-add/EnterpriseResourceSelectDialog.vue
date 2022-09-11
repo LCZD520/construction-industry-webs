@@ -6,7 +6,7 @@
   <div class="enterprise-resource-select-dialog">
     <el-dialog
         :close-on-click-modal=false
-        width="80%"
+        width="70%"
         :title="dialogTitle"
         :visible.sync="visible"
         :before-close="beforeClose">
@@ -58,10 +58,14 @@
               </template>
             </el-table-column>
             <el-table-column
-                v-for="item in columns"
-                :key="item.key"
-                :prop="item.key"
-                :label="item.title">
+                prop="enterpriseName"
+                label="企业名称">
+            </el-table-column>
+            <el-table-column
+                label="地区">
+              <template slot-scope="scope">
+                <span> {{ $CodeToText[scope.row.area] }}</span>
+              </template>
             </el-table-column>
           </el-table>
           <div class="pagination">
@@ -98,71 +102,6 @@
 export default {
   name: 'EnterpriseResourceSelectDialog',
   components: {},
-  data() {
-    return {
-      currentIndex: null,
-      currentSelectId: null,
-      form: {
-        name: '',
-        area: ''
-      },
-      columns: [
-        {
-          title: '企业名称',
-          key: 'username'
-        },
-        {
-          title: '地区名称',
-          key: 'address'
-        },
-      ],
-      options: [
-        {
-          id: "xxxx",
-          value: 1,
-          label: '录入企业数'
-        },
-        {
-          id: "xxxxx",
-          value: 2,
-          label: '录入人才数'
-        },
-        {
-          value: '选项3',
-          label: '资质收购录入数'
-        },
-        {
-          value: '选项4',
-          label: '资质转让录入数'
-        },
-        {
-          value: '选项5',
-          label: '资质代办录入数'
-        },
-        {
-          value: '选项6',
-          label: '职称评审录入数'
-        },
-        {
-          value: '选项7',
-          label: '三类人员录入数'
-        },
-        {
-          value: '选项8',
-          label: '学历提升录入数'
-        },
-        {
-          value: '选项9',
-          label: '录入总数'
-        },
-      ],
-      pageInfo: {
-        pageSize: 10,
-        total: 0,
-        currentPage: 1,
-      },
-    }
-  },
   props: {
     visible: {
       type: Boolean,
@@ -175,6 +114,20 @@ export default {
     dialogTitle: {
       type: String,
       default: ''
+    },
+    pageInfo: {
+      type: Object
+    }
+  },
+  data() {
+    return {
+      currentIndex: null,
+      currentSelectId: null,
+      form: {
+        name: '',
+        area: ''
+      },
+      options: [],
     }
   },
   methods: {
@@ -213,7 +166,7 @@ export default {
     handleConfirm() {
       if (this.currentSelectId) {
 
-
+        this.$emit('confirm', this.currentIndex)
         this.$emit('closeDialog')
         this.cancelSelect()
         return
@@ -247,18 +200,19 @@ export default {
     },
     handleChange(_val) {
       console.log(_val)
+      console.log(this.form)
     },
     /**
      * 表格翻页
      */
     handleCurrentChange() {
-
+      this.$emit('handleCurrentChange')
     },
     /**
      * 改变页数
      */
     handleSizeChange(_pageSize) {
-      console.log(_pageSize)
+      this.$emit('handleSizeChange', _pageSize)
     }
   },
 }
