@@ -49,7 +49,7 @@
             </el-form-item>
             <el-form-item label=" " label-width="120px">
               <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
-              <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
+              <el-button size="small" icon="el-icon-refresh-right" v-throttle="getListUsers">重 置</el-button>
             </el-form-item>
           </el-form>
           <div class="split-line">
@@ -154,7 +154,6 @@
             </el-table-column>
           </el-table>
           <div class="pagination">
-            <div class="pagination-total">共<span class="total"> {{ pageInfo.total }} </span>条</div>
             <div class="pagination-right">
               <el-pagination
                   ref="pagination"
@@ -253,7 +252,6 @@ export default {
       }
     },
     handleView(_index, _row) {
-      console.log(_index, _row)
       this.$router.push('/management-organization-view/' + _row.userId)
     },
     handleEdit(_index, _row) {
@@ -269,15 +267,53 @@ export default {
         this.$message.error(res.message)
       })
     },
-    handleDelete(_index, _row) {
-      this.$message.success('删除' + _row)
+    async handleDelete(_index, _row) {
+      this.$confirm(`确定要删除用户【${_row.username}】吗?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        try {
+          const res = await this.$http.delete('/user/delete/' + _row.userId)
+          if (res.status) {
+            this.$message.success(res.message)
+            if (this.currentMechanismId != null) {
+              await this.getListUsersByMechanismId(this.currentMechanismId)
+              return
+            }
+            await this.getListUsers()
+            return
+          }
+          this.$message.error(res.message)
+        } catch (e) {
+          console.log(e)
+        }
+      }).catch(() => {
+        this.$message.info('已取消删除')
+      })
     },
     handleEditMechanism() {
       this.$router.push('/institution-edit/' + this.currentMechanismId)
     },
-    handleResetPassword(_index, _row) {
-      console.log(_index, _row)
-      this.$message.success('重置密码 ')
+    async handleResetPassword(_index, _row) {
+      this.$confirm(`确定要重置用户【${_row.username}】的密码吗?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        try {
+          const res = await this.$http.put('/user/reset-password/' + _row.userId)
+          if (res.status) {
+            this.$message.success(`密码重置成功，用户【${_row.username}】的重置密码为【123456】`)
+            return
+          }
+          this.$message.error(res.message)
+        } catch (e) {
+          console.log(e)
+        }
+      }).catch(() => {
+        this.$message.info('已取消重置')
+      })
     },
   }
 }

@@ -179,10 +179,6 @@ export default {
   margin: 0 200px;
 }
 
-.width-full {
-  width: 100%;
-}
-
 .el-select-dropdown.is-multiple .el-select-dropdown__item {
   height: auto;
   padding: 0;

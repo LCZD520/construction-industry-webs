@@ -87,11 +87,11 @@
             <el-tag
                 size="small"
                 style="margin-right: 10px"
-                v-for="item in 10"
-                :key="item"
+                v-for="item in form.listRoles"
+                :key="item.roleId"
                 type="success"
                 effect="dark">
-              角色
+              {{ item.roleName }}
             </el-tag>
           </el-form-item>
         </el-card>

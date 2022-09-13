@@ -55,10 +55,10 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="在建工程">
-            <el-select class="width-full" size="small" v-model="form.name">
+          <el-form-item label="在建工程" prop="constructionProgress">
+            <el-select class="width-full" v-model="form.constructionProgress" placeholder="请选择在建工程">
               <el-option
-                  v-for="item in options"
+                  v-for="item in this.$store.state.bool3_options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -67,10 +67,10 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="资质人员">
-            <el-select class="width-full" size="small" v-model="form.name">
+          <el-form-item label="资质人员" prop="qualifiedPersonnel">
+            <el-select class="width-full" v-model="form.qualifiedPersonnel" placeholder="请选择资质人员">
               <el-option
-                  v-for="item in options"
+                  v-for="item in this.$store.state.bool3_options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -81,10 +81,10 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="安全许可证">
-            <el-select class="width-full" size="small" v-model="form.name">
+          <el-form-item label="安全许可证" prop="safetyPermit">
+            <el-select class="width-full" v-model="form.safetyPermit" placeholder="请选择安全许可证">
               <el-option
-                  v-for="item in options"
+                  v-for="item in this.$store.state.bool3_options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -93,38 +93,40 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="收购金额">
+          <el-form-item label="收购金额" prop="acquisitionAmount">
             <el-input-number
+                placeholder="请输入收购金额"
+                :precision="2"
                 class="width-full"
                 controls-position="right"
                 :min="0"
-                size="small"
-                placeholder="请填写收购金额"
-                v-model="form.name"/>
+                v-model="form.acquisitionAmount"/>
+            <p style="height: 20px">
+              <span v-if="formatAmount === 0"></span>
+              <span v-else>{{ formatAmount | amount }}</span>
+            </p>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="收购日期">
+          <el-form-item label="收购日期" prop="acquisitionDate">
             <el-date-picker
-                class="width-full"
-                size="small"
-                v-model="form.name"
                 placeholder="请选择收购日期"
+                class="width-full"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd"
+                v-model="form.acquisitionDate"
                 type="date">
             </el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-form-item label="备注">
-        <el-input :rows="3" type="textarea" placeholder="请输入备注...">
+      <el-form-item label="备注" prop="remark">
+        <el-input v-model="form.remark" placeholder="请输入备注..." :rows="5" type="textarea">
 
         </el-input>
       </el-form-item>
-
-
-
       <el-row>
         <el-col :span="12">
           <el-form-item label=" ">
@@ -142,16 +144,33 @@
 </template>
 
 <script>
+import gsap from "gsap";
+
 export default {
   name: 'QualificationAcquisitionStripping',
   components: {},
   data() {
     return {
       form: {
-        name: ''
+        remark: '',
+        status: 1,
+        transferCustomers: '',
+        area: '',
+        categoryAndGrade: [],
+        acquisitionAmount: undefined,
+        safetyPermit: null,
+        constructionProgress: null,
+        qualifiedPersonnel: null,
+        acquisitionDate: null,
       },
       tableData: [{id: 1}, {id: 2}],
       selectionList: [],
+      formatAmount: 0
+    }
+  },
+  filters: {
+    amount(val) {
+      return val
     }
   },
   methods: {
@@ -189,6 +208,9 @@ export default {
     },
   },
   watch: {
+    'form.acquisitionAmount': function (newValue) {
+      gsap.to(this.$data, {duration: 0.5, formatAmount: newValue});
+    },
     selectionList(newVal, oldVal) {
       newVal.forEach(k => {
         k.className = 'highlight'

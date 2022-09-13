@@ -165,22 +165,6 @@
                   prop="continuingEducationDate"
                   label="继续教育时间（默认3年）">
               </el-table-column>
-              <el-table-column fixed="right" label="操作" width="120">
-                <template slot-scope="scope">
-                  <el-button
-                      style="padding: 5px"
-                      size="mini"
-                      type="primary"
-                      @click.stop="handleEdit(scope.$index, scope.row)">编辑
-                  </el-button>
-                  <el-button
-                      style="padding: 5px"
-                      size="mini"
-                      type="danger"
-                      @click.stop="handleDelete(scope.$index, scope.row)">删除
-                  </el-button>
-                </template>
-              </el-table-column>
             </el-table>
           </el-form-item>
         </el-col>
@@ -311,7 +295,6 @@ export default {
           key: 'address'
         },
       ],
-      tableData: [{}]
     }
   },
   created() {

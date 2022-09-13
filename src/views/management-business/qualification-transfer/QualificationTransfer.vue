@@ -132,7 +132,7 @@
           <el-button
               size="mini"
               type="primary"
-              @click.stop="handleStrippe(scope.$index, scope.row,'second')">编辑
+              @click.stop="handleEdit(scope.$index, scope.row,'second')">编辑
           </el-button>
           <el-button
               v-if="true"
@@ -364,6 +364,9 @@ export default {
           id: _row.id
         }
       })
+    },
+    handleEdit(_index, _row) {
+      console.log(_index, _row)
     },
     handleDelete(_index, _row) {
       console.log(_index, _row)

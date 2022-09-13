@@ -54,7 +54,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="在建工程" prop="constructionProgress">
-            <el-select class="width-full" v-model="form.constructionProgress" placeholder="请选择学历">
+            <el-select class="width-full" v-model="form.constructionProgress" placeholder="请选择在建工程">
               <el-option
                   v-for="item in this.$store.state.bool3_options"
                   :key="item.value"
@@ -66,7 +66,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="资质人员" prop="qualifiedPersonnel">
-            <el-select class="width-full" v-model="form.qualifiedPersonnel" placeholder="请选择学历">
+            <el-select class="width-full" v-model="form.qualifiedPersonnel" placeholder="请选择资质人员">
               <el-option
                   v-for="item in this.$store.state.bool3_options"
                   :key="item.value"
@@ -80,7 +80,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="安全许可证" prop="safetyPermit">
-            <el-select class="width-full" v-model="form.safetyPermit" placeholder="请选择学历">
+            <el-select class="width-full" v-model="form.safetyPermit" placeholder="请选择安全许可证">
               <el-option
                   v-for="item in this.$store.state.bool3_options"
                   :key="item.value"
@@ -93,8 +93,12 @@
         <el-col :span="12">
           <el-form-item label="收购金额" prop="acquisitionAmount">
             <el-input-number
+                placeholder="请输入收购金额"
                 :precision="2"
-                class="width-full" controls-position="right" :min="0" v-model="form.acquisitionAmount"/>
+                class="width-full"
+                controls-position="right"
+                :min="0"
+                v-model="form.acquisitionAmount"/>
             <p style="height: 20px">
               <span v-if="formatAmount === 0"></span>
               <span v-else>{{ formatAmount | amount }}</span>
@@ -106,6 +110,7 @@
         <el-col :span="12">
           <el-form-item label="收购日期" prop="acquisitionDate">
             <el-date-picker
+                placeholder="请选择收购日期"
                 class="width-full"
                 format="yyyy-MM-dd"
                 value-format="yyyy-MM-dd"
@@ -270,11 +275,6 @@ export default {
       gsap.to(this.$data, {duration: 0.5, formatAmount: newValue});
     }
   },
-  computed: {
-    animatedNumber: function () {
-      return this.formatAmount.toFixed(0);
-    }
-  }
 }
 </script>
 

@@ -69,7 +69,7 @@
           <el-input placeholder="请输入联系方式" v-model="form.telephoneNumber"/>
         </el-form-item>
         <el-form-item label="用户性别" prop="sex">
-          <el-select style="width: 100%" v-model="form.sex" placeholder="请选择用户角色">
+          <el-select style="width: 100%" v-model="form.sex" placeholder="请选择用户性别">
             <el-option
                 v-for="item in $store.state.sex_options"
                 :key="item.value"
@@ -186,8 +186,12 @@ export default {
               this.$message.success(res.message)
               this.$router.back()
               return
+            } else if (res.code === "4009") {
+              this.$message.error("用户【" + newData.username + "】已存在")
+              return
+            } else {
+              this.$message.error(res.message)
             }
-            this.$message.error(res.message)
           } catch (e) {
             console.log(e)
           }

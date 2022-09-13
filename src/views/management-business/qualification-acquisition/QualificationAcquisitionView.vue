@@ -18,17 +18,16 @@
                 class="width-full"
                 size="small"
                 placeholder="请选择地区"
-                :options="regionData"
-                v-model="form.newPassword"
-                @change="handleChange">
+                :options="this.$provinceAndCityData"
+                v-model="form.newPassword">
             </el-cascader>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="在建工程">
-            <el-select class="width-full" size="small" disabled v-model="value">
+            <el-select class="width-full" size="small" disabled v-model="form.name">
               <el-option
-                  v-for="item in options"
+                  v-for="item in []"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -40,9 +39,9 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label="资质人员">
-            <el-select class="width-full" size="small" disabled v-model="value">
+            <el-select class="width-full" size="small" disabled v-model="form.name">
               <el-option
-                  v-for="item in options"
+                  v-for="item in []"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -52,9 +51,9 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="安全许可证">
-            <el-select class="width-full" size="small" disabled v-model="value">
+            <el-select class="width-full" size="small" disabled v-model="form.name">
               <el-option
-                  v-for="item in options"
+                  v-for="item in []"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -83,9 +82,9 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="状态">
-            <el-select class="width-full" disabled size="small" v-model="value" placeholder="请选择">
+            <el-select class="width-full" disabled size="small" v-model="form.name" placeholder="请选择">
               <el-option
-                  v-for="item in options"
+                  v-for="item in []"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -120,9 +119,8 @@
                 class="width-full"
                 size="small"
                 placeholder="请选择地区"
-                :options="regionData"
-                v-model="form.newPassword"
-                @change="handleChange">
+                :options="this.$provinceAndCityData"
+                v-model="form.newPassword">
             </el-cascader>
           </el-form-item>
         </el-col>
@@ -135,11 +133,9 @@
                 :data="tableData"
                 stripe
                 border
-                highlight-current-row
                 :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
                 :cell-style="{textAlign:'center'}"
-                style="width: 100%"
-                :row-class-name="tableRowClassName">
+                style="width: 100%">
               <el-table-column
                   min-width="180"
                   v-for="item in columns"
@@ -191,11 +187,9 @@
             :data="tableData"
             stripe
             border
-            highlight-current-row
             :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
             :cell-style="{textAlign:'center'}"
-            style="width: 100%"
-            :row-class-name="tableRowClassName">
+            style="width: 100%">
           <el-table-column
               min-width="180"
               prop="address"
@@ -231,13 +225,11 @@
               <el-button
                   size="mini"
                   type="primary"
-                  plain
                   @click="handleEdit(scope.$index, scope.row)">取消申请
               </el-button>
               <el-button
                   size="mini"
                   type="primary"
-                  plain
                   @click="handleEdit(scope.$index, scope.row)">详情
               </el-button>
             </template>
@@ -245,18 +237,17 @@
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="图片上传" name="second">
-        <ImagesUpload/>
+        11111
       </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script>
-import ImagesUpload from "./qualification-acquisition-view/ImagesUpload";
 
 export default {
   name: 'QualificationAcquisitionView',
-  components: {ImagesUpload},
+  components: {},
   data() {
     return {
       activeName: 'first',
@@ -272,19 +263,19 @@ export default {
         },
         {
           title: '资质类别及等级',
-          key: 'address'
+          key: 'address1'
         },
         {
           title: '剥离时间',
-          key: 'address'
+          key: 'address2'
         },
         {
           title: '剥离人员',
-          key: 'address'
+          key: 'address3'
         },
         {
           title: '剥离备注',
-          key: 'address'
+          key: 'address4'
         },
       ],
       tableData: [
@@ -293,14 +284,6 @@ export default {
     }
   },
   methods: {
-    tableRowClassName({rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row';
-      } else if (rowIndex === 3) {
-        return 'success-row';
-      }
-      return '';
-    },
     handleClick() {
 
     },

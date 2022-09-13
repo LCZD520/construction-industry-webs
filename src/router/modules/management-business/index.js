@@ -104,7 +104,7 @@ const businessRoutes = [
         component: () => import('../../../views/management-business/qualification-acquisition/QualificationAcquisitionAdd'),
     },
     {
-        path: '/qualification-acquisition-edit',
+        path: '/qualification-acquisition-edit/:id',
         name: 'qualification-acquisition-edit',
         meta: {
             title: '资质收购编辑',

@@ -29,6 +29,10 @@
             type="primary"
             icon="el-icon-plus">提 交
         </el-button>
+        <el-button
+            @click="$router.back()"
+            icon="el-icon-back">返 回
+        </el-button>
       </div>
     </div>
   </div>
