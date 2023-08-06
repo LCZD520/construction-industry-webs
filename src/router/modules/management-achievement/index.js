@@ -68,7 +68,7 @@ const achievementRoutes = [
         component: () => import('../../../views/management-achievement/achievement-title-evaluation/AchievementTitleEvaluation'),
     },
     {
-        path: '/achievement-title-evaluation-view',
+        path: '/achievement-class-three-personnel-view',
         name: 'achievement-title-evaluation-view',
         meta: {
             title: '职称评审业绩查看',

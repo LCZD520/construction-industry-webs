@@ -5,19 +5,29 @@
 <template>
   <div class="confirm-logistics">
     <el-form
-        ref="formData"
+        size="small"
+        ref="form"
         inline
+        :rules="rules"
+        label-width="120px"
         :model="form">
-      <el-form-item label="申请人" label-width="120px">
-        <el-input size="small" v-model="form.newPassword" placeholder="请输入创建人姓名">
+      <el-form-item label="申请人" prop="creatorId">
+        <el-select clearable v-model="form.creatorId" placeholder="请选择申请人">
+          <el-option
+              v-for="item in $store.state.user_options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+
+      </el-form-item>
+      <el-form-item label="客户名称" prop="customerName">
+        <el-input clearable v-model.trim="form.customerName" placeholder="请输入客户名称">
         </el-input>
       </el-form-item>
-      <el-form-item label="客户名称" label-width="120px">
-        <el-input size="small" v-model="form.newPassword" placeholder="请输入客户名称">
-        </el-input>
-      </el-form-item>
-      <el-form-item label="后勤项目" label-width="120px">
-        <el-select size="small" v-model="form.oldPassword" placeholder="请选择后勤项目">
+      <el-form-item label="后勤项目" prop="logisticsProjectType">
+        <el-select clearable v-model="form.logisticsProjectType" placeholder="请选择后勤项目">
           <el-option
               v-for="item in this.$store.state.logistics_project_options"
               :key="item.value"
@@ -26,8 +36,8 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="后勤申请状态" label-width="120px">
-        <el-select size="small" v-model="form.oldPassword" placeholder="请选择后勤申请状态">
+      <el-form-item label="后勤申请状态" prop="status">
+        <el-select clearable v-model="form.status" placeholder="请选择后勤申请状态">
           <el-option
               v-for="item in this.$store.state.logistics_status_options"
               :key="item.value"
@@ -36,12 +46,30 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label=" " label-width="120px">
-        <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
-        <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
+      <el-form-item label="提交日期" prop="date">
+        <el-date-picker
+            v-model="form.date"
+            size="small"
+            type="daterange"
+            align="right"
+            unlink-panels
+            value-format="yyyy-MM-dd"
+            format="yyyy-MM-dd"
+            range-separator="-"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :picker-options="$pickerOptions">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label=" ">
+        <el-button size="small" icon="el-icon-search" @click="search(pageInfo.pageSize,1)" :loading="loading"
+                   type="primary">搜 索
+        </el-button>
+        <el-button size="small" icon="el-icon-refresh-right" v-throttle="reset">重 置</el-button>
       </el-form-item>
     </el-form>
     <el-table
+        v-loading="loading"
         :data="list"
         stripe
         border
@@ -95,7 +123,6 @@
       </el-table-column>
     </el-table>
     <div class="pagination">
-      <div class="pagination-total">共<span class="total"> {{ pageInfo.total }} </span>条</div>
       <div class="pagination-right">
         <el-pagination
             ref="pagination"
@@ -105,7 +132,7 @@
             @current-change="handleCurrentChange"
             @size-change="handleSizeChange"
             background
-            layout="sizes, prev, pager, next, jumper"
+            layout="total,sizes, prev, pager, next, jumper"
             :total="pageInfo.total">
         </el-pagination>
       </div>
@@ -119,7 +146,7 @@
       <div class="dialog-content">
         <el-form
             ref="form2"
-            :rules="rules"
+            :rules="rules2"
             label-width="100px"
             :model="form2">
           <el-form-item prop="confirm" label="是否确认">
@@ -165,6 +192,7 @@ export default {
   components: {},
   data() {
     return {
+      loading: false,
       visible: false,
       pageInfo: {
         pageSize: 10,
@@ -172,10 +200,20 @@ export default {
         currentPage: 1,
       },
       form: {
-        oldPassword: '',
-        newPassword: '',
-        confirmPassword: '',
+        creatorId: null,
+        customerName: '',
+        logisticsProjectType: null,
+        status: null,
+        date: [],
       },
+      rules: {
+        creatorId: [{required: false, trigger: 'blur'}],
+        customerName: [{required: false, trigger: 'blur'}],
+        logisticsProjectType: [{required: false, trigger: 'blur'}],
+        status: [{required: false, trigger: 'blur'}],
+        date: [{required: false, trigger: 'blur'}],
+      },
+      list: [],
       // 确认
       form2: {
         "id": null,
@@ -183,8 +221,7 @@ export default {
         "confirm": null,
         "confirmCost": undefined
       },
-      list: [],
-      rules: {
+      rules2: {
         confirm: [
           {required: true, message: '请选择是否确认', trigger: 'change'}
         ],
@@ -198,37 +235,62 @@ export default {
     }
   },
   created() {
-    this.getList()
+    this.search()
   },
   methods: {
+    reset() {
+      this.$refs.form.resetFields()
+      this.pageInfo.currentPage = 1
+      this.search()
+    },
+    @throttle()
+    async search(size, page) {
+      let newForm = {}
+      newForm.pageSize = size ? size : this.pageInfo.pageSize
+      newForm.currentPage = page ? page : this.pageInfo.currentPage
+      this.loading = true
+      if (this.form.date && this.form.date.length > 1) {
+        newForm.startDate = this.form.date[0]
+        newForm.endDate = this.form.date[1]
+      }
+      newForm = Object.assign(newForm, this.form)
+      for (let key in newForm) {
+        if (newForm[key] === '') {
+          newForm[key] = null
+        }
+      }
+      try {
+        const res = await this.$http.post('/logistics/list-all', newForm)
+        if (res && res.status) {
+          this.pageInfo.total = res.data.total
+          this.list = res.data.list
+          this.list.forEach(item => {
+            item.listCertificates.forEach(certificate => {
+              certificate.levelMajor = JSON.parse(certificate.levelMajor)
+            })
+          })
+        }
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.loading = false
+      }
+    },
     /**
      * 表格翻页
      */
     handleCurrentChange() {
-      this.getList()
+      this.search()
     },
     /**
      * 改变页数
-     * @param _pageSize
      */
     handleSizeChange(_pageSize) {
-      this.getList(_pageSize)
+      this.search(_pageSize)
     },
-    getList(_pageSize) {
-      let url = ``
-      if (undefined !== _pageSize) {
-        url = `/logistics/list-all?currentPage=${this.pageInfo.currentPage}&pageSize=${_pageSize}`
-      } else {
-        url = `/logistics/list-all?currentPage=${this.pageInfo.currentPage}&pageSize=${this.pageInfo.pageSize}`
-      }
-      this.$http.get(url).then(res => {
-        console.log(res)
-        if (res.status) {
-          this.list = res.data.list
-          this.pageInfo.total = res.data.total
-        }
-      })
+    handleChange() {
     },
+
 
     handleConfirm(_index, _row) {
       this.visible = true
@@ -256,7 +318,7 @@ export default {
     },
     handleView(_index, _row) {
       console.log(_index, _row)
-      this.$router.push('/confirm-logistics-view/'+_row.id)
+      this.$router.push('/confirm-logistics-view/' + _row.id)
     },
   },
 }

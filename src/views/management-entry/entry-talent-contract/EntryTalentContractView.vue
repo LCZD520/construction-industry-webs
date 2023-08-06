@@ -104,8 +104,16 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="公司账户">
-            <el-input size="small" v-model="form.talentEntry.enterpriseAccountId">
-            </el-input>
+            <!--            <el-input size="small" v-model="form.talentEntry.enterpriseAccountId">-->
+            <!--            </el-input>-->
+            <el-select class="width-full" size="small" v-model="form.talentEntry.enterpriseAccountId">
+              <el-option
+                  v-for="item in $store.state.listCompanyAccounts"
+                  :key="item.enterpriseAccountId"
+                  :label="item.accountName"
+                  :value="item.enterpriseAccountId">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>

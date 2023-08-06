@@ -5,15 +5,16 @@
 <template>
   <div class="management-role">
     <el-form
-        ref="formData"
+        ref="form"
         inline
+        label-width="120px"
         :model="form">
-      <el-form-item label="角色" label-width="120px">
-        <el-input size="small" v-model="form.newPassword" placeholder="请输入角色">
+      <el-form-item label="角色" prop="roleName">
+        <el-input size="small" v-model="form.roleName" placeholder="请输入角色">
         </el-input>
       </el-form-item>
-      <el-form-item label="是否启用" label-width="120px">
-        <el-select size="small" v-model="form.oldPassword" placeholder="请选择是否启用">
+      <el-form-item label="是否启用" prop="enabled">
+        <el-select size="small" v-model="form.enabled" placeholder="请选择是否启用">
           <el-option
               v-for="item in $store.state.bool_options"
               :key="item.value"
@@ -22,9 +23,9 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label=" " label-width="120px">
-        <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
-        <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
+      <el-form-item label=" ">
+        <el-button size="small" icon="el-icon-search" type="primary" @click="search">搜 索</el-button>
+        <el-button size="small" icon="el-icon-refresh-right" @click="reset">重 置</el-button>
       </el-form-item>
     </el-form>
     <div class="split-line">
@@ -36,6 +37,7 @@
       <div class="split-line-right">共查询到 <b style="color: #409EFF">{{ pageInfo.total }}</b> 条记录</div>
     </div>
     <el-table
+        v-loading="loading"
         :data="list"
         stripe
         border
@@ -65,32 +67,39 @@
           label="角色描述">
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="300">
-        <template slot-scope="scope">
+        <template #default="{row}">
           <el-button
               size="mini"
               type="primary"
-              @click="handleEdit(scope.$index, scope.row)">编辑
+              @click="handleEdit(row)">编辑
           </el-button>
           <el-button
               size="mini"
               type="primary"
-              @click="handleSetPermissions(scope.$index, scope.row)">设置权限
+              @click="handleSetPermissions(row)">设置权限
           </el-button>
           <el-button
-              size="mini"
-              type="primary"
-              @click="handleDisable(scope.$index, scope.row)">禁用
-          </el-button>
-          <el-button
+              v-if="row.enabled"
               size="mini"
               type="danger"
-              @click="handleDelete(scope.$index, scope.row)">删除
+              @click="handleDisable(row)">禁用
+          </el-button>
+          <el-button
+              v-else
+              size="mini"
+              type="success"
+              @click="handleEnable(row)">启用
+          </el-button>
+          <el-button
+              size="mini"
+              disabled
+              type="danger"
+              @click="handleDelete(row)">删除
           </el-button>
         </template>
       </el-table-column>
     </el-table>
     <div class="pagination">
-      <div class="pagination-total">共<span class="total"> {{ pageInfo.total }} </span>条</div>
       <div class="pagination-right">
         <el-pagination
             ref="pagination"
@@ -100,7 +109,7 @@
             @current-change="handleCurrentChange"
             @size-change="handleSizeChange"
             background
-            layout="sizes, prev, pager, next, jumper"
+            layout="total,sizes, prev, pager, next, jumper"
             :total="pageInfo.total">
         </el-pagination>
       </div>
@@ -115,15 +124,15 @@ export default {
   data() {
     return {
       list: [],
+      loading: false,
       pageInfo: {
         pageSize: 10,
         total: 0,
         currentPage: 1,
       },
       form: {
-        oldPassword: '',
-        newPassword: '',
-        confirmPassword: '',
+        roleName: '',
+        enabled: null,
       },
     }
   },
@@ -131,6 +140,14 @@ export default {
     this.getListRoles()
   },
   methods: {
+    search() {
+      this.getListRoles()
+    },
+    reset() {
+      this.$refs.form.resetFields()
+      this.pageInfo.currentPage = 1
+      this.getListRoles()
+    },
     /**
      * 表格翻页
      */
@@ -144,21 +161,29 @@ export default {
     handleSizeChange(_pageSize) {
       this.getListRoles(_pageSize)
     },
-    getListRoles(_pageSize) {
-      let url = ``
-      if (undefined !== _pageSize) {
-        url = `/role/list?currentPage=${this.pageInfo.currentPage}&pageSize=${_pageSize}`
-      } else {
-        url = `/role/list?currentPage=${this.pageInfo.currentPage}&pageSize=${this.pageInfo.pageSize}`
-      }
-      this.$http.get(url).then(res => {
+    async getListRoles(_pageSize) {
+      this.loading = true
+      const {currentPage, pageSize} = this.pageInfo
+      try {
+        const res = await this.$http.get('/role/list', {
+          params: {
+            currentPage,
+            pageSize: _pageSize ? _pageSize : pageSize,
+            roleName: this.form.roleName,
+            enabled: this.form.enabled
+          }
+        })
         if (res.status) {
           this.list = res.data.list
           this.pageInfo.total = res.data.total
         }
-      })
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.loading = false
+      }
     },
-    handleEdit(_index, _row) {
+    handleEdit(_row) {
       this.$router.push({
         path: '/management-role-edit',
         query: {
@@ -166,7 +191,7 @@ export default {
         }
       })
     },
-    handleSetPermissions(_index, _row) {
+    handleSetPermissions(_row) {
       this.$router.push({
         path: '/management-role-set-permissions',
         query: {
@@ -174,13 +199,35 @@ export default {
         }
       })
     },
-    // eslint-disable-next-line no-unused-vars
-    handleDisable(_index, _row) {
-      this.$message.success('禁用')
+    async handleDisable(_row) {
+      try {
+        const res = await this.$http.post(`/role/disable/${_row.roleId}`)
+        if (res.status) {
+          this.$message.success(res.message)
+          await this.getListRoles()
+          return
+        }
+        this.$message.error(res.message)
+      } catch (e) {
+        console.log(e)
+      }
     },
-    // eslint-disable-next-line no-unused-vars
-    handleDelete(_index, _row) {
-      this.$message.success('禁用')
+    async handleEnable(_row) {
+      try {
+        const res = await this.$http.post(`/role/enable/${_row.roleId}`)
+        if (res.status) {
+          this.$message.success(res.message)
+          await this.getListRoles()
+          return
+        }
+        this.$message.error(res.message)
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    handleDelete(_row) {
+      console.log(_row);
+      this.$message.success('删除')
     },
   }
 }

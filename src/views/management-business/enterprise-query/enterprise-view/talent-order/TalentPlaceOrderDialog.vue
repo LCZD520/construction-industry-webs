@@ -3,7 +3,8 @@
 * Notes 人才订单下单弹窗
 */
 <template>
-  <el-dialog width="80%" title="人才订单" :visible.sync="outerVisible" :before-close="()=>this.$emit('closeDialog')">
+  <el-dialog width="80%" title="人才订单" v-if="outerVisible" :visible.sync="outerVisible"
+             :before-close="()=>this.$emit('closeDialog')">
     <div class="dialog-wrapper" style="height: 476px">
       <el-scrollbar style="height: 100%">
         <div class="dialog-content" style="margin-right: 10px">
@@ -16,7 +17,7 @@
                   :column="3" border>
                 <el-descriptions-item label="级别专业">
                   <div v-for="(subItem,index) in item.levelMajorInitialConversion" :key="index">
-                    {{ subItem.levelMajor[0] }}&nbsp;/&nbsp;{{ subItem.levelMajor[1] }}
+                    {{ subItem.levelMajor | levelMajor }}
                     &nbsp;-&nbsp;
                     {{ $valueToLabel(subItem.initialConversion, $store.state.initial_conversion_options) }}
                   </div>
@@ -43,7 +44,7 @@
               <br>
               <el-form-item>
                 <div slot="label">
-                  <el-button type="primary" size="small" @click="selectTalent(item.id,index)">
+                  <el-button type="primary" size="small" @click="selectTalent(item.tenderExit,index)">
                     选择人才
                   </el-button>
                   <template v-if="selectedTalentList !== undefined">
@@ -80,8 +81,8 @@
                       {{ subItem.levelMajor[0] }}&nbsp;/&nbsp;{{ subItem.levelMajor[1] }}
                       &nbsp;-&nbsp;
                       {{
-                          $valueToLabel(subItem.initialConversion
-                              , $store.state.initial_conversion_options) + '\n'
+                          subItem.initialConversion ? $valueToLabel(subItem.initialConversion
+                              , $store.state.initial_conversion_options) + '\n' : '未选'
                         }}
                     </span>
                     </template>
@@ -116,7 +117,7 @@
                           style="padding: 5px"
                           size="mini"
                           type="primary"
-                          @click.stop="scope.row.selected = false">取消
+                          @click.stop="handleCancel(scope.row)">取消
                       </el-button>
                     </template>
                   </el-table-column>
@@ -124,8 +125,7 @@
               </el-form-item>
             </div>
             <el-form-item label="订单需求" prop="orderDemand">
-              <el-input resize="none" v-model="form.orderDemand" placeholder="请输入订单需求......" :rows="5" type="textarea">
-
+              <el-input show-word-limit maxlength="100" resize="none" v-model.trim="form.orderDemand" placeholder="请输入订单需求......" :rows="5" type="textarea">
               </el-input>
             </el-form-item>
           </el-form>
@@ -139,29 +139,41 @@
               :visible.sync="innerVisible"
               append-to-body>
             <el-form
+                ref="searchForm"
                 label-position="right"
+                :model="searchForm"
                 label-width="80px">
               <el-row :gutter="20">
-                <el-col :span="12">
-                  <el-form-item label="排序" prop="initialConversion">
-                    <el-select
-                        v-model="sort"
-                        clearable
-                        class="width-full"
-                        placeholder="请选择">
-                      <el-option
-                          v-for="item in this.$store.state.initial_conversion_options"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                      </el-option>
-                    </el-select>
+                <el-col :span="8">
+                  <el-form-item label="姓名" prop="fullName">
+                    <el-input size="small" clearable v-model.trim="searchForm.fullName" placeholder="请输入姓名">
+                    </el-input>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12" style="text-align: right">
+                <el-col :span="8">
+                  <el-form-item label="级别专业" prop="levelMajor">
+                    <el-cascader
+                        size="small"
+                        clearable
+                        ref="cascaderLevelMajor"
+                        @expand-change="cascaderClick('levelMajor')"
+                        @visible-change="cascaderClick('levelMajor')"
+                        :props="{ expandTrigger: 'hover'
+                    ,value:'categoryName'
+                    ,label:'categoryName'
+                    ,checkStrictly:true
+                    ,emitPath:false
+                    ,children:'listCertificateCategory'}"
+                        placeholder="请选择级别专业"
+                        :options="this.$store.state.list_certificate_category"
+                        v-model="searchForm.levelMajor">
+                    </el-cascader>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8" style="text-align: right">
                   <el-form-item label=" ">
-                    <el-button size="small" icon="el-icon-refresh">重置</el-button>
-                    <el-button size="small" type="primary" icon="el-icon-search">搜索</el-button>
+                    <el-button @click="reset" size="small" icon="el-icon-refresh">重置</el-button>
+                    <el-button @click="search" size="small" type="primary" icon="el-icon-search">搜索</el-button>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -191,11 +203,11 @@
                   <template slot-scope="scope">
                     <span style="white-space:pre-line" v-for="(subItem,index) in scope.row.listCertificates"
                           :key="index">
-                      {{ subItem.levelMajor[0] }}&nbsp;/&nbsp;{{ subItem.levelMajor[1] }}
+                      {{ subItem.levelMajor | levelMajor }}
                       &nbsp;-&nbsp;
                       {{
-                        $valueToLabel(subItem.initialConversion
-                            , $store.state.initial_conversion_options) + '\n'
+                        subItem.initialConversion ? $valueToLabel(subItem.initialConversion
+                            , $store.state.initial_conversion_options) + '\n' : '未选'
                       }}
                     </span>
                   </template>
@@ -259,13 +271,11 @@
                 <div class="pagination-right">
                   <el-pagination
                       ref="pagination"
-                      :page-sizes="[10]"
                       :page-size="pageInfo.pageSize"
                       :current-page.sync="pageInfo.currentPage"
                       @current-change="handleCurrentChange"
-                      @size-change="handleSizeChange"
                       background
-                      layout="total, prev, pager, next,sizes, jumper"
+                      layout="total, prev, pager, next, jumper"
                       :total="pageInfo.total">
                   </el-pagination>
                 </div>
@@ -307,6 +317,10 @@ export default {
       sort: null,
       currentIndex: null,
       selectedTalentList: [],
+      searchForm: {
+        fullName: '',
+        levelMajor: '',
+      },
       form: {
         enterpriseId: null,
         enterpriseName: '',
@@ -319,7 +333,14 @@ export default {
         fullName: '',
         area: '',
         levelMajor: '',
-      }
+      },
+      listSelectedIds: new Set(),
+      tenderExit: null
+    }
+  },
+  filters: {
+    levelMajor(val) {
+      return val.toString().replaceAll(',', ' / ')
     }
   },
   created() {
@@ -338,6 +359,9 @@ export default {
      * 确认订单
      */
     async confirmOrder() {
+      console.log(this.form, "form")
+      console.log(this.selectedTalentList, "selectedTalentList")
+      // return
       this.$store.state.enterprise.enterpriseDetail.listEnterpriseDemands.forEach(item => {
         this.form.enterpriseDemandIds.push(item.id)
       })
@@ -398,22 +422,27 @@ export default {
         delete item.listCertificates
       })
       newForm.enterpriseDemandIds = JSON.stringify(newForm.enterpriseDemandIds)
+      newForm.source = 'enterprise'
       console.log(newForm)
       try {
         const res = await this.$http.post('/talent-order/insert', newForm)
         if (res.status) {
           this.$message.success(res.message)
+          this.clearSelection()
           this.$emit('closeDialog')
           this.$emit('getListOrders')
+          this.selectedTalentList.length = 0
+          this.init()
         }
       } catch (e) {
         console.log(e)
       }
-      //   return
+      // return
       // }
       // this.$message.warning('请选择人才')
     },
     handleSelect(_row) {
+      this.listSelectedIds.add(_row.id)
       _row.selected = true
       let index = this.selectedTalentList[this.currentIndex].findIndex(item => item.id === _row.id)
       this.$set(this.selectedTalentList[this.currentIndex]
@@ -422,25 +451,32 @@ export default {
     },
     /**
      * 选择人才
-     * @param _id 企业需求id
+     * @param _tenderExit 招标出场
      * @param _index
      */
-    async selectTalent(_id, _index) {
+    async selectTalent(_tenderExit, _index) {
+      console.log(this.searchForm, "searchForm")
       this.currentIndex = _index
+      this.tenderExit = _tenderExit
       if (this.selectedTalentList[this.currentIndex].length === 0) {
-        const res = await this.$http.get('/talent/list/candidate-talent/' + _id, {
-          params: {
-            currentPage: this.pageInfo.currentPage,
-            pageSize: this.pageInfo.pageSize
-          }
+        const res = await this.$http.post('/talent/list/candidate-talent', {
+          tenderExit: this.tenderExit,
+          currentPage: this.pageInfo.currentPage,
+          pageSize: this.pageInfo.pageSize,
+          listSelectedIds: [...this.listSelectedIds],
+          fullName: this.searchForm.fullName,
+          levelMajor: this.searchForm.levelMajor,
         })
         if (res.status && res.data !== null) {
           this.selectedTalentList[this.currentIndex] = res.data.list
           this.selectedTalentList[this.currentIndex].forEach(item => {
             item.listCertificates.forEach(subItem => {
-              subItem.levelMajor = JSON.parse(subItem.levelMajor)
+              if (typeof subItem.levelMajor === "string") {
+                subItem.levelMajor = JSON.parse(subItem.levelMajor)
+              }
             })
           })
+          this.pageInfo.total = res.data.total
           this.selectedTalentList[this.currentIndex].forEach(item => {
             let {
               id,
@@ -462,17 +498,33 @@ export default {
       }
       this.innerVisible = true
     },
+    handleCancel(_row) {
+      _row.selected = false
+      const exist = this.listSelectedIds.has(_row.id)
+      if (exist) {
+        this.listSelectedIds.delete(_row.id)
+      }
+    },
+    @throttle(1000)
+    async reset() {
+      this.$refs.searchForm.resetFields()
+      this.pageInfo.currentPage = 1
+      await this.selectTalent(this.tenderExit, this.currentIndex)
+    },
+    @throttle(1000)
+    async search() {
+      this.pageInfo.currentPage = 1
+      try {
+        await this.selectTalent(this.tenderExit, this.currentIndex)
+      } catch (e) {
+        console.log(e)
+      }
+    },
     /**
      * 表格翻页
      */
-    handleCurrentChange() {
-
-    },
-    /**
-     * 改变页数
-     */
-    handleSizeChange(_pageSize) {
-      console.log(_pageSize)
+    async handleCurrentChange() {
+      await this.selectTalent(this.tenderExit, this.currentIndex)
     },
     /**
      * 清空已选人才
@@ -483,8 +535,42 @@ export default {
           subItem.selected = false
         })
       })
-    }
-  }
+    },
+    cascaderClick(_type) {
+      let that = this
+      setTimeout(() => {
+        document.querySelectorAll('.el-cascader-node__label').forEach(el => {
+          el.onclick = function () {
+            this.previousElementSibling.click()
+            if (_type === 'area') {
+              that.$refs.cascaderArea && (that.$refs.cascaderArea.dropDownVisible = false)
+              return
+            }
+            if (_type === 'levelMajor') {
+              that.$refs.cascaderLevelMajor && (that.$refs.cascaderLevelMajor.dropDownVisible = false)
+              return
+            }
+            if (_type === 'socialSecurity') {
+              that.$refs.cascaderSocialSecurity && (that.$refs.cascaderSocialSecurity.dropDownVisible = false)
+            }
+          }
+        })
+        document
+            .querySelectorAll('.el-cascader-panel .el-radio')
+            .forEach(el => {
+              el.onclick = function () {
+                if (_type === 'area') {
+                  that.$refs.cascaderArea && (that.$refs.cascaderArea.dropDownVisible = false)
+                  return
+                }
+                if (_type === 'socialSecurity') {
+                  that.$refs.cascaderSocialSecurity && (that.$refs.cascaderSocialSecurity.dropDownVisible = false)
+                }
+              }
+            })
+      }, 1)
+    },
+  },
 }
 </script>
 

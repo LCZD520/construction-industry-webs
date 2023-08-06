@@ -14,7 +14,7 @@ const orderRoutes = [
         component: () => import('../../../views/management-order/order-talent/OrderTalent'),
     },
     {
-        path: '/order-talent-view',
+        path: '/order-talent-view/:id',
         name: 'order-talent-view',
         meta: {
             title: '人才订单查看',
@@ -32,7 +32,7 @@ const orderRoutes = [
         component: () => import('../../../views/management-order/order-qualification-transfer/OrderQualificationTransfer'),
     },
     {
-        path: '/order-qualification-transfer-view',
+        path: '/order-qualification-transfer-view/:id',
         name: 'order-qualification-transfer-view',
         meta: {
             title: '资质转让订单查看',
@@ -50,7 +50,7 @@ const orderRoutes = [
         component: () => import('../../../views/management-order/order-title-evaluation/OrderTitleEvaluation'),
     },
     {
-        path: '/order-title-evaluation-view',
+        path: '/order-title-evaluation-view/:id',
         name: 'order-title-evaluation-view',
         meta: {
             title: '职称评审订单查看',
@@ -59,7 +59,7 @@ const orderRoutes = [
         component: () => import('../../../views/management-order/order-title-evaluation/OrderTitleEvaluationView'),
     },
     {
-        path: '/order-title-evaluation-edit',
+        path: '/order-title-evaluation-edit/:id',
         name: 'order-title-evaluation-edit',
         meta: {
             title: '职称评审订单编辑',
@@ -77,7 +77,7 @@ const orderRoutes = [
         component: () => import('../../../views/management-order/order-class-three-personnel/OrderClassThreePersonnel'),
     },
     {
-        path: '/order-class-three-personnel-view',
+        path: '/order-class-three-personnel-view/:id',
         name: 'order-class-three-personnel-view',
         meta: {
             title: '三类人员订单查看',
@@ -86,7 +86,7 @@ const orderRoutes = [
         component: () => import('../../../views/management-order/order-class-three-personnel/OrderClassThreePersonnelView'),
     },
     {
-        path: '/order-class-three-personnel-edit',
+        path: '/order-class-three-personnel-edit/:id',
         name: 'order-class-three-personnel-edit',
         meta: {
             title: '三类人员订单编辑',
@@ -104,7 +104,7 @@ const orderRoutes = [
         component: () => import('../../../views/management-order/order-education-promotion/OrderEducationPromotion'),
     },
     {
-        path: '/order-education-promotion-view',
+        path: '/order-education-promotion-view/:id',
         name: 'order-education-promotion-view',
         meta: {
             title: '学历提升订单查看',
@@ -113,7 +113,7 @@ const orderRoutes = [
         component: () => import('../../../views/management-order/order-education-promotion/OrderEducationPromotionView'),
     },
     {
-        path: '/order-education-promotion-edit',
+        path: '/order-education-promotion-edit/:id',
         name: 'order-education-promotion-edit',
         meta: {
             title: '学历提升订单编辑',

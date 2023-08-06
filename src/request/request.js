@@ -2,14 +2,12 @@
  * Created by Lv Cheng on 2022/2/26
  * Notes
  */
-
 import axios from "axios";
+import router from "../router";
 import {Message} from 'element-ui'
+import '../../public/js/decorator'
 
 export default class Http {
-    instance
-    instance2
-
     constructor() {
         this.instance = axios.create({
             timeout: 5000
@@ -24,13 +22,22 @@ export default class Http {
         })
         // 响应拦截器
         this.instance.interceptors.response.use(config => {
+            if (config.data.code === '403') {
+                this.message(config.data.message)
+            }
+            if (config.data.code === '4001') {
+                this.message(config.data.message)
+                localStorage.clear()
+                router.push('/login')
+            }
             return config.data
-        }, (error) => {
-            console.log(error)
-            // Message.error("服务器出现异常，请联系管理员！")
-            // return Promise.reject(error)
+        }, error => {
+            (error.code === 'ECONNABORTED' || error.message.includes('timeout')) && this.message("请求超时，请刷新后重试!")
+            if (error.response && error.response.status === 500) {
+                this.message("服务器出现异常，请联系管理员！")
+            }
+            return Promise.reject(error)
         })
-
         this.instance2 = axios.create({
             timeout: 5000
         })
@@ -41,13 +48,23 @@ export default class Http {
         })
         // 响应拦截器
         this.instance2.interceptors.response.use(config => {
+            if (config.data.code === '403') {
+                this.message(config.data.message)
+            }
+            if (config.data.code === '4001') {
+                this.message(config.data.message)
+                localStorage.clear()
+                router.push('/login')
+            }
             return config.data
-        }, (error) => {
-            Message.error("服务器出现异常，请联系管理员！")
+        }, error => {
+            (error.code === 'ECONNABORTED' || error.message.includes('timeout')) && this.message("请求超时，请刷新后重试!")
+            if (error.response && error.response.status === 500) {
+                this.message("服务器出现异常，请联系管理员！")
+            }
             return Promise.reject(error)
         })
     }
-
 
     get(url, config, isNeedToken = true) {
         if (isNeedToken) {
@@ -75,6 +92,11 @@ export default class Http {
             return this.instance.delete(url, data)
         }
         return this.instance2.delete(url, data)
+    }
+
+    @throttle()
+    message(message) {
+        Message.error(message)
     }
 
 }

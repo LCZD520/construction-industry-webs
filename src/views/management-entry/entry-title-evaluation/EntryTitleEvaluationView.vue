@@ -4,23 +4,23 @@
 */
 <template>
   <div class="entry-title-evaluation-view">
-    <el-form label-position="right" label-width="120px">
+    <el-form size="small" disabled label-position="right" label-width="120px">
       <el-row>
         <el-col :span="8">
           <el-form-item label="订单编号">
-            <el-input disabled size="small" v-model="form.name">
+            <el-input disabled v-model="form.orderno">
             </el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="客户名称">
-            <el-input disabled size="small" v-model="form.name">
+            <el-input disabled v-model="form.customerName">
             </el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="代办金额">
-            <el-input disabled size="small" v-model="form.name">
+            <el-input disabled v-model="form.totalAgencyAmount">
             </el-input>
           </el-form-item>
         </el-col>
@@ -28,15 +28,15 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label="申请转账金额">
-            <el-input disabled size="small" v-model="form.name">
+            <el-input disabled v-model="form.entryAmount">
             </el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="款项用途">
-            <el-select disabled class="width-full" size="small" v-model="form.name">
+            <el-select disabled class="width-full" v-model="form.fundsPurpose">
               <el-option
-                  v-for="item in options"
+                  v-for="item in $store.state.title_evaluation_funds_purpose_options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -46,7 +46,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="转账方信息">
-            <el-input disabled size="small" v-model="form.name">
+            <el-input disabled v-model="form.transferorInfo">
             </el-input>
           </el-form-item>
         </el-col>
@@ -54,9 +54,9 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label="转账方式">
-            <el-select disabled class="width-full" size="small" v-model="form.name">
+            <el-select disabled class="width-full" v-model="form.transferWay">
               <el-option
-                  v-for="item in options"
+                  v-for="item in $store.state.order_transfer_way_options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -66,7 +66,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="公司账户">
-            <el-input disabled size="small" v-model="form.name">
+            <el-input disabled :value="form.accountName">
             </el-input>
           </el-form-item>
         </el-col>
@@ -75,8 +75,7 @@
             <el-date-picker
                 disabled
                 class="width-full"
-                v-model="form.oldPassword"
-                size="small"
+                v-model="form.receiptDate"
                 type="date">
             </el-date-picker>
           </el-form-item>
@@ -85,26 +84,9 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label="申请人">
-            <el-input disabled size="small" v-model="form.name">
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="申请日期">
-            <el-date-picker
-                disabled
-                class="width-full"
-                v-model="form.oldPassword"
-                size="small"
-                type="date">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="申请状态">
-            <el-select disabled class="width-full" size="small" v-model="form.name">
+            <el-select class="width-full" v-model="form.creatorId">
               <el-option
-                  v-for="item in options"
+                  v-for="item in $store.state.user_options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -112,128 +94,61 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <el-col :span="8">
+          <el-form-item label="申请日期">
+            <el-date-picker
+                disabled
+                class="width-full"
+                v-model="form.gmtCreate"
+                type="date">
+            </el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="申请状态">
+            <el-input v-model="form.applicationStatus"/>
+          </el-form-item>
+        </el-col>
       </el-row>
       <el-divider content-position="left">历史记录</el-divider>
       <p>
         职称评审入账记录
         <span style="color:#409EFF;display:inline-block;margin-left: 20px">
-          已通过:55000 待申请:0
+          已通过:&nbsp;{{ throughedAmount }}元， 待申请:&nbsp;{{ form.totalAgencyAmount - applyedAmount }}元
         </span>
       </p>
       <br>
       <el-table
           size="mini"
-          :data="tableData"
+          :data="form.listRecords"
           stripe
           border
-          highlight-current-row
           :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
           :cell-style="{textAlign:'center'}"
-          style="width: 100%"
-          :row-class-name="tableRowClassName">
+          style="width: 100%">
         <el-table-column
-            min-width="200"
+            min-width="160"
             v-for="item in columns"
             :key="item.key"
             :prop="item.key"
             :label="item.title">
         </el-table-column>
+        <el-table-column
+            min-width="200"
+            label="款项用途">
+          <template #default="{row}">
+            {{ $valueToLabel(row.fundsPurpose, $store.state.title_evaluation_funds_purpose_options) }}
+          </template>
+        </el-table-column>
       </el-table>
       <br>
-      <el-divider content-position="left">职称评审图片</el-divider>
-      <el-card>
-        <div slot="header">
-          <span>合同</span>
-          <el-button icon="el-icon-download" style="float: right;" size="small" type="primary">下载图片</el-button>
-        </div>
-        <div v-if="true">
-          <el-row :gutter="10">
-            <el-col :span="4" v-for="(o) in 6" :key="o">
-              <el-card shadow="hover" :body-style="{ padding: '0px' }" style="margin-bottom: 10px">
-                <el-image
-                    src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png">
-                </el-image>
-                <div style="padding: 14px;">
-                  <span>
-                    <el-checkbox>
-                      <option>111111</option>
-                    </el-checkbox>
-                  </span>
-                  <div class="bottom clearfix">
-                    <time class="time">2022-6-20</time>
-                    <el-button icon="el-icon-download" type="primary" round class="button"/>
-                  </div>
-                </div>
-              </el-card>
-            </el-col>
-          </el-row>
-        </div>
-        <el-empty v-else style="padding: 0" description="暂无图片"/>
-      </el-card>
-      <el-card>
-        <div slot="header">
-          <span>证件</span>
-          <el-button icon="el-icon-download" style="float: right;" size="small" type="primary">下载图片</el-button>
-        </div>
-        <div v-if="true">
-          <el-row :gutter="10">
-            <el-col :span="4" v-for="(o) in 6" :key="o">
-              <el-card shadow="hover" :body-style="{ padding: '0px' }" style="margin-bottom: 10px">
-                <el-image
-                    src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png">
-                </el-image>
-                <div style="padding: 14px;">
-                  <span>
-                    <el-checkbox>
-                      <option>111111</option>
-                    </el-checkbox>
-                  </span>
-                  <div class="bottom clearfix">
-                    <time class="time">2022-6-20</time>
-                    <el-button icon="el-icon-download" type="primary" round class="button"/>
-                  </div>
-                </div>
-              </el-card>
-            </el-col>
-          </el-row>
-        </div>
-        <el-empty v-else style="padding: 0" description="暂无图片"/>
-      </el-card>
-      <el-card>
-        <div slot="header">
-          <span>其他</span>
-          <el-button icon="el-icon-download" style="float: right;" size="small" type="primary">下载图片</el-button>
-        </div>
-        <div v-if="true">
-          <el-row :gutter="10">
-            <el-col :span="4" v-for="(o) in 6" :key="o">
-              <el-card shadow="hover" :body-style="{ padding: '0px' }" style="margin-bottom: 10px">
-                <el-image
-                    src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png">
-                </el-image>
-                <div style="padding: 14px;">
-                  <span>
-                    <el-checkbox>
-                      <option>111111</option>
-                    </el-checkbox>
-                  </span>
-                  <div class="bottom clearfix">
-                    <time class="time">2022-6-20</time>
-                    <el-button icon="el-icon-download" type="primary" round class="button"/>
-                  </div>
-                </div>
-              </el-card>
-            </el-col>
-          </el-row>
-        </div>
-        <el-empty v-else style="padding: 0" description="暂无图片"/>
-      </el-card>
-      <br>
-      <el-form-item label=" ">
-        <el-button icon="el-icon-back" size="small" @click="$router.back()">
-          返回
-        </el-button>
-      </el-form-item>
+      <el-form v-if="edit">
+        <el-form-item label=" ">
+          <el-button icon="el-icon-back" @click="$router.back()">
+            返回
+          </el-button>
+        </el-form-item>
+      </el-form>
     </el-form>
   </div>
 </template>
@@ -245,46 +160,68 @@ export default {
   data() {
     return {
       form: {
-        name: ''
+        listRecords: []
       },
       columns: [
         {
           title: '申请时间',
-          key: 'address'
+          key: 'gmtCreate'
         },
         {
           title: '申请入账金额',
-          key: 'address'
-        },
-        {
-          title: '款项用途',
-          key: 'address'
+          key: 'entryAmount'
         },
         {
           title: '入账方信息',
-          key: 'address'
+          key: 'transferorInfo'
         },
         {
           title: '入账日期',
-          key: 'address'
+          key: 'receiptDate'
         },
         {
           title: '申请状态',
-          key: 'address'
+          key: 'applicationStatus'
         },
+
       ],
-      tableData: [{}]
     }
   },
-  methods: {
-    tableRowClassName({rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row';
-      } else if (rowIndex === 3) {
-        return 'success-row';
-      }
-      return '';
+  props: {
+    edit: {
+      type: Boolean,
+      default: true
+    }
+  },
+  computed: {
+    applyedAmount() {
+      return this.form.listRecords
+          .map(item => item.entryAmount).reduce((p, c) => {
+            return p + c
+          }, 0)
     },
+    throughedAmount() {
+      return this.form.listRecords
+          .filter(item => item.applicationStatus === '财务审批通过')
+          .map(item => item.entryAmount).reduce((p, c) => {
+            return p + c
+          }, 0)
+    }
+  },
+  created() {
+    this.getDetailById()
+  },
+  methods: {
+    async getDetailById() {
+      try {
+        const res = await this.$http.get(`/title-evaluation-order-entry/entry-detail/${this.$route.params.id}`)
+        if (res && res.status) {
+          this.form = res.data
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    }
   }
 }
 </script>

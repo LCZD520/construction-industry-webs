@@ -9,20 +9,32 @@
       width="70%"
       :before-close="()=>$emit('closeDialog')">
     <el-table
-        height="260"
+        height="300"
         ref="table"
-        size="mini"
         :data="list"
-        highlight-current-row
         border
         :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
         :cell-style="{textAlign:'center'}"
         style="width: 100%">
       <el-table-column
-          v-for="item in columns"
-          :key="item.key"
-          :prop="item.key"
-          :label="item.title">
+          prop="gmtCreate"
+          label="操作时间">
+      </el-table-column>
+      <el-table-column
+          label="操作人">
+        <template slot-scope="scope">
+          {{ $valueToLabel(scope.row.creatorId, $store.state.user_options) }}
+        </template>
+      </el-table-column>
+      <el-table-column
+          label="证件去向">
+        <template slot-scope="scope">
+          {{ $valueToLabel(scope.row.certificatesWhereabouts, $store.state.certificates_whereabouts_options) }}
+        </template>
+      </el-table-column>
+      <el-table-column
+          prop="remark"
+          label="去向备注">
       </el-table-column>
     </el-table>
     <div slot="footer" class="dialog-footer">

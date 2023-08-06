@@ -14,7 +14,16 @@ const transferRoutes = [
         component: () => import('../../../views/management-transfer/transfer-talent/TransferTalent'),
     },
     {
-        path: '/transfer-talent-view',
+        path: '/transfer-talent-audit/:id',
+        name: 'transfer-talent-audit',
+        meta: {
+            title: '人才转账审核',
+            activeMenuPath: '/transfer-talent'
+        },
+        component: () => import('../../../views/management-transfer/transfer-talent/TransferTalentAudit'),
+    },
+    {
+        path: '/transfer-talent-view/:id',
         name: 'transfer-talent-view',
         meta: {
             title: '人才转账审核查看',
@@ -32,7 +41,16 @@ const transferRoutes = [
         component: () => import('../../../views/management-transfer/transfer-enterprise/TransferEnterprise'),
     },
     {
-        path: '/transfer-enterprise-view',
+        path: '/transfer-enterprise-audit/:id',
+        name: 'transfer-enterprise-audit',
+        meta: {
+            title: '市场开拓转账审核',
+            activeMenuPath: '/transfer-enterprise'
+        },
+        component: () => import('../../../views/management-transfer/transfer-enterprise/TransferEnterpriseAudit'),
+    },
+    {
+        path: '/transfer-enterprise-view/:id',
         name: 'transfer-enterprise-view',
         meta: {
             title: '市场开拓转账查看',
@@ -50,7 +68,7 @@ const transferRoutes = [
         component: () => import('../../../views/management-transfer/transfer-qualification-acquisition/TransferQualificationAcquisition'),
     },
     {
-        path: '/transfer-qualification-acquisition-view',
+        path: '/transfer-qualification-acquisition-view/:id',
         name: 'transfer-qualification-acquisition-view',
         meta: {
             title: '资质收购转账查看',
@@ -68,7 +86,7 @@ const transferRoutes = [
         component: () => import('../../../views/management-transfer/transfer-of-qualification/TransferOfQualification'),
     },
     {
-        path: '/transfer-of-qualification-view',
+        path: '/transfer-of-qualification-view/:id',
         name: 'transfer-of-qualification-view',
         meta: {
             title: '资质转让转账查看',
@@ -86,13 +104,22 @@ const transferRoutes = [
         component: () => import('../../../views/management-transfer/transfer-qualification-agency/TransferQualificationAgency'),
     },
     {
-        path: '/transfer-qualification-agency-view',
+        path: '/transfer-qualification-agency-view/:id',
         name: 'transfer-qualification-agency-view',
         meta: {
             title: '资质代办转账查看',
             activeMenuPath: '/transfer-qualification-agency'
         },
         component: () => import('../../../views/management-transfer/transfer-qualification-agency/TransferQualificationAgencyView'),
+    },
+    {
+        path: '/transfer-qualification-agency-audit/:id',
+        name: 'transfer-qualification-agency-audit',
+        meta: {
+            title: '资质代办转账审批',
+            activeMenuPath: '/transfer-qualification-agency'
+        },
+        component: () => import('../../../views/management-transfer/transfer-qualification-agency/TransferQualificationAgencyAudit'),
     },
     {
         path: '/transfer-title-evaluation',
@@ -104,13 +131,22 @@ const transferRoutes = [
         component: () => import('../../../views/management-transfer/transfer-title-evaluation/TransferTitleEvaluation'),
     },
     {
-        path: '/transfer-title-evaluation-view',
+        path: '/transfer-class-three-personnel-view/:id',
         name: 'transfer-title-evaluation-view',
         meta: {
             title: '职称评审转账查看',
             activeMenuPath: '/transfer-title-evaluation'
         },
         component: () => import('../../../views/management-transfer/transfer-title-evaluation/TransferTitleEvaluationView'),
+    },
+    {
+        path: '/transfer-title-evaluation-audit/:id',
+        name: 'transfer-title-evaluation-audit',
+        meta: {
+            title: '职称评审转账审核',
+            activeMenuPath: '/transfer-title-evaluation'
+        },
+        component: () => import('../../../views/management-transfer/transfer-title-evaluation/TransferTitleEvaluationAudit'),
     },
     {
         path: '/transfer-class-three-personnel',
@@ -122,7 +158,7 @@ const transferRoutes = [
         component: () => import('../../../views/management-transfer/transfer-class-three-personnel/TransferClassThreePersonnel'),
     },
     {
-        path: '/transfer-class-three-personnel-view',
+        path: '/transfer-class-three-personnel-view/:id',
         name: 'transfer-class-three-personnel-view',
         meta: {
             title: '三类人员转账查看',
@@ -140,7 +176,7 @@ const transferRoutes = [
         component: () => import('../../../views/management-transfer/transfer-education-promotion/TransferEducationPromotion'),
     },
     {
-        path: '/transfer-education-promotion-view',
+        path: '/transfer-education-promotion-view/:id',
         name: 'transfer-education-promotion-view',
         meta: {
             title: '学历提升转账查看',

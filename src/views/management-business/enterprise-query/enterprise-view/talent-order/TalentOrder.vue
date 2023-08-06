@@ -10,9 +10,9 @@
       <el-button type="primary" size="small" @click="handlePlaceOrder">
         下单
       </el-button>
-      <el-button type="primary" size="small" v-throttle="mergeOrder">
-        合并订单
-      </el-button>
+<!--      <el-button disabled type="primary" disabled size="small" v-throttle="mergeOrder">-->
+<!--        合并订单-->
+<!--      </el-button>-->
       <br><br>
     </template>
     <el-table
@@ -36,10 +36,10 @@
           min-width="180"
           prop="enterpriseName"
           label="人才选择">
-        <template slot-scope="scope">
-          <p v-for="item in scope.row.selectedTalents" :key="item.id">
+        <template #default="{row}">
+          <el-tag style="margin: 3px" type="dark" size="mini" v-for="item in row.selectedTalents" :key="item.id">
             {{ item.fullName }}
-          </p>
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -65,6 +65,7 @@
         <template slot-scope="scope">
           <el-button
               size="mini"
+              disabled
               type="primary"
               @click="handleEdit(scope.$index, scope.row)">编辑
           </el-button>
@@ -143,7 +144,11 @@ export default {
       let id = this.$route.query.id / 1
       if (this.list.length > 0) {
         try {
-          const res = await this.$http.put('/talent-order/merge-order/' + id)
+          const res = await this.$http.get('/talent-order/merge-order', {
+            params: {
+              id, source: 'enterprise'
+            }
+          })
           if (res.status) {
             this.$message.success(res.message)
             await this.getListOrders(id)
@@ -230,7 +235,7 @@ export default {
     },
     async handleDelete(_row) {
       try {
-        const res = await this.$http.post('/' + _row.id)
+        const res = await this.$http.delete('/talent-order/delete/' + _row.id)
         if (res.status) {
           this.$message.success(res.message)
           await this.getListOrders(this.$route.query.id / 1)

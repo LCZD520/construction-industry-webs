@@ -5,65 +5,85 @@
 <template>
   <div class="qualification-transfer">
     <el-form
-        ref="formData"
+        ref="form"
         inline
+        :rules="rules"
+        label-width="100px"
         :model="form">
-      <el-form-item label="收购意向客户" label-width="100px">
-        <el-input size="small" v-model="form.newPassword" placeholder="请输入企业意向客户">
+      <el-form-item label="收购意向客户" prop="transferCustomers">
+        <el-input clearable size="small" v-model.trim="form.transferCustomers" placeholder="请输入企业意向客户">
         </el-input>
       </el-form-item>
-      <el-form-item label="资质需求" label-width="100px">
+      <el-form-item label="资质需求" prop="qualificationRequirements">
         <el-cascader
             size="small"
             clearable
+            ref="cascaderLevelMajor"
+            @expand-change="cascaderClick('levelMajor')"
+            @visible-change="cascaderClick('levelMajor')"
+            :props="{ expandTrigger: 'hover'
+                    ,value:'categoryName'
+                    ,label:'categoryName'
+                    ,checkStrictly:true
+                    ,emitPath:false
+                    ,children:'listCertificateCategory'}"
             placeholder="请选择资质需求"
-            v-model="form.newPassword">
+            :options="this.$store.state.list_certificate_category"
+            v-model="form.qualificationRequirements">
         </el-cascader>
       </el-form-item>
-      <el-form-item label="所在地区" label-width="100px">
+      <el-form-item prop="area" label="所在地区">
         <el-cascader
             size="small"
             clearable
-            placeholder="请输入所在地区"
-            v-model="form.newPassword">
+            placeholder="请选择地区"
+            ref="cascaderArea"
+            @expand-change="cascaderClick('area')"
+            @visible-change="cascaderClick('area')"
+            :props="{ expandTrigger: 'hover' ,checkStrictly:true ,emitPath:false}"
+            :options="this.$provinceAndCityData"
+            v-model="form.area">
         </el-cascader>
       </el-form-item>
-      <el-form-item label="状态" label-width="100px">
-        <el-select size="small" v-model="form.oldPassword" placeholder="请选择转让状态">
+      <el-form-item label="状态" prop="status">
+        <el-select clearable size="small" v-model="form.status" placeholder="请选择人才状态">
           <el-option
-              v-for="item in options"
+              v-for="item in this.$store.state.qualification_transfer_status_options"
               :key="item.value"
               :label="item.label"
               :value="item.value">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="录入人" label-width="100px">
-        <el-select size="small" v-model="form.oldPassword" placeholder="请选择录入人">
+      <el-form-item label="录入人" prop="creatorId">
+        <el-select clearable size="small" v-model="form.creatorId" placeholder="请选择录入人">
           <el-option
-              v-for="item in options"
+              v-for="item in $store.state.user_options"
               :key="item.value"
               :label="item.label"
               :value="item.value">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="录入日期" label-width="100px">
+      <el-form-item label="录入日期" prop="date">
         <el-date-picker
-            v-model="form.oldPassword"
+            clearable
+            v-model="form.date"
             size="small"
             type="daterange"
             align="right"
             unlink-panels
+            value-format="yyyy-MM-dd"
+            format="yyyy-MM-dd"
             range-separator="-"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            :picker-options="pickerOptions">
+            :picker-options="$pickerOptions">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label=" " label-width="100px">
-        <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
-        <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
+      <el-form-item label=" ">
+        <el-button size="small" icon="el-icon-search" @click="search(pageInfo.pageSize,1)" :loading="loading" type="primary">搜 索</el-button>
+        <el-button size="small" icon="el-icon-refresh-right" v-throttle="reset">重 置</el-button>
       </el-form-item>
 
     </el-form>
@@ -73,7 +93,7 @@
                    @click="$router.push('/qualification-transfer-add')">添加
         </el-button>
       </div>
-      <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
+      <div class="split-line-right">共查询到 <b style="color: #409EFF">{{ pageInfo.total }}</b> 条记录</div>
     </div>
     <el-table
         :data="list"
@@ -117,34 +137,45 @@
           prop="gmtCreate"
           label="录入时间">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="300">
-        <template slot-scope="scope">
+      <el-table-column v-if="deleted" fixed="right" label="操作" width="90">
+        <template #default="scope">
+          <el-button
+              style="padding: 5px"
+              size="mini"
+              type="primary"
+              @click.stop="recovery(scope.row.id)">恢复
+          </el-button>
+        </template>
+      </el-table-column>
+      <el-table-column v-else fixed="right" label="操作" width="300">
+        <template #default="{row}">
           <el-button
               size="mini"
               type="primary"
-              @click.stop="handleEdit(scope.$index, scope.row)">订单
+              @click.stop="handleView(row,'first')">订单
           </el-button>
           <el-button
               size="mini"
               type="primary"
-              @click.stop="handleView(scope.$index, scope.row,'first')">图片
+              @click.stop="handleView(row,'second')">图片
           </el-button>
           <el-button
+              v-if="row.status === 1"
               size="mini"
               type="primary"
-              @click.stop="handleEdit(scope.$index, scope.row,'second')">编辑
+              @click.stop="handleEdit(row,'second')">编辑
           </el-button>
           <el-button
-              v-if="true"
+              style="padding: 5px"
               size="mini"
               type="danger"
-              @click.stop="handleDelete(scope.$index, scope.row)">删除
+              v-if="row.status === 1"
+              @click.stop="handleDelete(row.id)">删除
           </el-button>
         </template>
       </el-table-column>
     </el-table>
     <div class="pagination">
-      <div class="pagination-total">共<span class="total"> {{ pageInfo.total }} </span>条</div>
       <div class="pagination-right">
         <el-pagination
             ref="pagination"
@@ -154,7 +185,7 @@
             @current-change="handleCurrentChange"
             @size-change="handleSizeChange"
             background
-            layout="sizes, prev, pager, next, jumper"
+            layout="total,sizes, prev, pager, next, jumper"
             :total="pageInfo.total">
         </el-pagination>
       </div>
@@ -164,199 +195,116 @@
 
 <script>
 
+import {confirmDelete} from "../../../util/decorator";
+
 export default {
   name: 'QualificationTransfer',
   components: {},
+  props: {
+    deleted: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       list: [],
       loading: false,
-      columns: [
-        {
-          title: '客户名称',
-          key: 'address'
-        },
-        {
-          title: '客户类型',
-          key: 'address'
-        },
-        {
-          title: '资质转让录入数',
-          key: 'address'
-        },
-        {
-          title: '状态',
-          key: 'address'
-        },
-        {
-          title: '人员数',
-          key: 'address'
-        },
-        {
-          title: '代办总金额',
-          key: 'address'
-        },
-        {
-          title: '录入人名称',
-          key: 'address'
-        },
-        {
-          title: '录入时间',
-          key: 'address'
-        },
-      ],
-      options: [
-        {
-          value: '选项1',
-          label: '录入企业数'
-        },
-        {
-          value: '选项2',
-          label: '录入人才数'
-        },
-        {
-          value: '选项3',
-          label: '资质收购录入数'
-        },
-        {
-          value: '选项4',
-          label: '资质转让录入数'
-        },
-        {
-          value: '选项5',
-          label: '资质代办录入数'
-        },
-        {
-          value: '选项6',
-          label: '职称评审录入数'
-        },
-        {
-          value: '选项7',
-          label: '三类人员录入数'
-        },
-        {
-          value: '选项8',
-          label: '学历提升录入数'
-        },
-        {
-          value: '选项9',
-          label: '录入总数'
-        },
-      ],
-      options2: [
-        {
-          label: '热门城市',
-          options: [{
-            value: 'Shanghai',
-            label: '上海'
-          }, {
-            value: 'Beijing',
-            label: '北京'
-          }]
-        }, {
-          label: '城市名',
-          options: [{
-            value: 'Chengdu',
-            label: '成都'
-          }, {
-            value: 'Shenzhen',
-            label: '深圳'
-          }, {
-            value: 'Guangzhou',
-            label: '广州'
-          }, {
-            value: 'Dalian',
-            label: '大连'
-          }]
-        }],
       pageInfo: {
         pageSize: 10,
         total: 0,
         currentPage: 1,
       },
       form: {
-        oldPassword: '',
-        newPassword: '',
-        confirmPassword: '',
+        transferCustomers: '',
+        qualificationRequirements: '',
+        area: '',
+        status: null,
+        creatorId: null,
+        date: [],
+        deleted: this.deleted,
       },
-      pickerOptions: {
-        shortcuts: [
-          {
-            text: '今天',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '一周内',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '一个月内',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '三个月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit('pick', [start, end]);
-            }
-          }
-        ]
+      rules: {
+        transferCustomers: [{required: false, trigger: 'blur'}],
+        qualificationRequirements: [{required: false, trigger: 'blur'}],
+        area: [{required: false, trigger: 'blur'}],
+        status: [{required: false, trigger: 'blur'}],
+        creatorId: [{required: false, trigger: 'blur'}],
+        date: [{required: false, trigger: 'blur'}],
       },
     }
   },
   created() {
-    this.getListEnterpriseResources()
+    this.search()
   },
   methods: {
-    getListEnterpriseResources(_pageSize) {
-      let url = `/qualification-transfer/list`
+    reset() {
+      this.$refs.form.resetFields()
+      this.pageInfo.currentPage = 1
+      this.search()
+    },
+    @throttle()
+    async search(size, page) {
+      let newForm = {}
+      newForm.pageSize = size ? size : this.pageInfo.pageSize
+      newForm.currentPage = page ? page : this.pageInfo.currentPage
       this.loading = true
-      this.$http.get(url, {
-        params: {
-          currentPage: this.pageInfo.currentPage,
-          pageSize: _pageSize ? _pageSize : this.pageInfo.pageSize,
+      const area = this.findSelfAndChildren(this.form.area, this.$provinceAndCityData)
+      if (this.form.date && this.form.date.length > 1) {
+        newForm.startDate = this.form.date[0]
+        newForm.endDate = this.form.date[1]
+      }
+      Object.keys(this.form).forEach(key => {
+        if (['area'].includes(key)) {
+          newForm.area = area
+        } else {
+          newForm[key] = this.form[key]
         }
-      }).then(res => {
-        if (null !== res.data) {
+      })
+      for (let key in newForm) {
+        if (newForm[key] === '') {
+          newForm[key] = null
+        }
+      }
+      try {
+        const res = await this.$http.post('/qualification-transfer/list', newForm)
+        if (res && res.status) {
           this.pageInfo.total = res.data.total
           this.list = res.data.list
           this.list.forEach(item => {
             item.qualificationRequirements = JSON.parse(item.qualificationRequirements)
           })
         }
-      })
-      this.loading = false
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.loading = false
+      }
+    },
+    findSelfAndChildren(val, array) {
+      let arr = []
+      if (!val || !val.length) return arr
+      arr.push(val)
+      let obj = array.find(item => item.value === val)
+      if (obj && obj.children && obj.children.length > 0) {
+        arr = arr.concat(obj.children.map(item => item.value))
+      }
+      return arr
     },
     /**
      * 表格翻页
      */
     handleCurrentChange() {
-      this.getListEnterpriseResources()
+      this.search()
     },
     /**
      * 改变页数
      */
     handleSizeChange(_pageSize) {
-      this.getListEnterpriseResources(_pageSize)
+      this.search(_pageSize)
     },
-    handleView(_index, _row, _activeTab) {
-      console.log(_index, _row)
+
+    handleView(_row, _activeTab) {
       this.$router.push({
         path: '/qualification-transfer-view',
         query: {
@@ -365,11 +313,72 @@ export default {
         }
       })
     },
-    handleEdit(_index, _row) {
-      console.log(_index, _row)
+    handleEdit(_row) {
+      console.log(_row)
+      this.$router.push('/qualification-transfer-edit/' + _row.id)
     },
-    handleDelete(_index, _row) {
-      console.log(_index, _row)
+    async recovery(id) {
+      try {
+        const res = await this.$http.delete(`/qualification-transfer/recovery/${id}`)
+        if (res && res.status) {
+          this.$message.success(res.message)
+          await this.search()
+          return
+        }
+        this.$message.error(res.message)
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    @confirmDelete()
+    async handleDelete(id) {
+      try {
+        const res = await this.$http.delete(`/qualification-transfer/delete/${id}`)
+        if (res && res.status) {
+          this.$message.success(res.message)
+          await this.search()
+          return
+        }
+        this.$message.error(res.message)
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    cascaderClick(_type) {
+      let that = this
+      setTimeout(() => {
+        document.querySelectorAll('.el-cascader-node__label').forEach(el => {
+          el.onclick = function () {
+            if (this.previousElementSibling) {
+              this.previousElementSibling.click()
+            }
+            if (_type === 'area') {
+              that.$refs.cascaderArea.dropDownVisible = false
+              return
+            }
+            if (_type === 'levelMajor') {
+              that.$refs.cascaderLevelMajor.dropDownVisible = false
+              return
+            }
+            if (_type === 'socialSecurity') {
+              that.$refs.cascaderSocialSecurity.dropDownVisible = false
+            }
+          }
+        })
+        document
+            .querySelectorAll('.el-cascader-panel .el-radio')
+            .forEach(el => {
+              el.onclick = function () {
+                if (_type === 'area') {
+                  that.$refs.cascaderArea.dropDownVisible = false
+                  return
+                }
+                if (_type === 'socialSecurity') {
+                  that.$refs.cascaderSocialSecurity.dropDownVisible = false
+                }
+              }
+            })
+      }, 1)
     },
   }
 }

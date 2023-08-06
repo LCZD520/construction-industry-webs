@@ -8,7 +8,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="收购意向客户" prop="transferCustomers">
-            <el-input placeholder="请输入收购意向客户" v-model="form.transferCustomers"/>
+            <el-input show-word-limit maxlength="50" placeholder="请输入收购意向客户" v-model.trim="form.transferCustomers"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -54,7 +54,7 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="备注" prop="remark">
-            <el-input v-model="form.remark" placeholder="请输入备注..." :rows="5" type="textarea">
+            <el-input show-word-limit maxlength="100" v-model.trim="form.remark" placeholder="请输入备注..." :rows="5" type="textarea">
 
             </el-input>
           </el-form-item>
@@ -80,7 +80,6 @@ export default {
     return {
       form: {
         remark: '',
-        status: 1,
         transferCustomers: '',
         area: '',
         qualificationRequirements: [],

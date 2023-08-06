@@ -158,8 +158,7 @@
           highlight-current-row
           :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
           :cell-style="{textAlign:'center'}"
-          style="width: 100%"
-          :row-class-name="tableRowClassName">
+          style="width: 100%">
         <el-table-column
             min-width="100"
             v-for="item in columns"
@@ -180,8 +179,7 @@
           highlight-current-row
           :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
           :cell-style="{textAlign:'center'}"
-          style="width: 100%"
-          :row-class-name="tableRowClassName">
+          style="width: 100%">
         <el-table-column
             min-width="180"
             v-for="item in columns2"
@@ -298,14 +296,6 @@ export default {
     }
   },
   methods: {
-    tableRowClassName({rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row';
-      } else if (rowIndex === 3) {
-        return 'success-row';
-      }
-      return '';
-    },
     handleEdit(_index, _row) {
       console.log(_index, _row)
     },

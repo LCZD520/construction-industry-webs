@@ -5,7 +5,7 @@
 
 import Vue from 'vue'
 import Router from 'vue-router'
-// import store from '../store/index'
+import store from '../store/index'
 
 import basicDataRoutes from "./modules/basic-data";
 import achievementRoutes from "./modules/management-achievement";
@@ -18,6 +18,7 @@ import stockRoutes from "./modules/management-stock";
 import systemRoutes from "./modules/management-system";
 import transferRoutes from "./modules/management-transfer";
 import statisticsRoutes from "./modules/statistical-analysis";
+import recycleBinRoutes from "./modules/recycle-bin";
 
 Vue.use(Router)
 
@@ -33,11 +34,13 @@ const routes = [
     ...systemRoutes,
     ...transferRoutes,
     ...statisticsRoutes,
+    ...recycleBinRoutes,
     // 首页
     {
         path: '/home',
         name: 'home',
-        component: () => import('../views/home/Home')
+        // component: () => import('../views/home/Home')
+        component: () => import('../views/home/GoodsSku')
     },
     // 登录
     {
@@ -64,33 +67,30 @@ const router = new Router({
     routes
 })
 
-// 全局路由拦截
-// router.beforeEach((to, from, next) => {
-//     // console.log(to, from)
-//     // console.log(store.state.loginStatus);
-//     if (to.path === '/login') {
-//         next()
-//     } else {
-//         if (store.state.loginStatus) {
-//             next()
-//         } else {
-//             router.push("/login")
-//         }
-//     }
-// })
-
 import NProgress from 'nprogress'
-// eslint-disable-next-line no-unused-vars
+
+// 全局路由拦截
 router.beforeEach((to, from, next) => {
-    next()
-    NProgress.start()
+    // console.log(document.referrer, 'referrer')
+    const token = localStorage.getItem('access_token')
+    if (to.path === "/login") {
+        next();
+        NProgress.start()
+    } else {
+        if (store.state.loginStatus && token && token !== '') {
+            next();
+            NProgress.start()
+        } else {
+            router.push("/login");
+        }
+    }
 
 });
 
 router.afterEach(() => {
-    setTimeout(()=>{
+    setTimeout(() => {
         NProgress.done()
-    },0)
+    }, 0)
 
 });
 export default router

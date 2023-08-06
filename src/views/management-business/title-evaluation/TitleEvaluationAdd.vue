@@ -14,9 +14,13 @@ export default {
   name: 'TitleEvaluationAdd',
   components: {TitleEvaluationAddEditCommonForm},
   data() {
-    return {}
+    return {
+
+    }
   },
-  methods: {}
+  methods: {
+
+  }
 }
 </script>
 

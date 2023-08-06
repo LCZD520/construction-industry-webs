@@ -56,7 +56,7 @@ export default {
     }
   },
   created() {
-    this.getNoticeById(this.$route.query.id)
+    this.getNoticeById(this.$route.params.id)
   },
   methods: {
     getNoticeById(_id) {

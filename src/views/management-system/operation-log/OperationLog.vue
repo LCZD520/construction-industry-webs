@@ -5,56 +5,58 @@
 <template>
   <div class="operation-log">
     <el-form
-        ref="formData"
+        ref="form"
         inline
         label-width="120px"
+        :rules="rules"
         :model="form">
-      <el-form-item label="用户名">
-        <el-input size="small" v-model="form.username" placeholder="请输入用户名">
+      <el-form-item label="用户名" prop="username">
+        <el-input size="small" v-model.trim="form.username" placeholder="请输入用户名">
         </el-input>
       </el-form-item>
-      <el-form-item label="用户中文姓名">
-        <el-input size="small" v-model="form.userChineseName" placeholder="请输入用户中文姓名">
+      <el-form-item label="用户中文姓名" prop="userChineseName">
+        <el-input size="small" v-model.trim="form.userChineseName" placeholder="请输入用户中文姓名">
         </el-input>
       </el-form-item>
-      <el-form-item label="操作日期">
+      <el-form-item label="操作日期" prop="date">
         <el-date-picker
-            v-model="form.operationTime"
+            v-model="form.date"
             size="small"
             type="daterange"
             align="right"
             unlink-panels
+            value-format="yyyy-MM-dd"
+            format="yyyy-MM-dd"
             range-separator="-"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             :picker-options="pickerOptions">
         </el-date-picker>
       </el-form-item>
-
-      <el-form-item label="机构名称">
+      <el-form-item label="机构名称" prop="mechanismName">
         <el-input size="small" v-model="form.mechanismName" placeholder="请输入机构名称">
         </el-input>
       </el-form-item>
-      <el-form-item label="日志内容">
-        <el-input size="small" v-model="form.content" placeholder="请输入日志内容">
+      <el-form-item label="日志内容" prop="logContent">
+        <el-input size="small" v-model="form.logContent" placeholder="请输入日志内容">
         </el-input>
       </el-form-item>
       <el-form-item label=" ">
-        <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
-        <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
+        <el-button size="small" icon="el-icon-search" v-throttle="search" type="primary">搜 索</el-button>
+        <el-button size="small" icon="el-icon-refresh-right" v-throttle="reset">重 置</el-button>
       </el-form-item>
     </el-form>
     <el-table
-        :data="tableData"
+        v-loading="loading"
+        :data="list"
         stripe
         border
-        highlight-current-row
+        height="500"
         :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
         :cell-style="{textAlign:'center'}"
-        style="width: 100%"
-        :row-class-name="tableRowClassName">
+        style="width: 100%">
       <el-table-column
-          min-width="180"
+          :width="item.width"
           v-for="item in columns"
           :key="item.key"
           :prop="item.key"
@@ -62,7 +64,6 @@
       </el-table-column>
     </el-table>
     <div class="pagination">
-      <div class="pagination-total">共<span class="total"> {{ pageInfo.total }} </span>条</div>
       <div class="pagination-right">
         <el-pagination
             ref="pagination"
@@ -72,7 +73,7 @@
             @current-change="handleCurrentChange"
             @size-change="handleSizeChange"
             background
-            layout="sizes, prev, pager, next, jumper"
+            layout="total,sizes, prev, pager, next, jumper"
             :total="pageInfo.total">
         </el-pagination>
       </div>
@@ -86,6 +87,7 @@ export default {
   components: {},
   data() {
     return {
+      loading: false,
       columns: [
         {
           title: '用户名',
@@ -100,76 +102,28 @@ export default {
           key: 'mechanismName'
         },
         {
-          title: '操作时间',
-          key: 'gmtCreate'
+          title: '日志内容',
+          key: 'logContent'
         },
         {
-          title: '日志内容',
-          key: 'content'
+          title: 'IP地址',
+          key: 'ip'
+        },
+        {
+          title: '归属地',
+          key: 'cityInfo'
+        },
+        {
+          title: '操作时间',
+          key: 'gmtCreate',
+          width: '160'
         },
         {
           title: '备注',
           key: 'remark'
         },
       ],
-      options: [
-        {
-          label: '热门城市',
-          options: [{
-            value: 'Shanghai',
-            label: '上海'
-          }, {
-            value: 'Beijing',
-            label: '北京'
-          }]
-        }, {
-          label: '城市名',
-          options: [{
-            value: 'Chengdu',
-            label: '成都'
-          }, {
-            value: 'Shenzhen',
-            label: '深圳'
-          }, {
-            value: 'Guangzhou',
-            label: '广州'
-          }, {
-            value: 'Dalian',
-            label: '大连'
-          }]
-        }],
-      options2: [
-        {
-          value: '选项1',
-          label: '初始'
-        },
-        {
-          value: '选项2',
-          label: '转注'
-        },
-        {
-          value: '选项3',
-          label: '其他'
-        },
-      ],
-      tableData: [
-        {
-          date: '2016-05-02',
-          username: '王小虎',
-          address: '上海市普陀区',
-        }, {
-          date: '2016-05-04',
-          username: '王小虎',
-          address: '上海市普陀区'
-        }, {
-          date: '2016-05-01',
-          username: '王小虎',
-          address: '上海市普陀区',
-        }, {
-          date: '2016-05-03',
-          username: '王小虎',
-          address: '上海市普陀区'
-        }],
+      list: [],
       pageInfo: {
         pageSize: 10,
         total: 0,
@@ -179,8 +133,15 @@ export default {
         username: '',
         userChineseName: '',
         mechanismName: '',
-        operationTime: [],
-        content: '',
+        date: [],
+        logContent: '',
+      },
+      rules: {
+        username: [{required: false, trigger: 'blur'}],
+        userChineseName: [{required: false, trigger: 'blur'}],
+        mechanismName: [{required: false, trigger: 'blur'}],
+        date: [{required: false, trigger: 'blur'}],
+        logContent: [{required: false, trigger: 'blur'}],
       },
       pickerOptions: {
         shortcuts: [
@@ -223,29 +184,44 @@ export default {
       },
     }
   },
-  mounted() {
-    console.log(this.$route)
+  created() {
+    this.search()
   },
   methods: {
-    tableRowClassName({rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row';
-      } else if (rowIndex === 3) {
-        return 'success-row';
+    async search(pageSize) {
+      let newForm = {}
+      newForm = Object.assign(newForm, this.form)
+      if (this.form.date && this.form.date.length > 0) {
+        newForm.startDate = this.form.date[0]
+        newForm.endDate = this.form.date[1]
       }
-      return '';
+      newForm.pageSize = pageSize ? pageSize : this.pageInfo.pageSize
+      newForm.currentPage = this.pageInfo.currentPage
+      this.loading = true
+      try {
+        const res = await this.$http.post('/operation-log', newForm)
+        if (res.status) {
+          this.list = res.data.list
+          this.pageInfo.total = res.data.total
+          return
+        }
+        this.$message.error(res.message)
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.loading = false
+      }
     },
-    /**
-     * 表格翻页
-     */
+    reset() {
+      this.$refs.form.resetFields()
+      this.pageInfo.currentPage = 1
+      this.search()
+    },
     handleCurrentChange() {
-
+      this.search()
     },
-    /**
-     * 改变页数
-     */
-    handleSizeChange(_pageSize) {
-      console.log(_pageSize)
+    handleSizeChange(size) {
+      this.search(size)
     }
   }
 }

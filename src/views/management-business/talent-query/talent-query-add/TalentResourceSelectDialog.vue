@@ -13,50 +13,52 @@
       <div class="dialog-wrapper">
         <div class="dialog-content">
           <el-form
-              ref="formData"
+              ref="form"
               inline
-              label-width="120px"
+              size="small"
+              label-width="100px"
               :model="form">
-            <el-form-item label="姓名">
-              <el-input size="small" v-model="form.name" placeholder="请输入姓名">
+            <el-form-item label="姓名" prop="fullName">
+              <el-input clearable v-model.trim="form.fullName" placeholder="请输入姓名">
               </el-input>
             </el-form-item>
-            <el-form-item label="地区">
+            <el-form-item prop="area" label="地区">
               <el-cascader
-                  size="small"
                   clearable
-                  ref="cascader"
-                  @expand-change="cascaderClick"
-                  @visible-change="cascaderClick"
-                  :props="{ expandTrigger: 'hover' ,checkStrictly:true ,emitPath:false}"
                   placeholder="请选择地区"
+                  ref="cascaderArea"
+                  @expand-change="cascaderClick('area')"
+                  @visible-change="cascaderClick('area')"
+                  :props="{ expandTrigger: 'hover' ,checkStrictly:true ,emitPath:false}"
                   :options="this.$provinceAndCityData"
-                  @change="handleChange"
                   v-model="form.area">
               </el-cascader>
             </el-form-item>
             <el-form-item label="电话号码">
-              <el-input size="small" v-model="form.name" placeholder="请输入姓名">
+              <el-input v-model.trim="form.name" placeholder="请输入电话号码">
               </el-input>
             </el-form-item>
-            <el-form-item label="级别专业">
+            <el-form-item label="级别专业" prop="levelMajor">
               <el-cascader
-                  size="small"
                   clearable
-                  ref="cascader"
-                  @expand-change="cascaderClick"
-                  @visible-change="cascaderClick"
-                  :props="{ expandTrigger: 'hover' ,checkStrictly:true ,emitPath:false}"
+                  ref="cascaderLevelMajor"
+                  @expand-change="cascaderClick('levelMajor')"
+                  @visible-change="cascaderClick('levelMajor')"
+                  :props="{ expandTrigger: 'hover'
+                    ,value:'categoryName'
+                    ,label:'categoryName'
+                    ,checkStrictly:true
+                    ,emitPath:false
+                    ,children:'listCertificateCategory'}"
                   placeholder="请选择级别专业"
-                  :options="this.$provinceAndCityData"
-                  @change="handleChange"
-                  v-model="form.area">
+                  :options="this.$store.state.list_certificate_category"
+                  v-model="form.levelMajor">
               </el-cascader>
             </el-form-item>
-            <el-form-item label="初始转注">
-              <el-select size="small" v-model="form.name" placeholder="请选择初始转注">
+            <el-form-item label="初始转注" prop="initialConversion">
+              <el-select clearable v-model="form.initialConversion" placeholder="请选择初始转注">
                 <el-option
-                    v-for="item in options"
+                    v-for="item in this.$store.state.initial_conversion_options"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value">
@@ -170,17 +172,16 @@
             </el-table-column>
           </el-table>
           <div class="pagination">
-            <div class="pagination-total">共<span class="total"> {{ pageInfo.total }} </span>条</div>
             <div class="pagination-right">
               <el-pagination
                   ref="pagination"
-                  :page-sizes="[10, 20, 30, 50]"
+                  :page-sizes="[10]"
                   :page-size="pageInfo.pageSize"
                   :current-page.sync="pageInfo.currentPage"
                   @current-change="handleCurrentChange"
                   @size-change="handleSizeChange"
                   background
-                  layout="sizes, prev, pager, next, jumper"
+                  layout="total,sizes, prev, pager, next, jumper"
                   :total="pageInfo.total">
               </el-pagination>
             </div>
@@ -212,8 +213,7 @@ export default {
         name: '',
         area: ''
       },
-      options: [
-      ],
+      options: [],
     }
   },
   props: {
@@ -282,20 +282,36 @@ export default {
       this.cancelSelect()
       this.$emit('closeDialog')
     },
-    cascaderClick() {
+    cascaderClick(_type) {
       let that = this
       setTimeout(() => {
         document.querySelectorAll('.el-cascader-node__label').forEach(el => {
           el.onclick = function () {
             this.previousElementSibling.click()
-            that.$refs.cascader.dropDownVisible = false
+            if (_type === 'area') {
+              that.$refs.cascaderArea && (that.$refs.cascaderArea.dropDownVisible = false)
+              return
+            }
+            if (_type === 'levelMajor') {
+              that.$refs.cascaderLevelMajor && (that.$refs.cascaderLevelMajor.dropDownVisible = false)
+              return
+            }
+            if (_type === 'socialSecurity') {
+              that.$refs.cascaderSocialSecurity && (that.$refs.cascaderSocialSecurity.dropDownVisible = false)
+            }
           }
         })
         document
             .querySelectorAll('.el-cascader-panel .el-radio')
             .forEach(el => {
               el.onclick = function () {
-                that.$refs.cascader.dropDownVisible = false
+                if (_type === 'area') {
+                  that.$refs.cascaderArea && (that.$refs.cascaderArea.dropDownVisible = false)
+                  return
+                }
+                if (_type === 'socialSecurity') {
+                  that.$refs.cascaderSocialSecurity && (that.$refs.cascaderSocialSecurity.dropDownVisible = false)
+                }
               }
             })
       }, 1)

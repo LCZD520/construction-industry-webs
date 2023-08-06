@@ -19,7 +19,8 @@
       <el-row>
         <el-col :span="12">
           <el-form-item :error="errorMessage.fullName" prop="fullName" label="姓名">
-            <el-input clearable class="width-full" placeholder="请输入姓名" v-model="form.fullName"/>
+            <el-input show-word-limit maxlength="10" clearable class="width-full" placeholder="请输入姓名"
+                      v-model="form.fullName"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -69,12 +70,14 @@
       <el-row>
         <el-col :span="12">
           <el-form-item :error="errorMessage.telephoneNumber" prop="telephoneNumber" label="电话号码">
-            <el-input clearable class="width-full" placeholder="请输入电话号码" v-model="form.telephoneNumber"/>
+            <el-input clearable show-word-limit maxlength="11" class="width-full" placeholder="请输入电话号码"
+                      v-model.trim="form.telephoneNumber"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item prop="qqNumber" label="QQ">
-            <el-input clearable class="width-full" placeholder="请输入QQ" v-model="form.qqNumber"/>
+            <el-input show-word-limit maxlength="12" clearable class="width-full" placeholder="请输入QQ"
+                      v-model.trim="form.qqNumber"/>
           </el-form-item>
         </el-col>
       </el-row>
@@ -181,14 +184,14 @@
               <el-table-column
                   min-width="200"
                   label="级别专业">
-                <template slot-scope="scope">
-                  {{ scope.row.levelMajor[0] }}&nbsp;-&nbsp;{{ scope.row.levelMajor[1] }}
+                <template #default="{row}">
+                  {{ row.levelMajor | levelMajor }}
                 </template>
               </el-table-column>
               <el-table-column
                   min-width="200"
                   label="初始转注">
-                <template slot-scope="scope">
+                <template #default="scope">
                   {{ $valueToLabel(scope.row.initialConversion, $store.state.initial_conversion_options) }}
                 </template>
               </el-table-column>
@@ -203,7 +206,7 @@
                   label="继续教育时间（默认3年）">
               </el-table-column>
               <el-table-column fixed="right" label="操作" width="120">
-                <template slot-scope="scope">
+                <template #default="scope">
                   <el-button
                       style="padding: 5px"
                       size="mini"
@@ -252,6 +255,7 @@
         <el-col :span="8">
           <el-form-item :error="errorMessage.talentPrice" prop="talentPrice" label="价格">
             <el-input-number
+                :min="0" :max="99999999.99" :precision="2"
                 clearable controls-position="right"
                 v-model="form.talentPrice"/>
             &nbsp;元
@@ -259,7 +263,8 @@
         </el-col>
         <el-col :span="5">
           <el-form-item :error="errorMessage.talentPriceNumber" prop="talentPriceNumber" label-width="0">
-            <el-input-number clearable controls-position="right" v-model="form.talentPriceNumber"/>
+            <el-input-number :min="0" :max="99999999.99" :precision="2" clearable controls-position="right"
+                             v-model="form.talentPriceNumber"/>
           </el-form-item>
         </el-col>
         <el-col :span="5">
@@ -278,8 +283,8 @@
       <el-row>
         <el-col :span="24">
           <el-form-item prop="remark" label="备注">
-            <el-input clearable v-model="form.remark" placeholder="请输入备注..." :rows="5" type="textarea">
-
+            <el-input show-word-limit maxlength="100" clearable v-model.trim="form.remark" placeholder="请输入备注..."
+                      :rows="5" type="textarea">
             </el-input>
           </el-form-item>
         </el-col>
@@ -302,6 +307,7 @@
         @handleSizeChange="handleSizeChange"
         @handleCurrentChange="handleCurrentChange"
         :page-info="page"
+        v-if="visible"
         @closeDialog="visible = false"/>
     <CertificateAddDialog
         :dialog-title="dialogTitle2"

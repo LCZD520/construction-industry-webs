@@ -39,14 +39,9 @@
           label="申请备注">
       </el-table-column>
       <el-table-column
+          prop="applicationStatus"
           min-width="120"
           label="申请状态">
-        <template slot-scope="scope">
-          <el-tag size="mini">{{
-              $valueToLabel(scope.row.applicationStatus, $store.state.application_status_options)
-            }}
-          </el-tag>
-        </template>
       </el-table-column>
       <el-table-column
           min-width="180"
@@ -137,8 +132,7 @@
             <el-col :span="12">
               <el-form-item label="转账金额" prop="transferAmount">
                 <el-input-number
-                    :min="0"
-                    :precision="2"
+                    :min="0" :max="99999999.99" :precision="2"
                     controls-position="right" class="width-full" placeholder="请输入转账金额"
                     v-model="formTransfer.transferAmount">
                 </el-input-number>
@@ -175,7 +169,7 @@
       <div class="dialog-content">
         <el-form :model="formDetail" label-suffix="：" label-width="120px" label-position="right">
           <el-form-item label="审批流水">
-            <div style="height: 100px" v-if="formDetail.listTalentApprovalFlows !== undefined
+            <div style="height: 100px" v-if="formDetail.listTalentApprovalFlows
               && formDetail.listTalentApprovalFlows.length>0">
               <el-scrollbar style="height: 100%">
                 <el-card shadow="always">
@@ -186,28 +180,27 @@
                         :key="index"
                         icon="el-icon-s-help">
                       <div slot="title">
-                        <span style="color: #45c0f6" class="description-item">
+                        <span style="color: #E6A23C" class="description-item">
                           <i class="el-icon-date"></i>
                           <span>
-                            申请状态
+                            {{ item.gmtCreate }}
+                          </span>
+                        </span>
+                        <span style="color: #45c0f6" class="description-item">
+                          <span>
+                            【{{ item.auditStatus }}】
                           </span>
                         </span>
                         <span style="color: #409EFF" class="description-item">
                           <i class="el-icon-user-solid"></i>
                           <span>
-                            审批人【】
+                            审批人【{{ $valueToLabel(item.creatorId, $store.state.user_options) }}】
                           </span>
                         </span>
                         <span style="color: #67C23A" class="description-item">
                           <i class="el-icon-info"></i>
                           <span>
-                            审批意见【】
-                          </span>
-                        </span>
-                        <span style="color: #E6A23C" class="description-item">
-                          <i class="el-icon-date"></i>
-                          <span>
-                            2022-06-20
+                            审批意见【{{ item.approvalOpinion }}】
                           </span>
                         </span>
                       </div>
@@ -216,7 +209,7 @@
                 </el-card>
               </el-scrollbar>
             </div>
-            <el-tag type="info">暂无审批流水</el-tag>
+            <el-tag type="info" v-else>暂无审批流水</el-tag>
           </el-form-item>
           <el-row :gutter="10">
             <el-col :span="8">
@@ -255,7 +248,7 @@
           <el-row :gutter="10">
             <el-col :span="8">
               <el-form-item label="款项用途">
-                {{ formDetail.fundsPurpose }}
+                {{ this.$valueToLabel(formDetail.fundsPurpose, this.$store.state.funds_purpose_options) }}
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -265,9 +258,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="申请状态">
-                {{
-                  $valueToLabel(formDetail.applicationStatus, $store.state.application_status_options)
-                }}
+                {{ formDetail.applicationStatus }}
               </el-form-item>
             </el-col>
           </el-row>
@@ -359,7 +350,6 @@ export default {
       console.log(_index, _row)
     },
     async handleDetail(_index, _row) {
-      console.log(_row)
       try {
         const res = await this.$http.get('/talent-transfer/detail/' + _row.id)
         if (res.status && res.data !== null) {

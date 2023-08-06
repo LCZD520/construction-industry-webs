@@ -4,18 +4,17 @@
 */
 <template>
   <div class="qualification-category">
-    <h3>资质类别</h3>
-    <el-divider/>
+    <el-divider content-position="left">资质类别</el-divider>
     <div class="container">
       <el-row :gutter="20">
         <el-col :span="6">
           <div class="list-item">
             <div class="list-item-header">
               <el-input
+                  clearable
                   size="small"
                   style="width: 180px;"
                   placeholder="搜索"
-                  @input="searchKeyword1"
                   v-model="keyword1">
                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
               </el-input>
@@ -25,7 +24,8 @@
             </div>
             <el-scrollbar style="height: 450px">
               <ul class="list-item-content">
-                <li v-for="item in list" :key="item.id" @click="searchSubCategory(item.id)">
+                <li v-for="item in list.filter(data => !keyword1 || data.categoryName.toLowerCase().includes(keyword1.toLowerCase()))"
+                    :key="item.id" @click="searchSubCategory(item.id)">
                   <el-tooltip class="item" :open-delay="300" effect="dark" :content="item.categoryName" placement="top">
                     <span class="title">{{ item.categoryName }} </span>
                   </el-tooltip>
@@ -35,9 +35,12 @@
                         @click.stop="handleAddEditCategory(item.id,'add')" type="primary"
                         icon="el-icon-plus"></el-button>
                     <el-button
+                        disabled
                         style="padding: 5px" size="mini" type="primary"
-                        @click.stop="handleAddEditCategory(item.id)" icon="el-icon-edit"></el-button>
-                    <el-button style="padding: 5px" size="mini" type="danger" icon="el-icon-delete"></el-button>
+                        @click.stop="handleAddEditCategory2(item.id)" icon="el-icon-edit"></el-button>
+                    <el-button style="padding: 5px" size="mini" type="danger"
+                               @click.stop="deleteById(item.id)"
+                               icon="el-icon-delete"></el-button>
                   </div>
                 </li>
               </ul>
@@ -48,17 +51,18 @@
           <div class="list-item">
             <div class="list-item-header">
               <el-input
+                  clearable
                   size="small"
                   style="width: 180px;"
                   placeholder="搜索"
-                  @input="searchKeyword2"
                   v-model="keyword2">
                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
               </el-input>
             </div>
             <el-scrollbar style="height: 450px">
               <ul class="list-item-content">
-                <li v-for="item in subList" :key="item.id" @click="searchSubCategory2(item.id)">
+                <li v-for="item in subList.filter(data => !keyword2 || data.categoryName.toLowerCase().includes(keyword2.toLowerCase()))"
+                    :key="item.id" @click="searchSubCategory2(item.id)">
                   <el-tooltip class="item" :open-delay="300" effect="dark" :content="item.categoryName" placement="top">
                     <span class="title">{{ item.categoryName }} </span>
                   </el-tooltip>
@@ -67,8 +71,10 @@
                         style="padding: 5px" size="mini"
                         @click.stop="handleAddEditCategory2(item.id,'add')" type="primary"
                         icon="el-icon-plus"></el-button>
-                    <el-button style="padding: 5px" size="mini" type="primary" icon="el-icon-edit"></el-button>
-                    <el-button style="padding: 5px" size="mini" type="danger" icon="el-icon-delete"></el-button>
+                    <el-button disabled style="padding: 5px" size="mini" type="primary" icon="el-icon-edit"></el-button>
+                    <el-button style="padding: 5px" size="mini" type="danger"
+                               @click.stop="deleteById(item.id)"
+                               icon="el-icon-delete"></el-button>
                   </div>
                 </li>
               </ul>
@@ -79,59 +85,72 @@
           <div class="list-item">
             <div class="list-item-header">
               <el-input
+                  clearable
                   size="small"
                   style="width: 180px;"
                   placeholder="搜索"
-                  @input="searchKeyword3"
                   v-model="keyword3">
                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
               </el-input>
             </div>
             <el-scrollbar style="height: 450px">
               <ul class="list-item-content">
-                <li v-for="item in subList2" :key="item.id" @click="searchSubCategory(item.id)">
+                <li v-for="item in subList2.filter(data => !keyword3 || data.categoryName.toLowerCase().includes(keyword3.toLowerCase()))"
+                    :key="item.id" @click="searchSubCategory3(item.id)">
                   <el-tooltip class="item" :open-delay="300" effect="dark" :content="item.categoryName"
                               placement="top">
                     <span class="title">{{ item.categoryName }} </span>
                   </el-tooltip>
                   <div class="button-group">
-                    <el-button style="padding: 5px" size="mini" type="primary" icon="el-icon-edit"></el-button>
-                    <el-button style="padding: 5px" size="mini" type="danger" icon="el-icon-delete"></el-button>
+                    <el-button
+                        style="padding: 5px" size="mini"
+                        @click.stop="handleAddEditCategory3(item.id,'add')" type="primary"
+                        icon="el-icon-plus"></el-button>
+                    <el-button disabled style="padding: 5px" size="mini" type="primary" icon="el-icon-edit"></el-button>
+                    <el-button @click.stop="deleteById(item.id)" style="padding: 5px" size="mini" type="danger"
+                               icon="el-icon-delete"></el-button>
                   </div>
                 </li>
               </ul>
             </el-scrollbar>
           </div>
         </el-col>
-<el-col :span="6">
-  <div class="list-item">
-    <div class="list-item-header">
-      <el-input
-          size="small"
-          style="width: 180px;"
-          placeholder="搜索"
-          @input="searchKeyword4"
-          v-model="keyword4">
-        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-      </el-input>
-    </div>
-    <el-scrollbar style="height: 450px">
-      <ul class="list-item-content">
-        <li v-for="item in subList3" :key="item.id" @click="searchSubCategory(item.id)">
-          <el-tooltip class="item" :open-delay="300" effect="dark" :content="item.categoryName" placement="top">
-            <span class="title">{{ item.categoryName }} </span>
-          </el-tooltip>
-          <div class="button-group">
-            <el-button style="padding: 5px" size="mini" type="primary" icon="el-icon-edit"></el-button>
-            <el-button style="padding: 5px" size="mini" type="danger" icon="el-icon-delete"></el-button>
+        <el-col :span="6">
+          <div class="list-item">
+            <div class="list-item-header">
+              <el-input
+                  clearable
+                  size="small"
+                  style="width: 180px;"
+                  placeholder="搜索"
+                  v-model="keyword4">
+                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+              </el-input>
+            </div>
+            <el-scrollbar style="height: 450px">
+              <ul class="list-item-content">
+                <li v-for="item in subList3.filter(data => !keyword4 || data.categoryName.toLowerCase().includes(keyword4.toLowerCase()))"
+                    :key="item.id" @click="searchSubCategory(item.id)">
+                  <el-tooltip class="item" :open-delay="300" effect="dark" :content="item.categoryName" placement="top">
+                    <span class="title">{{ item.categoryName }} </span>
+                  </el-tooltip>
+                  <div class="button-group">
+                    <el-button style="padding: 5px" disabled size="mini" type="primary" icon="el-icon-edit"></el-button>
+                    <el-button style="padding: 5px" size="mini" type="danger" @click.stop="deleteById(item.id)"
+                               icon="el-icon-delete"></el-button>
+                  </div>
+                </li>
+              </ul>
+            </el-scrollbar>
+            <!--            <el-empty :image-size="200"></el-empty>-->
           </div>
-        </li>
-      </ul>
-    </el-scrollbar>
-    <!--            <el-empty :image-size="200"></el-empty>-->
-  </div>
-</el-col>
+        </el-col>
       </el-row>
+      <el-divider content-position="left">最新数据面板查看</el-divider>
+      <el-cascader-panel
+          :options="list"
+          :props="{value:'id',label:'categoryName',children:'listQualificationCategory'}">
+      </el-cascader-panel>
     </div>
     <el-dialog
         :close-on-click-modal=false
@@ -252,6 +271,9 @@ export default {
                 this.$message.success(res.message)
                 this.visible = false
                 await this.getList()
+                this.subList.length = 0
+                this.subList2.length = 0
+                this.subList3.length = 0
                 return
               }
               this.$message.error(res.message)
@@ -260,8 +282,6 @@ export default {
             }
             return
           }
-
-
         }
         this.$message.error('输入有误')
       })
@@ -275,12 +295,23 @@ export default {
           this.subList = item.listQualificationCategory
         }
       })
+      this.subList2.length = 0
+      this.subList3.length = 0
     },
     searchSubCategory2(_id) {
       console.log(_id)
       this.subList.map(item => {
         if (_id === item.id) {
           this.subList2 = item.listQualificationCategory
+        }
+        this.subList3.length = 0
+      })
+    },
+    searchSubCategory3(_id) {
+      console.log(_id)
+      this.subList2.map(item => {
+        if (_id === item.id) {
+          this.subList3 = item.listQualificationCategory
         }
       })
     },
@@ -323,6 +354,25 @@ export default {
       }
       this.getDetailById(_id)
     },
+    handleAddEditCategory3(_id, _mode) {
+      this.mode = _mode
+      this.visible = true
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.$refs.cascader.inputValue
+              = this.subList2.find(item => item.id === _id).categoryName
+        }, 0)
+        this.form.parentId = _id
+      })
+      if (_mode === 'add') {
+        this.$nextTick(() => {
+          this.$refs.form.resetFields()
+          this.form.parentId = _id
+        })
+        return
+      }
+      this.getDetailById(_id)
+    },
     async getDetailById(_id) {
       try {
         const res = await this.$http.get('/qualification-category/detail/' + _id)
@@ -347,15 +397,31 @@ export default {
         console.log(e)
       }
     },
-    searchKeyword1(_keyword) {
-      console.log(_keyword)
-    },
-    searchKeyword2() {
-    },
-    searchKeyword3() {
-    },
-    searchKeyword4() {
-    },
+
+    async deleteById(id) {
+      this.$confirm('确定要删除该类别吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        try {
+          const res = await this.$http.delete(`/qualification-category/delete/${id}`)
+          if (res && res.status) {
+            this.$message.success(res.message)
+            await this.getList()
+            return
+          }
+          this.$message.error(res.message)
+        } catch (e) {
+          console.log(e)
+        }
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
+    }
   }
 }
 </script>
@@ -367,7 +433,7 @@ export default {
 
 .qualification-category {
   .container {
-    margin: 40px 60px;
+    margin: 0 0px;
 
     .list-item {
       height: 480px;

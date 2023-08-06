@@ -90,7 +90,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="备注" prop="remark">
-        <el-input v-model="personInfo.remark" placeholder="请输入备注..." :rows="3" type="textarea">
+        <el-input show-word-limit maxlength="100" v-model.trim="personInfo.remark" placeholder="请输入备注..." :rows="3" type="textarea">
         </el-input>
       </el-form-item>
     </el-form>
@@ -111,7 +111,11 @@
           <el-cascader
               class="width-full"
               clearable
-              :props="{ expandTrigger: 'hover'
+              ref="cascaderLevelMajor"
+              @expand-change="cascaderClick('levelMajor')"
+              @visible-change="cascaderClick('levelMajor')"
+              :props="{ expandTrigger: 'hover',
+                      checkStrictly: true
                     ,value:'categoryName'
                     ,label:'categoryName'
                     ,children:'listCertificateCategory'}"

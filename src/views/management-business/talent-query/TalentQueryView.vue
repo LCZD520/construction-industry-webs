@@ -260,14 +260,17 @@
             <el-button type="primary" size="small" v-throttle="handleDeleteBatch">删除图片</el-button>
             <el-divider content-position="left">合同</el-divider>
             <ImagesUpload
+                ref="upload1"
                 @getCheckedList="(_list)=>{this.checkedList1 = _list}"
                 namespace="talent-query" type="contract"/>
             <el-divider content-position="left">证件</el-divider>
             <ImagesUpload
+                ref="upload2"
                 @getCheckedList="(_list)=>{this.checkedList2 = _list}"
                 namespace="talent-query" type="certificates"/>
             <el-divider content-position="left">转账凭证</el-divider>
             <ImagesUpload
+                ref="upload3"
                 @getCheckedList="(_list)=>{this.checkedList3 = _list}"
                 namespace="talent-query" type="transfer-voucher"/>
           </div>
@@ -299,6 +302,8 @@ import LogisticsApplication from "./talent-query-view/logistics-application/Logi
 import TalentVisit from "./talent-query-view/talent-visit/TalentVisit";
 import TransferApplication from "./talent-query-view/transfer-application/TransferApplication";
 // import _ from 'lodash'
+import JSzip from 'jszip'
+import {saveAs} from 'file-saver'
 
 export default {
   name: 'TalentQueryView',
@@ -352,20 +357,83 @@ export default {
      * 批量下载文件
      */
     async handleDownLoadBatch() {
-      const arr = await this.getCheckedList()
+      const arr = this.getCheckedList()
       if (arr.length > 0) {
-
+        try {
+          const res = await this.$http.post('/file/download', {
+            listIds: arr
+          })
+          if (res && res.status) {
+            const zip = new JSzip();
+            let typeSets = new Set();
+            res.data.forEach(item => typeSets.add(item.type))
+            let rootFolder = zip.folder(`人才查询-${this.form.fullName}`)
+            if (typeSets.has('contract')) {
+              rootFolder.folder('合同')
+            }
+            if (typeSets.has('certificates')) {
+              rootFolder.folder('证件')
+            }
+            if (typeSets.has('transfer-voucher')) {
+              rootFolder.folder('转账凭证')
+            }
+            res.data.forEach(item => {
+              const base64Str = item.base64Str
+              if (item.type === 'contract') {
+                rootFolder.folder('合同').file(item.name, base64Str, {base64: true})
+              }
+              if (item.type === 'certificates') {
+                rootFolder.folder('证件').file(item.name, base64Str, {base64: true})
+              }
+              if (item.type === 'transfer-voucher') {
+                rootFolder.folder('转账凭证').file(item.name, base64Str, {base64: true})
+              }
+            })
+            // 生成zip文件并下载
+            zip.generateAsync({
+              type: 'blob',// 压缩类型
+              compression: "DEFLATE", // STORE：默认不压缩 DEFLATE：需要压缩
+              compressionOptions: {
+                level: 9 // 压缩等级1~9 1压缩速度最快，9最优压缩方式
+              }
+            }).then(res => {
+              // 下载的文件名
+              let filename = `人才查询-${this.form.fullName}.zip`;
+              saveAs(res, filename)
+            })
+            return
+          }
+          this.$message.error(res.message)
+        } catch (e) {
+          console.log(e)
+        }
         return
       }
       this.$message.warning('至少选择一张图片！')
     },
     /**
-     * 批量下载文件
+     * 批量删除文件
      */
     async handleDeleteBatch() {
       const arr = await this.getCheckedList()
       if (arr.length > 0) {
-
+        try {
+          const res = await this.$http.post('/picture/talent/delete-batch', {
+            listIds: arr
+          })
+          if (res && res.status) {
+            this.$nextTick(() => {
+              this.$refs.upload1.handleRemoveBatch(this.checkedList1)
+              this.$refs.upload2.handleRemoveBatch(this.checkedList2)
+              this.$refs.upload3.handleRemoveBatch(this.checkedList3)
+            })
+            this.$message.success(res.message)
+            return
+          }
+          this.$message.success(res.message)
+        } catch (e) {
+          console.log(e)
+        }
         return
       }
       this.$message.warning('至少选择一张图片！')

@@ -21,7 +21,8 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="企业名称" prop="enterpriseName">
-            <el-input placeholder="请输入企业名称" size="small" v-model="form.enterpriseName"/>
+            <el-input show-word-limit maxlength="20" placeholder="请输入企业名称" size="small"
+                      v-model.trim="form.enterpriseName"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -58,14 +59,15 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="联系地址" prop="contactAddress">
-            <el-input clearable placeholder="请输入联系地址" v-model="form.contactAddress"/>
+            <el-input show-word-limit maxlength="30" clearable placeholder="请输入联系地址"
+                      v-model.trim="form.contactAddress"/>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="联系人" prop="contacts">
-            <el-input clearable placeholder="请输入联系人" v-model="form.contacts"/>
+            <el-input show-word-limit maxlength="10" clearable placeholder="请输入联系人" v-model.trim="form.contacts"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -84,12 +86,14 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="电话号码" prop="telephoneNumber">
-            <el-input placeholder="请输入电话号码" clearable class="width-full" v-model="form.telephoneNumber"/>
+            <el-input show-word-limit maxlength="11" placeholder="请输入电话号码" clearable class="width-full"
+                      v-model.trim="form.telephoneNumber"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="QQ号码" prop="qqNumber">
-            <el-input clearable class="width-full" placeholder="请输入QQ" v-model="form.qqNumber"/>
+            <el-input show-word-limit maxlength="12" clearable class="width-full" placeholder="请输入QQ"
+                      v-model.trim="form.qqNumber"/>
           </el-form-item>
         </el-col>
       </el-row>
@@ -153,11 +157,13 @@
         </el-col>
       </el-row>
       <el-form-item label="跟进情况" prop="followUpSituation">
-        <el-input v-model="form.followUpSituation" placeholder="请输入跟进情况..." :rows="3" type="textarea">
+        <el-input show-word-limit maxlength="100" v-model.trim="form.followUpSituation" placeholder="请输入跟进情况..."
+                  :rows="3" type="textarea">
         </el-input>
       </el-form-item>
       <el-form-item label="备注" prop="remark">
-        <el-input v-model="form.remark" placeholder="请输入备注..." :rows="3" type="textarea">
+        <el-input show-word-limit maxlength="100" v-model.trim="form.remark" placeholder="请输入备注..." :rows="3"
+                  type="textarea">
         </el-input>
       </el-form-item>
       <el-form-item label=" ">

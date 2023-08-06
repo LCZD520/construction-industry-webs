@@ -7,6 +7,10 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import enterprise from "./modules/enterprise";
 import mechanisms from "./modules/mechanism";
+import qualificationAgency from "./modules/qualificationAgency";
+import titleEvaluation from "./modules/titleEvaluation";
+import classThreePersonnel from "./modules/classThreePersonnel";
+import educationPromotion from "./modules/educationPromotion";
 // vuex持久化
 import VuexPersistence from 'vuex-persist'
 
@@ -18,6 +22,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
+        loading: false,
         bool_options: [
             {
                 value: true,
@@ -228,7 +233,7 @@ export default new Vuex.Store({
             },
             {
                 value: 3,
-                label: '订单完成'
+                label: '订单执行完成'
             },
         ],
         initial_conversion_options: [
@@ -322,6 +327,7 @@ export default new Vuex.Store({
                 label: '不需要'
             }
         ],
+        // 后勤申请状态
         logistics_status_options: [
             {
                 value: 1,
@@ -336,6 +342,7 @@ export default new Vuex.Store({
                 label: '不予确认'
             },
         ],
+        // 后勤项目类型
         logistics_project_options: [
             {
                 value: 1,
@@ -471,6 +478,7 @@ export default new Vuex.Store({
         user_options: [],
         // 登录状态
         loginStatus: false,
+        currentUser: {},
         // 侧边栏菜单
         listMenus: [],
 
@@ -628,10 +636,14 @@ export default new Vuex.Store({
             },
             {
                 value: 2,
-                label: '执行中客户'
+                label: '资质已在公示订单中'
             },
             {
                 value: 3,
+                label: '执行中客户'
+            },
+            {
+                value: 4,
                 label: '完成客户'
             },
         ],
@@ -648,6 +660,41 @@ export default new Vuex.Store({
             {
                 value: 3,
                 label: '执行完成客户'
+            },
+        ],
+        // 资质转让订单状态
+        qualification_transfer_order_status_options: [
+            {
+                value: 1,
+                label: '资质待确认'
+            },
+            {
+                value: 2,
+                label: '资质确认不通过'
+            },
+            {
+                value: 3,
+                label: '订单待确认'
+            },
+            {
+                value: 4,
+                label: '订单确认不通过'
+            },
+            {
+                value: 5,
+                label: '订单执行中'
+            },
+            {
+                value: 6,
+                label: '完成待确认'
+            },
+            {
+                value: 7,
+                label: '完成确认不通过'
+            },
+            {
+                value: 8,
+                label: '订单已完成'
             },
         ],
         // 企业资质
@@ -726,10 +773,28 @@ export default new Vuex.Store({
             },
         ],
 
+        /**
+         * 企业客户类型
+         */
+        enterprise_customer_type_options: [
+            {
+                value: 1,
+                label: '签约客户'
+            },
+            {
+                value: 2,
+                label: '执行中客户'
+            },
+            {
+                value: 3,
+                label: '完成客户'
+            },
+        ],
+
         // 资质分类
         list_qualification_category: [],
 
-        // 资质代办状态状态
+        // 资质代办状态
         qualification_agency_status_options: [
             {
                 value: 1,
@@ -742,6 +807,10 @@ export default new Vuex.Store({
             {
                 value: 3,
                 label: '执行完成客户'
+            },
+            {
+                value: 4,
+                label: '执行确认不通过'
             },
         ],
         // 订单入账
@@ -837,30 +906,207 @@ export default new Vuex.Store({
 
         // 角色列表
         roleList: [],
+
+        // 职称评审人员状态
+        title_evaluation_status_options: [
+            {
+                value: 1,
+                label: '待评审'
+            },
+            {
+                value: 2,
+                label: '评审中'
+            }
+        ],
+        // 职称评审订单转账款项用途
+        title_evaluation_transfer_funds_purpose_options: [
+            {
+                value: 1,
+                label: '预付款'
+            },
+            {
+                value: 2,
+                label: '尾款'
+            },
+            {
+                value: 3,
+                label: '一次性付款'
+            },
+            {
+                value: 4,
+                label: '定金退款'
+            },
+        ],
+        // 职称评审、三类人员、学历提升订单状态
+        title_evaluation_order_status_options: [
+            {
+                value: 1,
+                label: '订单待确认'
+            },
+            {
+                value: 2,
+                label: '订单执行中'
+            },
+            {
+                value: 3,
+                label: '订单已完成'
+            },
+            {
+                value: 4,
+                label: '取消订单'
+            },
+        ],
+        // 职称评审/三类人员/学历提升订单状态
+        common_order_status_options: [
+            {
+                value: 1,
+                label: '订单待确认'
+            },
+            {
+                value: 2,
+                label: '订单执行中'
+            },
+            {
+                value: 3,
+                label: '订单已完成'
+            }
+        ],
+        // 顶部申请状态搜索下拉选项
+        common_application_status_search_options: [
+            {
+                value: '已申请待审批',
+            },
+            {
+                value: '一次审核审批通过',
+            },
+            {
+                value: '一次审核审批不通过',
+            },
+            {
+                value: '二次审核审批通过',
+            },
+            {
+                value: '二次审核审批不通过',
+            },
+            {
+                value: '财务审批通过',
+            },
+            {
+                value: '财务审批不通过',
+            },
+            {
+                value: '出纳审批通过',
+            },
+            {
+                value: '出纳审批不通过',
+            },
+        ],
+        // 公司账户列表
+        listCompanyAccounts: [],
+        // 资质转让入账款项用途
+        qualification_transfer_entry_funds_purpose_options: [
+            {
+                value: 1,
+                label: '企业预付款'
+            },
+            {
+                value: 2,
+                label: '企业中期款'
+            },
+            {
+                value: 3,
+                label: '企业尾款'
+            },
+            {
+                value: 4,
+                label: '一次性付款'
+            },
+        ],
+        // 资质代办款项用途
+        qualification_agency_funds_purpose_options: [
+            {
+                value: 1,
+                label: '企业预付款'
+            },
+            {
+                value: 2,
+                label: '企业尾款'
+            },
+            {
+                value: 3,
+                label: '一次性付款'
+            },
+        ],
+        // 职称评审款项用途
+        title_evaluation_funds_purpose_options: [
+            {
+                value: 1,
+                label: '企业预付款'
+            },
+            {
+                value: 2,
+                label: '企业中期款'
+            },
+            {
+                value: 3,
+                label: '企业尾款'
+            },
+            {
+                value: 4,
+                label: '一次性付款'
+            },
+            {
+                value: 5,
+                label: '定金退款'
+            },
+        ],
+        /**
+         * 在线用户列表
+         */
+        listOnlineUsers: [],
+
     },
     mutations: {
-        CHANGE_LOGIN_STATUS() {
-            this.state.loginStatus = !this.state.loginStatus
+        CHANGE_LOGIN_STATUS(state, result) {
+            state.loginStatus = result
+        },
+        UPDATE_LOADING_STATUS(state, result) {
+            state.loading = result
+        },
+        UPDATE_CURRENT_USER(state, result) {
+            state.currentUser = result
         },
         INIT_LIST_MENUS(state, result) {
-            this.state.listMenus = result
+            state.listMenus = result
         },
         INIT_LIST_USERS(state, result) {
-            this.state.user_options = result
+            state.user_options = result
         },
         INIT_LIST_CERTIFICATE_CATEGORY(state, result) {
-            this.state.list_certificate_category = result
+            state.list_certificate_category = result
         },
         INIT_LIST_QUALIFICATION_CATEGORY(state, result) {
-            this.state.list_qualification_category = result
+            state.list_qualification_category = result
         },
         INIT_ROLE_LIST(state, result) {
-            this.state.roleList = result
+            state.roleList = result
+        },
+        INIT_LIST_COMPANY_ACCOUNTS(state, result) {
+            state.listCompanyAccounts = result
+        },
+        UPDATE_LIST_ONLINE_USERS(state, result) {
+            state.listOnlineUsers = result
         },
     },
     actions: {
-        changeLoginStatus({commit}) {
-            commit("CHANGE_LOGIN_STATUS")
+        changeLoginStatus({commit}, data) {
+            commit("CHANGE_LOGIN_STATUS", data)
+        },
+        updateLoadingStatus({commit}, data) {
+            commit("UPDATE_LOADING_STATUS", data)
+        },
+        updateCurrentUser({commit}, data) {
+            commit("UPDATE_CURRENT_USER", data)
         },
         initListMenus({commit}, data) {
             console.log(data)
@@ -877,11 +1123,21 @@ export default new Vuex.Store({
         },
         initRoleList({commit}, data) {
             commit("INIT_ROLE_LIST", data)
-        }
+        },
+        initListCompanyAccounts({commit}, data) {
+            commit("INIT_LIST_COMPANY_ACCOUNTS", data)
+        },
+        updateListOnlineUsers({commit}, data) {
+            commit("UPDATE_LIST_ONLINE_USERS", data)
+        },
     },
     modules: {
         enterprise,
-        mechanisms
+        mechanisms,
+        qualificationAgency,
+        titleEvaluation,
+        classThreePersonnel,
+        educationPromotion,
     },
     plugins: [vuexLocal.plugin]
 })

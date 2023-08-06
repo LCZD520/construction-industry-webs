@@ -25,7 +25,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item :error="errorMessage.fullName" prop="fullName" label="姓名">
-            <el-input clearable class="width-full" placeholder="请输入姓名" v-model="form.fullName"/>
+            <el-input show-word-limit maxlength="10" clearable class="width-full" placeholder="请输入姓名" v-model.trim="form.fullName"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -75,12 +75,12 @@
       <el-row>
         <el-col :span="12">
           <el-form-item :error="errorMessage.telephoneNumber" prop="telephoneNumber" label="电话号码">
-            <el-input placeholder="请输入电话号码" clearable class="width-full" v-model="form.telephoneNumber"/>
+            <el-input show-word-limit maxlength="11" placeholder="请输入电话号码" clearable class="width-full" v-model.trim="form.telephoneNumber"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item prop="qqNumber" label="QQ">
-            <el-input clearable class="width-full" placeholder="请输入QQ" v-model="form.qqNumber"/>
+            <el-input show-word-limit maxlength="12" clearable class="width-full" placeholder="请输入QQ" v-model.trim="form.qqNumber"/>
           </el-form-item>
         </el-col>
       </el-row>
@@ -251,15 +251,15 @@
         </el-col>
       </el-row>
       <el-form-item label="人才要求" prop="talentRequirement">
-        <el-input v-model="form.talentRequirement" placeholder="请输入人才要求..." :rows="3" type="textarea">
+        <el-input show-word-limit maxlength="100" v-model.trim="form.talentRequirement" placeholder="请输入人才要求..." :rows="3" type="textarea">
         </el-input>
       </el-form-item>
       <el-form-item label="跟进情况" prop="followUpSituation">
-        <el-input v-model="form.followUpSituation" placeholder="请输入跟进情况..." :rows="3" type="textarea">
+        <el-input show-word-limit maxlength="100" v-model.trim="form.followUpSituation" placeholder="请输入跟进情况..." :rows="3" type="textarea">
         </el-input>
       </el-form-item>
       <el-form-item label="备注" prop="remark">
-        <el-input v-model="form.remark" placeholder="请输入备注..." :rows="3" type="textarea">
+        <el-input show-word-limit maxlength="100" v-model.trim="form.remark" placeholder="请输入备注..." :rows="3" type="textarea">
         </el-input>
       </el-form-item>
       <el-form-item label=" ">

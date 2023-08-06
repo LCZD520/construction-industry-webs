@@ -14,6 +14,15 @@ const systemRoutes = [
         component: () => import('../../../views/management-system/operation-log/OperationLog'),
     },
     {
+        path: '/login-log',
+        name: 'login-log',
+        meta: {
+            title: '操作日志列表',
+            activeMenuPath: '/login-log'
+        },
+        component: () => import('../../../views/management-system/login-log/LoginLog'),
+    },
+    {
         path: '/system-notice',
         name: 'system-notice',
         meta: {
@@ -23,7 +32,7 @@ const systemRoutes = [
         component: () => import('../../../views/management-system/system-notice/SystemNotice'),
     },
     {
-        path: '/system-notice-view',
+        path: '/system-notice-view/:id',
         name: 'system-notice-view',
         meta: {
             title: '系统公告查看',

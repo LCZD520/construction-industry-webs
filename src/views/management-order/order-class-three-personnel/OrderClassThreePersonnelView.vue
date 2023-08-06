@@ -8,29 +8,29 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label="客户名称">
-            <el-input disabled size="small" v-model="form.name"/>
+            <el-input disabled size="small" :value="form.titleEvaluation && form.titleEvaluation.customerName"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="订单编号">
-            <el-input disabled size="small" v-model="form.name"/>
+            <el-input disabled size="small" v-model="form.orderno"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="人员数">
-            <el-input disabled size="small" v-model="form.name"/>
+            <el-input disabled size="small" v-model="form.assessorNum"/>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="8">
           <el-form-item label="代办费用">
-            <el-input disabled size="small" v-model="form.name"/>
+            <el-input disabled size="small" v-model="form.agencyTotalAmount"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="评审费用">
-            <el-input disabled size="small" v-model="form.name"/>
+            <el-input disabled size="small" v-model="form.totalEvaluationFee"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -39,7 +39,7 @@
                 disabled
                 class="width-full"
                 size="small"
-                v-model="form.name"
+                v-model="form.gmtCreate"
                 type="datetime">
             </el-date-picker>
           </el-form-item>
@@ -48,9 +48,10 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label="状态">
-            <el-select disabled class="width-full" size="small" v-model="value">
+            <el-select disabled class="width-full" size="small"
+                       :value="$valueToLabel(form.orderStatus, $store.state.common_order_status_options)">
               <el-option
-                  v-for="item in options"
+                  v-for="item in []"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -60,7 +61,8 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="三类人员录入人">
-            <el-input disabled size="small" v-model="form.name"/>
+            <el-input disabled size="small" :value="form.titleEvaluation
+            && this.$valueToLabel(form.titleEvaluation.creatorId,this.$store.state.user_options)"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -78,14 +80,12 @@
       </el-row>
       <el-table
           size="mini"
-          :data="tableData"
+          :data="form.listAssessors"
           stripe
           border
-          highlight-current-row
           :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
           :cell-style="{textAlign:'center'}"
-          style="width: 100%"
-          :row-class-name="tableRowClassName">
+          style="width: 100%">
         <el-table-column
             min-width="100"
             v-for="item in columns"
@@ -94,6 +94,14 @@
             :fixed="item.fixed"
             :label="item.title">
         </el-table-column>
+        <el-table-column
+            min-width="180"
+            fixed="right"
+            label="人员状态">
+          <template #default="{row}">
+            {{ $valueToLabel(row.evaluationStatus, $store.state.title_evaluation_status_options) }}
+          </template>
+        </el-table-column>
       </el-table>
       <el-divider content-position="left">三类人员入账明细</el-divider>
       <el-table
@@ -101,11 +109,8 @@
           :data="tableData"
           stripe
           border
-          highlight-current-row
           :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
-          :cell-style="{textAlign:'center'}"
-          style="width: 100%"
-          :row-class-name="tableRowClassName">
+          style="width: 100%">
         <el-table-column
             min-width="180"
             v-for="item in columns2"
@@ -120,27 +125,24 @@
           :data="tableData"
           stripe
           border
-          highlight-current-row
           :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
           :cell-style="{textAlign:'center'}"
-          style="width: 100%"
-          :row-class-name="tableRowClassName">
+          style="width: 100%">
+        <el-table-column fixed="right" label="操作" width="180">
+          <template slot-scope="scope">
+            <el-button
+                size="mini"
+                type="primary"
+                @click="handleEdit(scope.$index, scope.row)">查看图片
+            </el-button>
+          </template>
+        </el-table-column>
         <el-table-column
             min-width="180"
             v-for="item in columns3"
             :key="item.key"
             :prop="item.key"
             :label="item.title">
-        </el-table-column>
-        <el-table-column fixed="right" label="操作" width="180">
-          <template slot-scope="scope">
-            <el-button
-                size="mini"
-                type="primary"
-                plain
-                @click="handleEdit(scope.$index, scope.row)">查看图片
-            </el-button>
-          </template>
         </el-table-column>
       </el-table>
       <br>
@@ -159,132 +161,119 @@
 
 <script>
 export default {
-  name: 'OrderClassThreePersonnelView',
+  name: 'OrderTitleEvaluationView',
   components: {},
   data() {
     return {
-      form: {
-        name: ''
-      },
+      form: {},
       columns: [
         {
           title: '姓名',
-          key: 'address'
+          key: 'fullName'
         },
         {
           title: '性别',
-          key: 'address'
+          key: 'sex'
         },
         {
           title: '身份证',
-          key: 'address'
+          key: 'identityCard'
+        },
+        {
+          title: '联系电话',
+          key: 'telephoneNumber'
         },
         {
           title: '安全证书',
-          key: 'address'
+          key: 'securityCertificate'
         },
         {
           title: '三类类别',
-          key: 'address'
+          key: 'threeCategory'
         },
         {
           title: '事项性质',
-          key: 'address'
+          key: 'itemNature'
         },
         {
           title: '闽政通账号',
-          key: 'address'
+          key: 'minZhengTongAccount'
         },
         {
           title: '闽政通密码',
-          key: 'address'
-        },
-        {
-          title: '联系方式',
-          key: 'address'
+          key: 'minZhengTongPassword'
         },
         {
           title: '代办金额',
-          key: 'address',
-          fixed: 'right'
-        },
-        {
-          title: '评审费用',
-          key: 'address',
-          fixed: 'right'
-        },
-        {
-          title: '人员状态',
-          key: 'address',
-          fixed: 'right'
+          key: 'agencyAmount'
         },
       ],
       columns2: [
         {
           title: '申请入账时间',
-          key: 'address'
+          key: '1'
         },
         {
           title: '申请人',
-          key: 'address'
+          key: '2'
         },
         {
           title: '申请入账金额',
-          key: 'address'
+          key: '3'
         },
         {
           title: '款项用途',
-          key: 'address'
+          key: '4'
         },
         {
           title: '申请备注',
-          key: 'address'
+          key: '5'
         },
         {
           title: '申请状态',
-          key: 'address'
+          key: '6'
         },
       ],
       columns3: [
         {
           title: '申请转账时间',
-          key: 'address'
+          key: '1'
         },
         {
           title: '申请人',
-          key: 'address'
+          key: '2'
         },
         {
           title: '申请转账金额',
-          key: 'address'
+          key: '3'
         },
         {
           title: '款项用途',
-          key: 'address'
+          key: '4'
         },
         {
           title: '申请备注',
-          key: 'address'
+          key: '5'
         },
         {
           title: '申请状态',
-          key: 'address'
+          key: '6'
         },
       ],
-      tableData: [{}]
+      tableData: []
     }
   },
+  created() {
+    const id = this.$route.params.id
+    id && !isNaN(id / 1) && this.detail(id / 1)
+  },
   methods: {
-    tableRowClassName({rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row';
-      } else if (rowIndex === 3) {
-        return 'success-row';
+    async detail(id) {
+      const res = await this.$http.get(`/class-three-person-order/detail/${id}`)
+      if (res.status && res.data !== null) {
+        console.log(res)
+        this.form = res.data
       }
-      return '';
-    },
-    handleEdit(_index,_row){
-      console.log(_index,_row)
     },
     handleClick() {
 

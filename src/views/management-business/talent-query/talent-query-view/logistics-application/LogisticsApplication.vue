@@ -80,7 +80,6 @@
       </el-table-column>
     </el-table>
     <div class="pagination">
-      <div class="pagination-total">共<span class="total"> {{ pageInfo.total }} </span>条</div>
       <div class="pagination-right">
         <el-pagination
             ref="pagination"
@@ -90,7 +89,7 @@
             @current-change="handleCurrentChange"
             @size-change="handleSizeChange"
             background
-            layout="sizes, prev, pager, next, jumper"
+            layout="total,sizes, prev, pager, next, jumper"
             :total="pageInfo.total">
         </el-pagination>
       </div>
@@ -137,8 +136,7 @@ export default {
       // 添加
       form: {
         "id": null,
-        "talentId": this.logisticsType === 1 ? this.$route.query.id / 1 : null,
-        "enterpriseId": this.logisticsType === 2 ? this.$route.query.id / 1 : null,
+        "resourceId": this.$route.query.id,
         "addRemark": '',
         "logisticsProjectType": null,
         "detailItem": '',
@@ -171,21 +169,16 @@ export default {
      * @param _pageSize
      */
     getList(_pageSize) {
-      let page = {
+      const res = this.$http.post('/logistics/list-all', {
         currentPage: this.pageInfo.currentPage,
-        pageSize: _pageSize === undefined ? null : _pageSize,
-        talentId: this.form.talentId,
-        enterpriseId: this.form.enterpriseId,
+        pageSize: _pageSize ? _pageSize : this.pageInfo.pageSize,
+        resourceId: this.form.resourceId / 1,
         logisticsType: this.logisticsType,
-      }
-      this.$http.get('/logistics/list', {
-        params: page
-      }, false).then(res => {
-        if (res.status) {
-          this.list = res.data.list
-          this.pageInfo.total = res.data.total
-        }
       })
+      if (res && res.status) {
+        this.list = res.data.list
+        this.pageInfo.total = res.data.total
+      }
     },
     handleConfirm() {
       if (this.mode === 'add') {

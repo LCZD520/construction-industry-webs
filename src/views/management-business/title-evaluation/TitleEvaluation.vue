@@ -5,74 +5,67 @@
 <template>
   <div class="title-evaluation">
     <el-form
-        ref="formData"
+        ref="form"
+        :rules="rules"
         inline
+        label-width="100px"
         :model="form">
-      <el-row :gutter="20">
-        <el-col :span="7">
-          <el-form-item label="客户名称" label-width="100px">
-            <el-input size="small" v-model="form.newPassword" placeholder="请输入客户名称">
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="7">
-          <el-form-item label="客户类型" label-width="100px">
-            <el-select size="small" v-model="form.newPassword" placeholder="请选择客户类型">
-              <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="7">
-          <el-form-item label="状态" label-width="100px">
-            <el-select size="small" v-model="form.newPassword" placeholder="请选择状态">
-              <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="7">
-          <el-form-item label="录入人" label-width="100px">
-            <el-select size="small" v-model="form.newPassword" placeholder="请选择录入人">
-              <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="7">
-          <el-form-item label="录入日期" label-width="100px">
-            <el-date-picker
-                v-model="form.oldPassword"
-                size="small"
-                type="daterange"
-                align="right"
-                unlink-panels
-                range-separator="-"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                :picker-options="pickerOptions">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :span="7">
-          <el-form-item label=" " label-width="100px">
-            <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
-            <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
-          </el-form-item>
-        </el-col>
-      </el-row>
+      <el-form-item label="客户名称" prop="customerName">
+        <el-input clearable size="small" v-model.trim="form.customerName" placeholder="请输入客户名称">
+        </el-input>
+      </el-form-item>
+      <el-form-item label="客户类型" prop="customerType">
+        <el-select clearable size="small" v-model="form.customerType" placeholder="请选择客户类型">
+          <el-option
+              v-for="item in $store.state.title_customer_type_options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="状态" prop="status">
+        <el-select clearable size="small" v-model="form.status" placeholder="请选择状态">
+          <el-option
+              v-for="item in $store.state.enterprise_status_options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="录入人" prop="creatorId">
+        <el-select clearable size="small" v-model="form.creatorId" placeholder="请选择录入人">
+          <el-option
+              v-for="item in $store.state.user_options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="录入日期" prop="date">
+        <el-date-picker
+            clearable
+            v-model="form.date"
+            size="small"
+            type="daterange"
+            align="right"
+            unlink-panels
+            value-format="yyyy-MM-dd"
+            format="yyyy-MM-dd"
+            range-separator="-"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :picker-options="$pickerOptions">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label=" ">
+        <el-button size="small" icon="el-icon-search" @click="search(pageInfo.pageSize,1)" :loading="loading"
+                   type="primary">搜 索
+        </el-button>
+        <el-button size="small" icon="el-icon-refresh-right" v-throttle="reset">重 置</el-button>
+      </el-form-item>
     </el-form>
     <div class="split-line">
       <div class="split-line-left">
@@ -80,10 +73,11 @@
                    @click.stop="$router.push('/title-evaluation-add')">添加
         </el-button>
       </div>
-      <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
+      <div class="split-line-right">共查询到 <b style="color: #409EFF">{{ pageInfo.total }}</b> 条记录</div>
     </div>
     <el-table
-        :data="tableData"
+        :data="list"
+        v-loading="loading"
         stripe
         border
         :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
@@ -91,41 +85,45 @@
         style="width: 100%">
       <el-table-column
           min-width="180"
-          prop=""
+          prop="customerName"
           label="客户名称">
       </el-table-column>
       <el-table-column
           min-width="150"
           label="客户类型">
-        <template slot-scope="scope">
-          <span> {{ $valueToLabel(scope.row.username, $store.state.class_three_personnel_options) }}</span>
+        <template #default="{row}">
+          <span> {{ $valueToLabel(row.customerType, $store.state.title_customer_type_options) }}</span>
         </template>
       </el-table-column>
       <el-table-column
           min-width="150"
           label="状态">
-        <template slot-scope="scope">
-          <span> {{ $valueToLabel(scope.row.username, $store.state.class_three_personnel_options) }}</span>
+        <template #default="{row}">
+          <span> {{ $valueToLabel(row.status, $store.state.enterprise_status_options) }}</span>
         </template>
       </el-table-column>
       <el-table-column
           min-width="150"
-          prop=""
           label="人员数">
+        <template slot-scope="{row}">
+          {{
+            row.countAssessors
+          }}
+        </template>
       </el-table-column>
       <el-table-column
           min-width="180"
           align="right"
           label="代办总金额">
-        <template slot-scope="scope">
-          {{ scope.row.username }}
+        <template slot-scope="{row}">
+          <el-statistic group-separator="," :precision="2" :value="row.totalAgencyAmount"/>
         </template>
       </el-table-column>
       <el-table-column
           min-width="100"
           label="录入人名称">
-        <template slot-scope="scope">
-          <span> {{ $valueToLabel(scope.row.creatorId, $store.state.user_options) }}</span>
+        <template #default="{row}">
+          <span> {{ $valueToLabel(row.creatorId, $store.state.user_options) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -133,45 +131,57 @@
           prop="gmtCreate"
           label="录入时间">
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="400">
-        <template slot-scope="scope">
+      <el-table-column v-if="deleted" fixed="right" label="操作" width="90">
+        <template #default="scope">
           <el-button
-              v-if="false"
+              style="padding: 5px"
               size="mini"
               type="primary"
-              @click.stop="handleComplete(scope.$index, scope.row)">完成
+              @click.stop="recovery(scope.row.id)">恢复
+          </el-button>
+        </template>
+      </el-table-column>
+      <el-table-column v-else fixed="right" label="操作" width="400">
+        <template #default="{row}">
+          <el-button
+              v-if="row.status > 1"
+              disabled
+              size="mini"
+              type="primary"
+              @click.stop="handleComplete(row)">完成
           </el-button>
           <el-button
               size="mini"
               type="primary"
-              @click.stop="handleView(scope.$index, scope.row,'first')">订单
+              @click.stop="handleView(row,'first')">订单
           </el-button>
           <el-button
               size="mini"
               type="primary"
-              @click.stop="handleView(scope.$index, scope.row,'second')">图片
+              @click.stop="handleView(row,'second')">图片
           </el-button>
           <el-button
               size="mini"
               type="primary"
-              @click.stop="handleView(scope.$index, scope.row)">查看
+              @click.stop="handleView(row)">查看
           </el-button>
           <el-button
+              disabled
+              v-if="row.status === 1"
               size="mini"
               type="primary"
-              @click.stop="handleEdit(scope.$index, scope.row)">编辑
+              @click.stop="handleEdit(row)">编辑
           </el-button>
           <el-button
-              v-if="true"
+              v-if="row.status === 1"
               size="mini"
               type="danger"
-              @click.stop="handleDelete(scope.$index, scope.row)">删除
+              @click.stop="handleDelete(row.id)">删除
           </el-button>
         </template>
       </el-table-column>
     </el-table>
     <div class="pagination">
-      <div class="pagination-total">共<span class="total"> {{ pageInfo.total }} </span>条</div>
       <div class="pagination-right">
         <el-pagination
             ref="pagination"
@@ -181,7 +191,7 @@
             @current-change="handleCurrentChange"
             @size-change="handleSizeChange"
             background
-            layout="sizes, prev, pager, next, jumper"
+            layout="total,sizes, prev, pager, next, jumper"
             :total="pageInfo.total">
         </el-pagination>
       </div>
@@ -190,109 +200,93 @@
 </template>
 
 <script>
+import {confirmDelete} from "../../../util/decorator";
+
 export default {
   name: 'TitleEvaluation',
   components: {},
+  props: {
+    deleted: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
-      options: [
-        {
-          value: '选项1',
-          label: '录入企业数'
-        },
-        {
-          value: '选项2',
-          label: '录入人才数'
-        },
-        {
-          value: '选项3',
-          label: '资质收购录入数'
-        },
-        {
-          value: '选项4',
-          label: '资质转让录入数'
-        },
-        {
-          value: '选项5',
-          label: '资质代办录入数'
-        },
-        {
-          value: '选项6',
-          label: '职称评审录入数'
-        },
-        {
-          value: '选项7',
-          label: '三类人员录入数'
-        },
-        {
-          value: '选项8',
-          label: '学历提升录入数'
-        },
-        {
-          value: '选项9',
-          label: '录入总数'
-        },
-      ],
-      tableData: [
-        {
-          date: '2016-05-02',
-          username: '王小虎',
-          address: '上海市普陀区',
-        },],
+      loading: false,
+      list: [],
       pageInfo: {
         pageSize: 10,
         total: 0,
         currentPage: 1,
       },
       form: {
-        oldPassword: '',
-        newPassword: '',
-        confirmPassword: '',
+        customerName: '',
+        customerType: null,
+        status: null,
+        creatorId: null,
+        date: [],
+        deleted: this.deleted,
       },
-      pickerOptions: {
-        shortcuts: [
-          {
-            text: '今天',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '一周内',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '一个月内',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '三个月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit('pick', [start, end]);
-            }
-          }
-        ]
+      rules: {
+        customerName: [{required: false, trigger: 'blur'}],
+        customerType: [{required: false, trigger: 'blur'}],
+        status: [{required: false, trigger: 'blur'}],
+        creatorId: [{required: false, trigger: 'blur'}],
+        date: [{required: false, trigger: 'blur'}],
       },
     }
   },
-  mounted() {
+  created() {
+    this.search()
   },
   methods: {
+    reset() {
+      this.$refs.form.resetFields()
+      this.pageInfo.currentPage = 1
+      this.search()
+    },
+    @throttle()
+    async search(size, page) {
+      let newForm = {}
+      newForm.pageSize = size ? size : this.pageInfo.pageSize
+      newForm.currentPage = page ? page : this.pageInfo.currentPage
+      this.loading = true
+      if (this.form.date && this.form.date.length > 1) {
+        newForm.startDate = this.form.date[0]
+        newForm.endDate = this.form.date[1]
+      }
+      newForm = Object.assign(newForm, this.form)
+      for (let key in newForm) {
+        if (newForm[key] === '') {
+          newForm[key] = null
+        }
+      }
+      try {
+        const res = await this.$http.post('/title-evaluation/list', newForm)
+        if (res && res.status) {
+          this.pageInfo.total = res.data.total
+          this.list = res.data.list
+        }
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.loading = false
+      }
+    },
+    /**
+     * 表格翻页
+     */
+    handleCurrentChange() {
+      this.search()
+    },
+    /**
+     * 改变页数
+     */
+    handleSizeChange(_pageSize) {
+      this.search(_pageSize)
+    },
+
     cellStyle({columnIndex}) {
       let columns = [4]
       if (columns.indexOf(columnIndex) > -1) {
@@ -300,20 +294,8 @@ export default {
       }
       return 'text-align:center'
     },
-    /**
-     * 表格翻页
-     */
-    handleCurrentChange() {
-
-    },
-    /**
-     * 改变页数
-     */
-    handleSizeChange(_pageSize) {
-      console.log(_pageSize)
-    },
-    handleView(_index, _row, _activeTab) {
-      console.log(_index, _row)
+    handleView(_row, _activeTab) {
+      console.log(_row)
       this.$router.push({
         path: '/title-evaluation-view',
         query: {
@@ -322,26 +304,39 @@ export default {
         }
       })
     },
-    handleEdit(_index, _row) {
-      console.log(_index, _row)
-      this.$router.push('/title-evaluation-edit')
+    handleEdit(_row) {
+      console.log(_row)
+      this.$router.push(`/title-evaluation-edit/${_row.id}`)
     },
-    handleDelete(_index, _row) {
-      console.log(_index, _row)
-      this.$confirm('确定要删除这条记录吗？', '温馨提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '确定删除!'
-        });
-      }).catch(() => {
-      })
+    async recovery(id) {
+      try {
+        const res = await this.$http.delete(`/title-evaluation/recovery/${id}`)
+        if (res && res.status) {
+          this.$message.success(res.message)
+          await this.search()
+          return
+        }
+        this.$message.error(res.message)
+      } catch (e) {
+        console.log(e)
+      }
     },
-    handleComplete(_index, _row) {
-      console.log(_index, _row)
+    @confirmDelete()
+    async handleDelete(id) {
+      try {
+        const res = await this.$http.delete(`/title-evaluation/delete/${id}`)
+        if (res && res.status) {
+          this.$message.success(res.message)
+          await this.search()
+          return
+        }
+        this.$message.error(res.message)
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    handleComplete(_row) {
+      console.log(_row)
       this.$message.success('完成')
     },
   }

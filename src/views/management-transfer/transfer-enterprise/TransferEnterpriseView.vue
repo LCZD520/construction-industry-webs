@@ -8,43 +8,36 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="公司名称">
-            <el-input disabled size="small" v-model="form.name"/>
+            <el-input disabled size="small" v-model="form.enterpriseName"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="账户开户行">
-            <el-input disabled size="small" v-model="form.name"/>
+            <el-input disabled size="small" v-model="form.openBank"/>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="账户户名">
-            <el-input disabled size="small" v-model="form.name"/>
+            <el-input disabled size="small" v-model="form.accountName"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="账户卡号">
-            <el-input disabled size="small" v-model="form.name"/>
+            <el-input disabled size="small" v-model="form.bankCardNo"/>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="申请转账金额">
-            <el-input disabled size="small" v-model="form.name"/>
+            <el-input disabled size="small" v-model="form.transferAmount"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="款项用途">
-            <el-select disabled class="width-full" size="small" v-model="value">
-              <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
+            <el-input disabled class="width-full" size="small" v-model="form.fundsPurpose"/>
           </el-form-item>
         </el-col>
       </el-row>
@@ -55,18 +48,17 @@
                 disabled
                 class="width-full"
                 size="small"
-                v-model="form.name"
+                v-model="form.gmtCreate"
                 type="datetime">
             </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="申请人">
-            <el-input disabled size="small" v-model="form.name"/>
+          <el-form-item label="申请人姓名">
+            <el-input disabled size="small" :value="this.$valueToLabel(form.creatorId,this.$store.state.user_options)"/>
           </el-form-item>
         </el-col>
       </el-row>
-
 
 
       <el-row>
@@ -75,55 +67,43 @@
             <el-input disabled size="small" v-model="form.name"/>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
-          <el-form-item label="帐户开户行">
-            <el-input disabled size="small" v-model="form.name"/>
-          </el-form-item>
-        </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="申请状态">
-            <el-select disabled class="width-full" size="small" v-model="value">
-              <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
+            <el-input disabled class="width-full" size="small" v-model="form.applicationStatus"/>
           </el-form-item>
         </el-col>
       </el-row>
       <el-form-item label="备注">
-        <el-input disabled :rows="3" type="textarea">
+        <el-input :value="form.remark" disabled :rows="3" type="textarea">
         </el-input>
       </el-form-item>
       <el-form-item label="审批详情">
         <el-card>
           <el-steps direction="vertical" :active="6" align-center>
             <el-step
-                v-for="(item,index) in 5"
+                v-for="(item,index) in form.listAuditRecords"
                 style="line-height: 28px;"
                 :key="index"
-                :title="item+'次审核审批通过'"
+                :title="item.auditStatus"
                 icon="el-icon-s-help">
               <el-card slot="description" shadow="hover">
                 <span style="color: #409EFF" class="description-item">
                   <i class="el-icon-user-solid"></i>
                   <span>
-                    审批人【】
+                    审批人【{{ $valueToLabel(item.creatorId, $store.state.user_options) }}】
                   </span>
                 </span>
                 <span style="color: #67C23A" class="description-item">
                     <i class="el-icon-info"></i>
                     <span>
-                      审批意见【】
+                      审批意见【{{ item.approvalOpinion }}】
                     </span>
                   </span>
                 <span style="color: #E6A23C" class="description-item">
                     <i class="el-icon-date"></i>
-                      2022-06-20
+                      {{ item.gmtCreate }}
                   </span>
               </el-card>
             </el-step>
@@ -149,72 +129,49 @@ export default {
   components: {},
   data() {
     return {
-      form: {
-        name: ''
+      currentId: this.$route.params.id / 1 || null,
+      form: {},
+      form2: {
+        enterpriseTransferId: this.$route.params.id / 1 || null,
+        auditResult: null,
+        approvalOpinion: '',
+        currentAuditRoleId: null,
       },
-      columns: [
-        {
-          title: '申请时间',
-          key: 'address'
-        },
-        {
-          title: '申请入账金额',
-          key: 'address'
-        },
-        {
-          title: '款项用途',
-          key: 'address'
-        },
-        {
-          title: '入账方信息',
-          key: 'address'
-        },
-        {
-          title: '入账日期',
-          key: 'address'
-        },
-        {
-          title: '申请状态',
-          key: 'address'
-        },
-      ],
-      columns2: [
-        {
-          title: '申请时间',
-          key: 'address'
-        },
-        {
-          title: '申请转账金额',
-          key: 'address'
-        },
-        {
-          title: '款项用途',
-          key: 'address'
-        },
-        {
-          title: '转账用户',
-          key: 'address'
-        },
-        {
-          title: '申请备注',
-          key: 'address'
-        },
-        {
-          title: '申请状态',
-          key: 'address'
-        },
-      ],
-      tableData: [{}]
+      rules: {
+        auditResult: [
+          {required: true, message: '请选择审核结果', trigger: 'change'}
+        ]
+      },
     }
   },
+  created() {
+    !isNaN(this.$route.params.id / 1) && this.getDetailById()
+  },
   methods: {
-    tableRowClassName({rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row';
-      } else if (rowIndex === 3) {
-        return 'success-row';
+    async handleSubmit() {
+      this.form2.currentAuditRoleId = this.form.currentAuditRoleId
+      try {
+        const res = await this.$http.post('/enterprise-transfer/audit', this.form2)
+        if (res.status) {
+          this.$message.success(res.message)
+          this.$router.back()
+          return
+        }
+        this.$message.error(res.message)
+        this.getDetailById()
+      } catch (e) {
+        console.log(e)
       }
-      return '';
+    },
+    async getDetailById() {
+      try {
+        const res = await this.$http.get(`/enterprise-transfer/audit-detail/${this.currentId}`)
+        if (res && res.status) {
+          this.form = res.data
+        }
+      } catch (e) {
+        console.log(e)
+      }
     },
     handleEdit(_index, _row) {
       console.log(_index, _row)

@@ -46,9 +46,10 @@
                       <span style="white-space:pre-line"
                             v-for="(subItem,index) in scope.row.levelMajorInitialConversion"
                             :key="index">
-                        {{ subItem.levelMajor[0] }}&nbsp;/&nbsp;
-                        {{ subItem.levelMajor[1] }}&nbsp;-&nbsp;
-                        {{ $valueToLabel(subItem.initialConversion, $store.state.initial_conversion_options) + '\n' }}
+                        {{ subItem.levelMajor | levelMajor }}
+                        &nbsp;-&nbsp;{{
+                          subItem.initialConversion ? $valueToLabel(subItem.initialConversion, $store.state.initial_conversion_options) + '\n' : '无\n'
+                        }}
                       </span>
                     </template>
                   </el-table-column>
@@ -181,7 +182,7 @@
                 </el-table>
               </el-form-item>
               <el-form-item label="企业入账信息">
-                <el-button type="primary" size="small">从入账管理中获取</el-button>
+                <el-button type="primary" size="small" @click="select">从入账管理中获取</el-button>
               </el-form-item>
               <el-row :gutter="20">
                 <el-col :span="12">
@@ -208,10 +209,10 @@
                   <el-form-item label="公司账户" prop="enterpriseAccountId">
                     <el-select class="width-full" v-model="form.enterpriseAccountId">
                       <el-option
-                          v-for="item in $store.state.order_entry_options"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
+                          v-for="item in $store.state.listCompanyAccounts"
+                          :key="item.enterpriseAccountId"
+                          :label="item.accountName"
+                          :value="item.enterpriseAccountId">
                       </el-option>
                     </el-select>
                   </el-form-item>
@@ -238,13 +239,21 @@
         <el-button type="primary" size="small" v-throttle="handleSubmit">提交</el-button>
       </div>
     </el-dialog>
+    <EnterpriseCooperationDialog
+        @confirm="confirm"
+        dialog-title="入账管理" v-if="innerVisible" :visible="innerVisible"/>
   </div>
 </template>
 
 <script>
+
+
+import EnterpriseCooperationDialog
+  from "./EnterpriseCooperationDialog";
+
 export default {
   name: 'OrderEntry',
-  components: {},
+  components: {EnterpriseCooperationDialog},
   props: {
     visible: {
       type: Boolean,
@@ -269,6 +278,7 @@ export default {
       callback()
     }
     return {
+      innerVisible: false,
       form: {
         talentOrderId: null,
         transferorInfo: '',
@@ -314,6 +324,17 @@ export default {
 
   },
   methods: {
+    confirm(data) {
+      this.innerVisible = false
+      console.log(data, "data")
+      this.form.transferDate = data.transferDate
+      this.form.transferorInfo = data.transferorInfo
+      this.form.enterpriseAccountId = data.enterpriseAccountId
+      this.form.transferWay = data.transferWay
+    },
+    select() {
+      this.innerVisible = true
+    },
     handleChange(val) {
       this.selection.forEach(item => item.fundsPurpose = val)
     },

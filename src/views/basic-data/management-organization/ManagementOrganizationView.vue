@@ -84,14 +84,24 @@
             <span>角色权限</span>
           </div>
           <el-form-item label="角色">
+            <div v-if="form.listRoles.length>0">
+              <el-tag
+                  size="small"
+                  style="margin-right: 10px"
+                  v-for="item in form.listRoles"
+                  :key="item.roleId"
+                  type="success"
+                  effect="dark">
+                {{ item.roleName }}
+              </el-tag>
+            </div>
             <el-tag
+                v-else
                 size="small"
                 style="margin-right: 10px"
-                v-for="item in form.listRoles"
-                :key="item.roleId"
-                type="success"
+                type="info"
                 effect="dark">
-              {{ item.roleName }}
+              暂无角色
             </el-tag>
           </el-form-item>
         </el-card>

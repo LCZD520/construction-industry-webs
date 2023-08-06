@@ -5,71 +5,92 @@
 <template>
   <div class="entry-registration">
     <el-form
-        ref="formData"
+        ref="form"
+        :rules="rules"
         inline
         :model="form">
-      <el-form-item label="客户名称" label-width="120px">
-        <el-input size="small" v-model="form.newPassword" placeholder="请输入客户名称">
+      <el-form-item label="客户名称" label-width="120px" prop="customerName">
+        <el-input size="small" v-model="form.customerName" placeholder="请输入客户名称">
         </el-input>
       </el-form-item>
-      <el-form-item label="转账方信息" label-width="120px">
-        <el-input size="small" v-model="form.newPassword" placeholder="请输入转账方信息">
+      <el-form-item label="转账方信息" label-width="120px" prop="transferorInfo">
+        <el-input size="small" v-model="form.transferorInfo" placeholder="请输入转账方信息">
         </el-input>
       </el-form-item>
-      <el-form-item label="入账类型" label-width="120px">
-        <el-select size="small" v-model="form.oldPassword" placeholder="请选择入账类型">
+      <el-form-item label="入账类型" label-width="120px" prop="entryType">
+        <el-select size="small" v-model="form.entryType" placeholder="请选择入账类型">
           <el-option
-              v-for="item in options"
+              v-for="item in entryTypeOptions"
               :key="item.value"
               :label="item.label"
               :value="item.value">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="转账用途" label-width="120px">
-        <el-select size="small" v-model="form.oldPassword" placeholder="请选择转账用途">
+      <el-form-item label="转账用途" label-width="120px" prop="fundsPurpose">
+        <el-select size="small" v-model="form.fundsPurpose" placeholder="请选择转账用途">
           <el-option
-              v-for="item in options"
+              v-for="item in transferPurposeOptions"
               :key="item.value"
               :label="item.label"
               :value="item.value">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="到账日期" label-width="120px">
+      <el-form-item label="到账日期" label-width="120px" prop="date">
         <el-date-picker
-            v-model="form.oldPassword"
+            clearable
+            v-model="form.date"
             size="small"
             type="daterange"
             align="right"
             unlink-panels
+            value-format="yyyy-MM-dd"
+            format="yyyy-MM-dd"
             range-separator="-"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            :picker-options="pickerOptions">
+            :picker-options="$pickerOptions">
         </el-date-picker>
       </el-form-item>
       <el-form-item label=" " label-width="120px">
-        <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
-        <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
+        <el-button size="small" icon="el-icon-search" @click="search(pageInfo.pageSize,1)" :loading="loading"
+                   type="primary">搜 索
+        </el-button>
+        <el-button size="small" icon="el-icon-refresh-right" v-throttle="reset">重 置</el-button>
       </el-form-item>
     </el-form>
     <div class="split-line">
       <div class="split-line-left">
-        <el-button icon="el-icon-plus" size="small" type="primary"
-        @click.stop="$router.push('/entry-registration-add')">入账登记</el-button>
+        <el-button
+            icon="el-icon-plus" size="small" type="primary"
+            @click.stop="$router.push('/entry-registration-add')">入账登记
+        </el-button>
       </div>
-      <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
+      <div class="split-line-right">共查询到 <b style="color: #409EFF">{{ pageInfo.total }}</b> 条记录</div>
     </div>
     <el-table
-        :data="tableData"
+        :data="list"
         stripe
         border
         highlight-current-row
         :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
         :cell-style="{textAlign:'center'}"
-        style="width: 100%"
-        :row-class-name="tableRowClassName">
+        style="width: 100%">
+      <el-table-column
+          min-width="180"
+          label="入账类型">
+        <template #default="{row}">
+          {{ $valueToLabel(row.creatorId, entryTypeOptions) }}
+        </template>
+      </el-table-column>
+      <el-table-column
+          min-width="180"
+          label="转账用途">
+        <template #default="{row}">
+          {{ $valueToLabel(row.creatorId, $store.state.funds_purpose_options) }}
+        </template>
+      </el-table-column>
       <el-table-column
           min-width="180"
           v-for="item in columns"
@@ -82,20 +103,17 @@
           <el-button
               size="mini"
               type="primary"
-              plain
-              @click.stop="handleView(scope.$index, scope.row)">查看
+              @click.stop="$router.push('/entry-registration-view/'+scope.row.id)">查看
           </el-button>
           <el-button
               size="mini"
               type="danger"
-              plain
-              @click.stop="handleDelete(scope.$index, scope.row)">删除
+              @click.stop="handleDelete(scope.row.id)">删除
           </el-button>
         </template>
       </el-table-column>
     </el-table>
     <div class="pagination">
-      <div class="pagination-total">共<span class="total"> {{ pageInfo.total }} </span>条</div>
       <div class="pagination-right">
         <el-pagination
             ref="pagination"
@@ -105,7 +123,7 @@
             @current-change="handleCurrentChange"
             @size-change="handleSizeChange"
             background
-            layout="sizes, prev, pager, next, jumper"
+            layout="total,sizes, prev, pager, next, jumper"
             :total="pageInfo.total">
         </el-pagination>
       </div>
@@ -122,106 +140,143 @@ export default {
       columns: [
         {
           title: '客户名称',
-          key: 'address'
+          key: 'customerName'
         },
         {
           title: '转账方信息',
-          key: 'address'
-        },
-        {
-          title: '入账类型',
-          key: 'address'
+          key: 'transferorInfo'
         },
         {
           title: '转入金额（元）',
-          key: 'address'
-        },
-        {
-          title: '转账用途',
-          key: 'address'
+          key: 'entryAmount'
         },
         {
           title: '到账日期',
-          key: 'address'
+          key: 'transferDate'
         },
         {
           title: '备注',
-          key: 'address'
+          key: 'remark'
         },
       ],
-      tableData: [
+      entryTypeOptions: [
+        {value: 1, label: '人才合同价入账'},
+        {value: 2, label: '资质转让入账'},
+        {value: 3, label: '资质代办入账'},
+        {value: 4, label: '职称评审入账'},
+        {value: 5, label: '三类人员入账'},
+        {value: 6, label: '学历提升入账'},
+      ],
+      transferPurposeOptions: [
         {
-          date: '2016-05-02',
-          username: '王小虎',
-          address: '上海市普陀区',
-        },],
+          value: 1,
+          label: '企业预付款'
+        },
+        {
+          value: 2,
+          label: '企业中期款'
+        },
+        {
+          value: 3,
+          label: '注册成功尾款'
+        },
+        {
+          value: 4,
+          label: '注册成功B证费用'
+        },
+        {
+          value: 5,
+          label: '一次性付款'
+        },
+      ],
+      list: [],
       pageInfo: {
         pageSize: 10,
         total: 0,
         currentPage: 1,
       },
       form: {
-        oldPassword: '',
-        newPassword: '',
-        confirmPassword: '',
+        customerName: '',
+        transferorInfo: '',
+        entryType: null,
+        transferPurpose: null,
+        date: [],
       },
-      pickerOptions: {
-        shortcuts: [
-          {
-            text: '今天',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '一周内',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '一个月内',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '三个月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit('pick', [start, end]);
-            }
-          }
-        ]
+      rules: {
+        customerName: [{required: false, trigger: 'blur'}],
+        transferorInfo: [{required: false, trigger: 'blur'}],
+        entryType: [{required: false, trigger: 'blur'}],
+        transferPurpose: [{required: false, trigger: 'blur'}],
+        date: [{required: false, trigger: 'blur'}],
       },
     }
   },
+  created() {
+    this.search()
+  },
   methods: {
-    tableRowClassName({rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row';
-      } else if (rowIndex === 3) {
-        return 'success-row';
-      }
-      return '';
+    reset() {
+      this.$refs.form.resetFields()
+      this.pageInfo.currentPage = 1
+      this.search()
     },
-    handleView(_index,_row){
-      console.log(_index,_row)
+    @throttle(1000)
+    async search(size, page) {
+      let newForm = {}
+      newForm.pageSize = size ? size : this.pageInfo.pageSize
+      newForm.currentPage = page ? page : this.pageInfo.currentPage
+      this.loading = true
+      if (this.form.date && this.form.date.length > 1) {
+        newForm.startDate = this.form.date[0]
+        newForm.endDate = this.form.date[1]
+      }
+      newForm = Object.assign(this.form, newForm)
+      for (let key in newForm) {
+        if (newForm[key] === '') {
+          newForm[key] = null
+        }
+      }
+      try {
+        const res = await this.$http.post('/entry-registration', newForm)
+        if (res && res.status) {
+          this.pageInfo.total = res.data.total
+          this.list = res.data.list
+        }
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.loading = false
+      }
+    },
+    /**
+     * 表格翻页
+     */
+    handleCurrentChange() {
+      this.search()
+    },
+    /**
+     * 改变页数
+     */
+    handleSizeChange(_pageSize) {
+      this.search(_pageSize)
+    },
+    handleView(_index, _row) {
+      console.log(_index, _row)
       this.$router.push('/entry-registration-view')
     },
-    handleDelete(_index, _row) {
-      console.log(_index, _row)
-      this.$message.success('删除')
+    @throttle(1000)
+    async handleDelete(_id) {
+      try {
+        const res = await this.$http.delete(`/entry-registration/delete/${_id}`)
+        if (res.status) {
+          this.$message.success(res.message)
+          await this.search()
+          return
+        }
+        this.$message.error(res.message)
+      } catch (e) {
+        console.log(e)
+      }
     },
   }
 }

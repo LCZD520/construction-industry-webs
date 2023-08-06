@@ -5,20 +5,22 @@
 <template>
   <div class="advanced-setting">
     <el-form
-        ref="formData"
+        ref="form"
+        :rules="rules"
         inline
+        label-width="120px"
         :model="form">
-      <el-form-item label="名称" label-width="120px">
-        <el-input size="small" v-model="form.newPassword" placeholder="请输入名称">
+      <el-form-item label="名称" prop="configName">
+        <el-input size="small" v-model.trim="form.configName" placeholder="请输入名称">
         </el-input>
       </el-form-item>
-      <el-form-item label="代码" label-width="120px">
-        <el-input size="small" v-model="form.newPassword" placeholder="请输入配置项代码">
+      <el-form-item label="代码" prop="configCode">
+        <el-input size="small" v-model.trim="form.configCode" placeholder="请输入配置项代码">
         </el-input>
       </el-form-item>
-      <el-form-item label=" " label-width="120px">
-        <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
-        <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
+      <el-form-item label=" ">
+        <el-button size="small" icon="el-icon-search" v-throttle="search" type="primary">搜 索</el-button>
+        <el-button size="small" v-throttle="reset" icon="el-icon-refresh-right">重 置</el-button>
       </el-form-item>
     </el-form>
     <div class="split-line">
@@ -30,6 +32,7 @@
       <div class="split-line-right">共查询到 <b style="color: #409EFF">{{ pageInfo.total }}</b> 条记录</div>
     </div>
     <el-table
+        v-loading="loading"
         :data="list"
         stripe
         border
@@ -66,13 +69,13 @@
           <el-button
               size="mini"
               type="danger"
+              disabled
               @click.stop="handleDelete(scope.$index, scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
     </el-table>
     <div class="pagination">
-      <div class="pagination-total">共<span class="total"> {{ pageInfo.total }} </span>条</div>
       <div class="pagination-right">
         <el-pagination
             ref="pagination"
@@ -82,7 +85,7 @@
             @current-change="handleCurrentChange"
             @size-change="handleSizeChange"
             background
-            layout="sizes, prev, pager, next, jumper"
+            layout="total,sizes, prev, pager, next, jumper"
             :total="pageInfo.total">
         </el-pagination>
       </div>
@@ -96,6 +99,7 @@ export default {
   components: {},
   data() {
     return {
+      loading: false,
       list: [],
       pageInfo: {
         pageSize: 10,
@@ -103,48 +107,52 @@ export default {
         currentPage: 1,
       },
       form: {
-        oldPassword: '',
-        newPassword: '',
-        confirmPassword: '',
+        configName: '',
+        configCode: '',
+      },
+      rules: {
+        username: [{required: false, trigger: 'blur'}],
+        userChineseName: [{required: false, trigger: 'blur'}],
       },
     }
   },
   created() {
-    this.getList()
+    // this.getList()
+    this.search()
   },
   methods: {
-    /**
-     * 表格翻页
-     */
-    handleCurrentChange() {
-      this.getList()
-    },
-    /**
-     * 改变页数
-     * @param _pageSize
-     */
-    handleSizeChange(_pageSize) {
-      this.getList(_pageSize)
-    },
-    /**
-     * 获取高级设置列表
-     * @param _pageSize
-     */
-    getList(_pageSize) {
-      let url = ``
-      if (undefined !== _pageSize) {
-        url = `/advanced-setting/list?currentPage=${this.pageInfo.currentPage}&pageSize=${_pageSize}`
-      } else {
-        url = `/advanced-setting/list?currentPage=${this.pageInfo.currentPage}&pageSize=${this.pageInfo.pageSize}`
+    async search(pageSize) {
+      let newForm = {}
+      newForm = Object.assign(newForm, this.form)
+      newForm.pageSize = pageSize ? pageSize : this.pageInfo.pageSize
+      newForm.currentPage = this.pageInfo.currentPage
+      this.loading = true
+      try {
+        const res = await this.$http.get('/advanced-setting/list', {
+          params: newForm
+        })
+        if (res.status) {
+          this.list = res.data.list
+          this.pageInfo.total = res.data.total
+          return
+        }
+        this.$message.error(res.message)
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.loading = false
       }
-      this.$http.get(url)
-          .then(res => {
-            console.log(res)
-            if (null !== res.data) {
-              this.pageInfo.total = res.data.total
-              this.list = res.data.list
-            }
-          })
+    },
+    reset() {
+      this.$refs.form.resetFields()
+      this.pageInfo.currentPage = 1
+      this.search()
+    },
+    handleCurrentChange() {
+      this.search()
+    },
+    handleSizeChange(size) {
+      this.search(size)
     },
     handleEdit(_index, _row) {
       console.log(_index, _row)
@@ -160,7 +168,7 @@ export default {
         this.$http.delete('/advanced-setting/delete/' + _row.advancedSettingId).then(res => {
           if (res.status) {
             this.$message.success(res.message)
-            this.getList()
+            this.search()
             return
           }
           this.$message.error(res.message)

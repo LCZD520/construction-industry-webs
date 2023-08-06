@@ -19,7 +19,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item :error="errorMessage.fullName" prop="fullName" label="姓名">
-            <el-input clearable class="width-full" placeholder="请输入姓名" v-model="form.fullName"/>
+            <el-input show-word-limit maxlength="10" clearable class="width-full" placeholder="请输入姓名" v-model="form.fullName"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -69,12 +69,12 @@
       <el-row>
         <el-col :span="12">
           <el-form-item :error="errorMessage.telephoneNumber" prop="telephoneNumber" label="电话号码">
-            <el-input clearable class="width-full" v-model="form.telephoneNumber"/>
+            <el-input show-word-limit maxlength="11" clearable class="width-full" v-model.trim="form.telephoneNumber"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item prop="qqNumber" label="QQ">
-            <el-input clearable class="width-full" placeholder="请输入QQ" v-model="form.qqNumber"/>
+            <el-input show-word-limit maxlength="12" clearable class="width-full" placeholder="请输入QQ" v-model.trim="form.qqNumber"/>
           </el-form-item>
         </el-col>
       </el-row>
@@ -208,14 +208,12 @@
                       style="padding: 5px"
                       size="mini"
                       type="primary"
-                      plain
                       @click.stop="handleEdit(scope.$index, scope.row)">编辑
                   </el-button>
                   <el-button
                       style="padding: 5px"
                       size="mini"
                       type="danger"
-                      plain
                       @click.stop="handleDelete(scope.$index, scope.row)">删除
                   </el-button>
                 </template>
@@ -254,6 +252,7 @@
         <el-col :span="8">
           <el-form-item :error="errorMessage.talentPrice" prop="talentPrice" label="价格">
             <el-input-number
+                :min="0" :max="99999999.99" :precision="2"
                 clearable controls-position="right"
                 v-model="form.talentPrice"/>
             &nbsp;元
@@ -261,7 +260,9 @@
         </el-col>
         <el-col :span="5">
           <el-form-item :error="errorMessage.talentPriceNumber" prop="talentPriceNumber" label-width="0">
-            <el-input-number clearable controls-position="right" v-model="form.talentPriceNumber"/>
+            <el-input-number
+                :min="0" :max="99999999.99" :precision="2"
+                clearable controls-position="right" v-model="form.talentPriceNumber"/>
           </el-form-item>
         </el-col>
         <el-col :span="5">
@@ -280,8 +281,7 @@
       <el-row>
         <el-col :span="24">
           <el-form-item prop="remark" label="备注">
-            <el-input clearable v-model="form.remark" placeholder="请输入备注..." :rows="5" type="textarea">
-
+            <el-input show-word-limit maxlength="100" clearable v-model.trim="form.remark" placeholder="请输入备注..." :rows="5" type="textarea">
             </el-input>
           </el-form-item>
         </el-col>
@@ -296,9 +296,15 @@
       </el-form-item>
     </el-form>
     <TalentResourceSelectDialog
+        ref="TalentResourceSelectDialog"
         :talent-list="talentList"
         :visible="visible"
         :dialog-title="dialogTitle"
+        @confirm="confirm"
+        @handleSizeChange="handleSizeChange"
+        @handleCurrentChange="handleCurrentChange"
+        :page-info="page"
+        v-if="visible"
         @closeDialog="visible = false"/>
     <CertificateAddDialog
         :dialog-title="dialogTitle2"
@@ -425,17 +431,19 @@ export default {
         "continuingEducationDate": null
       },
       talentList: [],
+      page: {},
       pageInfo: {
         pageSize: 10,
         total: 0,
         currentPage: 1,
       },
-      list1: [
-
-      ],
-      list2: [
-
-      ],
+      pageInfo2: {
+        pageSize: 10,
+        total: 0,
+        currentPage: 1,
+      },
+      list1: [],
+      list2: [],
       errorMessage: {
         "fullName": '',
         "sex": null,
@@ -460,11 +468,92 @@ export default {
     }
   },
   created() {
-    if (this.$route.params.id !== null && this.$route.params.id !== undefined) {
+    if (this.$route.params.id != null) {
       this.getDetailById(this.$route.params.id / 1)
     }
+    this.getListTalents()
+    this.getListTalentResources()
   },
   methods: {
+    async getListTalents(_pageSize) {
+      let url = `/talent/list`
+      try {
+        const res = await this.$http.get(url, {
+          params: {
+            currentPage: this.pageInfo2.currentPage,
+            pageSize: _pageSize ? _pageSize : this.pageInfo2.pageSize,
+          }
+        })
+        if (res.status && null !== res.data) {
+          this.pageInfo2.total = res.data.total
+          this.list2 = res.data.list
+          this.list2.forEach(item => {
+            item.listCertificates.forEach(certificate => {
+              certificate.levelMajor = JSON.parse(certificate.levelMajor)
+            })
+          })
+        }
+        return res
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    async getListTalentResources(_pageSize) {
+      let url = `/talent-resource/list`
+      try {
+        const res = await this.$http.get(url, {
+          params: {
+            currentPage: this.pageInfo.currentPage,
+            pageSize: _pageSize ? _pageSize : this.pageInfo2.pageSize,
+            type: 'total',
+          }
+        })
+        if (res.status && null !== res.data) {
+          this.pageInfo.total = res.data.total
+          this.list1 = res.data.list
+          this.list1.forEach(item => {
+            item.listCertificates.forEach(certificate => {
+              certificate.levelMajor = JSON.parse(certificate.levelMajor)
+            })
+          })
+        }
+        return res
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    /**
+     * 从人才选择数据确认
+     * @param _index
+     */
+    confirm(_index) {
+      let talent = this.talentList[_index]
+      if (talent !== null) {
+        this.form = talent
+        this.form.talentStatus = 1
+      }
+    },
+    async handleCurrentChange() {
+      if (this.pageType === 'resource') {
+        const res = await this.getListTalentResources()
+        this.inner(res)
+        return
+      }
+      await this.getListTalents()
+      this.talentList = this.list2
+    },
+    /**
+     * 改变页数
+     */
+    async handleSizeChange(_pageSize) {
+      if (this.pageType === 'resource') {
+        const res = await this.getListTalentResources(_pageSize)
+        this.inner(res)
+        return
+      }
+      const res = await this.getListTalents(_pageSize)
+      this.inner(res)
+    },
     /**
      * 根据id获取详情
      * @param _id
@@ -575,13 +664,17 @@ export default {
       })
     },
     handleSelect() {
+      this.pageType = 'resource'
       this.dialogTitle = '从人才资源选择'
       this.talentList = this.list1
+      this.page = this.pageInfo
       this.visible = true
     },
     handleSelect2() {
+      this.pageType = 'talent'
       this.dialogTitle = '从已录人才资源选择'
       this.talentList = this.list2
+      this.page = this.pageInfo2
       this.visible = true
     },
     handleDelete(_index, _row) {

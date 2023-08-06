@@ -8,7 +8,7 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label="收购意向客户">
-            <el-input disabled size="small" v-model="form.name"/>
+            <el-input disabled size="small" v-model="form.transferCustomers"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -29,7 +29,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="状态">
-            <el-select placeholder="" class="width-full" size="small" disabled v-model="form.name">
+            <el-select placeholder="" class="width-full" size="small" disabled v-model="form.status">
               <el-option
                   v-for="item in $store.state.qualification_transfer_status_options"
                   :key="item.value"
@@ -84,7 +84,7 @@
       <el-col :span="24">
         <el-form label-width="100px">
           <el-form-item label="备注">
-            <el-input disabled placeholder="备注......" :rows="5" type="textarea">
+            <el-input v-model="form.remark" disabled placeholder="" :rows="5" type="textarea">
 
             </el-input>
           </el-form-item>
@@ -93,48 +93,30 @@
     </el-row>
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="转让订单" name="first">
-        <el-button type="primary" icon="el-icon-plus" size="small">
-          下单
-        </el-button>
-        <br><br>
-        <el-table
-            size="mini"
-            :data="tableData"
-            stripe
-            border
-            :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
-            :cell-style="{textAlign:'center'}"
-            style="width: 100%">
-          <el-table-column
-              min-width="180"
-              v-for="item in columns"
-              :key="item.key"
-              :prop="item.key"
-              :label="item.title">
-          </el-table-column>
-          <el-table-column fixed="right" label="操作" width="300">
-            <template slot-scope="scope">
-              <el-button
-                  size="mini"
-                  type="primary"
-                  @click="handleEdit(scope.$index, scope.row)">编辑订单
-              </el-button>
-              <el-button
-                  size="mini"
-                  type="danger"
-                  @click="handleEdit(scope.$index, scope.row)">删除
-              </el-button>
-              <el-button
-                  size="mini"
-                  type="primary"
-                  @click="handleEdit(scope.$index, scope.row)">详情
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+        <TransferOrder :form="form"/>
       </el-tab-pane>
       <el-tab-pane label="图片上传" name="second">
-        11111
+        <transition appear name="public">
+          <div v-show="activeName === 'second'">
+            <el-button type="primary" size="small" v-throttle="handleDownLoadBatch">下载图片</el-button>
+            <el-button type="primary" size="small" v-throttle="handleDeleteBatch">删除图片</el-button>
+            <el-divider content-position="left">合同</el-divider>
+            <ImagesUpload
+                ref="upload1"
+                @getCheckedList="(_list)=>{this.checkedList1 = _list}"
+                namespace="qualification-transfer" type="contract"/>
+            <el-divider content-position="left">证件</el-divider>
+            <ImagesUpload
+                ref="upload2"
+                @getCheckedList="(_list)=>{this.checkedList2 = _list}"
+                namespace="qualification-transfer" type="certificates"/>
+            <el-divider content-position="left">其他</el-divider>
+            <ImagesUpload
+                ref="upload3"
+                @getCheckedList="(_list)=>{this.checkedList3 = _list}"
+                namespace="qualification-transfer" type="other"/>
+          </div>
+        </transition>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -142,45 +124,22 @@
 
 <script>
 
+import TransferOrder from "./qualification-transfer-view/transfer-order/TransferOrder";
+import JSzip from 'jszip'
+import {saveAs} from 'file-saver'
+import ImagesUpload from "../../../components/image-upload/ImagesUpload";
+
 export default {
   name: 'QualificationTransferView',
-  components: {},
+  components: {TransferOrder, ImagesUpload},
   data() {
     return {
       activeName: this.$route.query.activeTab ? this.$route.query.activeTab : 'first',
       isShowDetail: false,
-      form: {
-        name: ''
-      },
-      columns: [
-        {
-          title: '转让意向客户资质',
-          key: 'address'
-        },
-        {
-          title: '成交金额',
-          key: 'address1'
-        },
-        {
-          title: '收购金额',
-          key: 'address2'
-        },
-        {
-          title: '状态',
-          key: 'address3'
-        },
-        {
-          title: '转让意向客户',
-          key: 'addres4s'
-        },
-        {
-          title: '订单时间',
-          key: 'addres5s'
-        },
-      ],
-      tableData: [
-        {}
-      ],
+      checkedList1: [],
+      checkedList2: [],
+      checkedList3: [],
+      form: {},
       defaultProps: {
         children: 'listQualificationCategory',
         label: 'categoryName'
@@ -188,7 +147,115 @@ export default {
       selectedList: [],
     }
   },
+  created() {
+    const id = this.$route.query.id / 1
+    id && !isNaN(id) && this.getDetailById(id)
+  },
   methods: {
+    /**
+     * 获取已选图片id
+     */
+    getCheckedList() {
+      return this.checkedList1
+          .concat(this.checkedList2)
+          .concat(this.checkedList3);
+    },
+    /**
+     * 批量下载文件
+     */
+    async handleDownLoadBatch() {
+      const arr = this.getCheckedList()
+      if (arr.length > 0) {
+        try {
+          const res = await this.$http.post('/file/download', {
+            listIds: arr
+          })
+          if (res && res.status) {
+            const zip = new JSzip();
+            let typeSets = new Set();
+            res.data.forEach(item => typeSets.add(item.type))
+            let rootFolder = zip.folder(`资质转让-${this.form.transferCustomers}`)
+            if (typeSets.has('contract')) {
+              rootFolder.folder('合同')
+            }
+            if (typeSets.has('certificates')) {
+              rootFolder.folder('证件')
+            }
+            if (typeSets.has('other')) {
+              rootFolder.folder('其他')
+            }
+            res.data.forEach(item => {
+              const base64Str = item.base64Str
+              if (item.type === 'contract') {
+                rootFolder.folder('合同').file(item.name, base64Str, {base64: true})
+              }
+              if (item.type === 'certificates') {
+                rootFolder.folder('证件').file(item.name, base64Str, {base64: true})
+              }
+              if (item.type === 'other') {
+                rootFolder.folder('其他').file(item.name, base64Str, {base64: true})
+              }
+            })
+            // 生成zip文件并下载
+            zip.generateAsync({
+              type: 'blob',// 压缩类型
+              compression: "DEFLATE", // STORE：默认不压缩 DEFLATE：需要压缩
+              compressionOptions: {
+                level: 9 // 压缩等级1~9 1压缩速度最快，9最优压缩方式
+              }
+            }).then(res => {
+              // 下载的文件名
+              let filename = `资质转让-${this.form.transferCustomers}.zip`;
+              saveAs(res, filename)
+            })
+            return
+          }
+          this.$message.error(res.message)
+        } catch (e) {
+          console.log(e)
+        }
+        return
+      }
+      this.$message.warning('至少选择一张图片！')
+    },
+    /**
+     * 批量删除文件
+     */
+    async handleDeleteBatch() {
+      const arr = await this.getCheckedList()
+      if (arr.length > 0) {
+        try {
+          const res = await this.$http.post('/picture/talent/delete-batch', {
+            listIds: arr
+          })
+          if (res && res.status) {
+            this.$nextTick(() => {
+              this.$refs.upload1.handleRemoveBatch(this.checkedList1)
+              this.$refs.upload2.handleRemoveBatch(this.checkedList2)
+              this.$refs.upload3.handleRemoveBatch(this.checkedList3)
+            })
+            this.$message.success(res.message)
+            return
+          }
+          this.$message.success(res.message)
+        } catch (e) {
+          console.log(e)
+        }
+        return
+      }
+      this.$message.warning('至少选择一张图片！')
+    },
+    async getDetailById(_id) {
+      try {
+        const res = await this.$http.get('/qualification-transfer/detail/' + _id)
+        if (res.status) {
+          this.form = res.data
+          this.form.qualificationRequirements = JSON.parse(this.form.qualificationRequirements)
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    },
     handleClick() {
 
     },

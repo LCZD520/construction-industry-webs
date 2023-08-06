@@ -23,15 +23,13 @@
             </el-form-item>
             <el-form-item label="地区">
               <el-cascader
-                  size="small"
                   clearable
-                  ref="cascader"
-                  @expand-change="cascaderClick"
-                  @visible-change="cascaderClick"
-                  :props="{ expandTrigger: 'hover' ,checkStrictly:true ,emitPath:false}"
                   placeholder="请选择地区"
+                  ref="cascaderArea"
+                  @expand-change="cascaderClick('area')"
+                  @visible-change="cascaderClick('area')"
+                  :props="{ expandTrigger: 'hover' ,checkStrictly:true ,emitPath:false}"
                   :options="this.$provinceAndCityData"
-                  @change="handleChange"
                   v-model="form.area">
               </el-cascader>
             </el-form-item>
@@ -69,7 +67,6 @@
             </el-table-column>
           </el-table>
           <div class="pagination">
-            <div class="pagination-total">共<span class="total"> {{ pageInfo.total }} </span>条</div>
             <div class="pagination-right">
               <el-pagination
                   ref="pagination"
@@ -79,7 +76,7 @@
                   @current-change="handleCurrentChange"
                   @size-change="handleSizeChange"
                   background
-                  layout="sizes, prev, pager, next, jumper"
+                  layout="total,sizes, prev, pager, next, jumper"
                   :total="pageInfo.total">
               </el-pagination>
             </div>
@@ -180,20 +177,28 @@ export default {
       this.cancelSelect()
       this.$emit('closeDialog')
     },
-    cascaderClick() {
+    cascaderClick(_type) {
       let that = this
       setTimeout(() => {
         document.querySelectorAll('.el-cascader-node__label').forEach(el => {
           el.onclick = function () {
             this.previousElementSibling.click()
-            that.$refs.cascader.dropDownVisible = false
+            if (_type === 'area') {
+              that.$refs.cascaderArea.dropDownVisible = false
+              return
+            }
+            that.$refs.cascaderLevelMajor.dropDownVisible = false
           }
         })
         document
             .querySelectorAll('.el-cascader-panel .el-radio')
             .forEach(el => {
               el.onclick = function () {
-                that.$refs.cascader.dropDownVisible = false
+                if (_type === 'area') {
+                  that.$refs.cascaderArea.dropDownVisible = false
+                  return
+                }
+                that.$refs.cascaderLevelMajor.dropDownVisible = false
               }
             })
       }, 1)

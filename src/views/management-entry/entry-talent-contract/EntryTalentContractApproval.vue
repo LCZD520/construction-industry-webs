@@ -64,7 +64,7 @@ export default {
         if (valid) {
           console.log(this.form)
           try {
-            const res = await this.$http.put('/talent-entry-record/update/' + this.$route.params.id / 1, this.form)
+            const res = await this.$http.put('/talent-entry-record/update/' + this.$route.params.id, this.form)
             if (res.status) {
               this.$message.success(res.message)
               this.$router.back()

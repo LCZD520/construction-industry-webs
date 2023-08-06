@@ -15,7 +15,8 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label="企业名称" prop="enterpriseName">
-            <el-input clearable placeholder="请输入企业名称" v-model="form.enterpriseName"/>
+            <el-input show-word-limit maxlength="20" clearable placeholder="请输入企业名称"
+                      v-model.trim="form.enterpriseName"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -52,12 +53,13 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label="联系地址" prop="contactAddress">
-            <el-input clearable placeholder="请输入联系地址" v-model="form.contactAddress"/>
+            <el-input show-word-limit maxlength="30" clearable placeholder="请输入联系地址"
+                      v-model.trim="form.contactAddress"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="联系人" prop="contacts">
-            <el-input clearable placeholder="请输入联系人" v-model="form.contacts"/>
+            <el-input show-word-limit maxlength="10" clearable placeholder="请输入联系人" v-model.trim="form.contacts"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -75,12 +77,13 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label="电话号码" prop="telephoneNumber">
-            <el-input clearable placeholder="请输入电话号码" v-model="form.telephoneNumber"/>
+            <el-input show-word-limit maxlength="11" clearable placeholder="请输入电话号码"
+                      v-model.trim="form.telephoneNumber"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="QQ号码" prop="qqNumber">
-            <el-input clearable placeholder="请输入QQ号码" v-model="form.qqNumber"/>
+            <el-input show-word-limit maxlength="12" clearable placeholder="请输入QQ号码" v-model.trim="form.qqNumber"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -116,7 +119,7 @@
                   label="级别专业-初转">
                 <template slot-scope="scope">
                   <div v-for="(item,index) in scope.row.levelMajorInitialConversion" :key="index">
-                    {{ item.levelMajor[0] }}&nbsp;/&nbsp;{{ item.levelMajor[1] }}
+                    {{ item.levelMajor | levelMajor }}
                     - {{ $valueToLabel(item.initialConversion, $store.state.initial_conversion_options) }}
                   </div>
                 </template>
@@ -238,7 +241,8 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="备注" prop="remark">
-            <el-input clearable v-model="form.remark" placeholder="请输入备注..." :rows="5" type="textarea">
+            <el-input show-word-limit maxlength="100" clearable v-model.trim="form.remark" placeholder="请输入备注..."
+                      :rows="5" type="textarea">
 
             </el-input>
           </el-form-item>
@@ -254,7 +258,7 @@
       </el-form-item>
     </el-form>
     <!--    添加企业需求-->
-    <el-dialog width="80%" title="添加企业需求" :visible.sync="outerVisible">
+    <el-dialog width="80%" title="添加企业需求" :close-on-click-modal="false" :visible.sync="outerVisible">
       <div class="dialog-wrapper" style="height: 476px">
         <el-scrollbar style="height: 100%">
           <div class="dialog-content" style="margin-right: 10px">
@@ -277,8 +281,10 @@
                     style="width: 100%">
                   <el-table-column
                       min-width="160"
-                      prop="levelMajor"
                       label="级别专业">
+                    <template #default="{row}">
+                      {{ row.levelMajor | levelMajor }}
+                    </template>
                   </el-table-column>
                   <el-table-column
                       min-width="160"
@@ -335,15 +341,17 @@
                 </el-col>
               </el-row>
               <el-form-item label="需求人数" prop="demandNumber">
-                <el-input-number clearable size="small" class="width-full" :min="0" controls-position="right"
-                                 v-model="enterpriseDemand.demandNumber">
+                <el-input-number
+                    :min="0"
+                    clearable size="small" class="width-full" controls-position="right"
+                    v-model="enterpriseDemand.demandNumber">
                 </el-input-number>
               </el-form-item>
               <el-row :gutter="10" style="width:1000px">
                 <el-col :span="7">
                   <el-form-item prop="enterpriseOffer" label="企业出价">
                     <el-input-number
-                        :min="0"
+                        :min="0" :max="99999999.99" :precision="2"
                         size="small"
                         clearable controls-position="right"
                         v-model="enterpriseDemand.enterpriseOffer"/>
@@ -352,8 +360,10 @@
                 </el-col>
                 <el-col :span="4">
                   <el-form-item prop="enterpriseOfferNumber" label-width="0">
-                    <el-input-number :min="0" size="small" clearable controls-position="right"
-                                     v-model="enterpriseDemand.enterpriseOfferNumber"/>
+                    <el-input-number
+                        :min="0" :max="99999999.99" :precision="2"
+                        size="small" clearable controls-position="right"
+                        v-model="enterpriseDemand.enterpriseOfferNumber"/>
                   </el-form-item>
                 </el-col>
                 <el-col :span="3">
@@ -372,14 +382,16 @@
                 </el-col>
                 <el-col :span="10">
                   <el-form-item label="市场开发费" prop="marketDevelopmentFee">
-                    <el-input-number clearable size="small" controls-position="right" :min="0"
-                                     v-model="enterpriseDemand.marketDevelopmentFee"/>
+                    <el-input-number
+                        :min="0" :max="99999999.99" :precision="2"
+                        clearable size="small" controls-position="right"
+                        v-model="enterpriseDemand.marketDevelopmentFee"/>
                     元
                     &nbsp;
                     <el-select clearable size="small" v-model="enterpriseDemand.marketDevelopmentFeeUnit"
                                style="width: 100px;" placeholder="请选择">
-                      <el-option :label="1" :value="1">人</el-option>
-                      <el-option :label="2" :value="2">单</el-option>
+                      <el-option label="人" :value="1">人</el-option>
+                      <el-option label="单" :value="2">单</el-option>
                     </el-select>
                   </el-form-item>
                 </el-col>
@@ -430,7 +442,11 @@
                   <el-cascader
                       class="width-full"
                       clearable
-                      :props="{ expandTrigger: 'hover'
+                      ref="cascaderLevelMajor"
+                      @expand-change="cascaderClick('levelMajor')"
+                      @visible-change="cascaderClick('levelMajor')"
+                      :props="{ expandTrigger: 'hover',
+                      checkStrictly: true
                     ,value:'categoryName'
                     ,label:'categoryName'
                     ,children:'listCertificateCategory'}"
@@ -475,6 +491,7 @@
         @handleSizeChange="handleSizeChange"
         @handleCurrentChange="handleCurrentChange"
         @closeDialog="visible = false"
+        v-if="visible"
         :page-info="page"
         :visible="visible"/>
     <CommonLoading v-if="loading"/>
@@ -581,7 +598,7 @@ export default {
           {required: true, message: '请选择', trigger: 'change'}
         ],
         title: [
-          {required: false, trigger: 'change'}
+          {required: true, message: '请选择职称', trigger: 'change'}
         ],
         education: [
           {required: false, trigger: 'change'}
@@ -660,6 +677,11 @@ export default {
           {required: true, message: '请选择初始转注', trigger: 'change'}
         ],
       },
+    }
+  },
+  filters: {
+    levelMajor(val) {
+      return val.toString().replaceAll(',', ' / ')
     }
   },
   created() {
@@ -842,16 +864,17 @@ export default {
       if (this.innerMode === 'add') {
         this.$refs.levelMajorInitial.validate(valid => {
           if (valid) {
+            this.enterpriseDemand.levelMajorInitialConversion.push(
+                JSON.parse(JSON.stringify(this.levelMajorInitial)))
             this.$nextTick(() => {
               this.$refs.levelMajorInitial.resetFields()
             })
             this.innerVisible = false
-            this.enterpriseDemand.levelMajorInitialConversion.push(
-                JSON.parse(JSON.stringify(this.levelMajorInitial)))
             return
           }
           this.$message.error('输入有误')
         })
+        console.log(this.enterpriseDemand.levelMajorInitialConversion, "this.enterpriseDemand.levelMajorInitialConversion")
         return
       }
       this.$set(
@@ -929,12 +952,15 @@ export default {
               this.form.listEnterpriseDemands.push(
                   JSON.parse(JSON.stringify(this.enterpriseDemand)))
             }
-            return
+          } else {
+            this.$set(
+                this.form.listEnterpriseDemands
+                , this.enterpriseCurrentIndex
+                , JSON.parse(JSON.stringify(this.enterpriseDemand)))
           }
-          this.$set(
-              this.form.listEnterpriseDemands
-              , this.enterpriseCurrentIndex
-              , JSON.parse(JSON.stringify(this.enterpriseDemand)))
+          this.$nextTick(() => {
+            this.$refs.enterpriseDemand.resetFields()
+          })
           return
         }
         this.$message.error('输入错误')

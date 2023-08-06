@@ -5,6 +5,8 @@
 <template>
   <div class="images-upload2">
     <div style="margin: 15px 0;"></div>
+    <el-button size="small" type="primary" v-throttle="deleteImages">删除图片</el-button>
+    <br><br>
     <div>
       <el-upload
           class="upload-demo"
@@ -24,29 +26,21 @@
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">可将一个或多个文件拖拽到此处，或<em>点击上传</em></div>
         <div slot="file" slot-scope="{file}">
-          <img
-              class="el-upload-list__item-thumbnail"
-              :src="file.url" alt="">
+          <img class="el-upload-list__item-thumbnail"
+               :src="file.url" alt="">
           <span class="el-upload-list__item-actions">
-            <span
-                class="el-upload-list__item-preview"
-                @click="handlePreview(file)">
+            <span class="el-upload-list__item-preview"
+                  @click="handlePreview(file)">
               <el-button type="primary" size="mini" icon="el-icon-zoom-in" circle></el-button>
             </span>
-            <span
-                class="el-upload-list__item-delete"
-                @click="handleDownload(file)">
-              <el-button type="primary" size="mini" icon="el-icon-download" circle></el-button>
-            </span>
-            <span
-                class="el-upload-list__item-delete"
-                @click="handleRemove(file)">
+            <span class="el-upload-list__item-delete"
+                  @click="handleRemove(file)">
               <el-button type="danger" size="mini" icon="el-icon-delete" circle></el-button>
             </span>
           </span>
           <div
               style="width: 100%;background: #fff;border-top: 1px solid #c0ccda;position:absolute;margin-left: 5px;bottom: 0;text-align: left">
-            <el-checkbox v-model="list" @mouseenter="handleDownload" :label="file.id">
+            <el-checkbox v-model="list" :label="file.url">
               {{ file.name.slice(22) }}
             </el-checkbox>
           </div>
@@ -60,7 +54,7 @@
 import {api as viewerApi} from "v-viewer"
 
 export default {
-  name: 'ImagesUpload',
+  name: 'ImagesUpload2',
   components: {},
   props: {
     namespace: {
@@ -69,6 +63,10 @@ export default {
     },
     type: {
       type: String,
+      required: true
+    },
+    files: {
+      type: Array,
       required: true
     },
   },
@@ -81,14 +79,33 @@ export default {
       formData: new FormData(),
       maxFileLength: 1,
       uploadFileList: [],
-      checkAll: false,
-      isIndeterminate: true
     }
   },
   created() {
-    this.getImageList()
+    console.log('imageUpload2Created')
+    // this.getImageList()
+    this.fileList = this.files
+    this.fileList.forEach(k => {
+      this.sourceImageObjects.push({
+        src: k.url,
+        'data-source': k.url
+      })
+    })
   },
   methods: {
+    deleteImages() {
+      if (this.list.length === 0) {
+        this.$message.warning('请选择至少一张图片')
+        return
+      }
+      this.list.forEach(url => {
+        const index = this.fileList.findIndex(item => item.url === url);
+        if (index > -1) {
+          this.fileList.splice(index, 1)
+          this.sourceImageObjects.splice(index, 1)
+        }
+      })
+    },
     async getImageList() {
       const res = await this.$http.get('/picture/list', {
         params: {
@@ -126,20 +143,17 @@ export default {
       //
     },
     async handleRemove(file) {
-      const res = await this.$http.delete('/picture/delete/' + file.id)
-      if (res.status) {
-        this.$message.success(res.message)
-        let index = this.fileList.findIndex(item => item.id === file.id)
+      let index = this.fileList.findIndex(item => item.url === file.url)
+      if (index > -1) {
         this.fileList.splice(index, 1)
         this.sourceImageObjects.splice(index, 1)
-        return
       }
-      this.$message.error(res.message)
     },
     handlePreview(_file) {
       let index = this.sourceImageObjects.findIndex(k => k.src === _file.url) | 0
       viewerApi({
         options: {
+          zIndex: 20016,
           toolbar: true,
           url: 'data-source',
           initialViewIndex: index
@@ -153,8 +167,7 @@ export default {
     submitUpload() {
       this.$refs.upload.submit()
       let length = this.uploadFileList.length
-      return this.$http.post(`/file/upload/${this.namespace}/${this.type}/${this.resourceId}`
-          , this.formData).then(res => {
+      return this.$http.post(`/temp-file/upload`, this.formData).then(res => {
             if (res.status) {
               this.$message.success('上传成功')
               if (res.data !== null && res.data.length > 0) {
@@ -172,20 +185,19 @@ export default {
                 })
               })
             }
-
           }
       ).catch(res => {
         console.log(res)
       })
     },
-
-    handleDownload(file) {
-      window.open("http://127.0.0.1:8848/api/file/download/" + file.id, '_self')
-    },
   },
   watch: {
     list(newValue) {
-      this.$emit("getCheckedList", newValue)
+      console.log(newValue)
+      // this.$emit("getCheckedList", newValue)
+    },
+    fileList(newValue) {
+      this.$emit("changeImageList", newValue)
     }
   }
 }

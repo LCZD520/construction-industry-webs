@@ -74,6 +74,7 @@ export default {
 <style scoped lang="less">
 
 .loading {
+  z-index: 10000;
   height: 100vh;
   position: fixed;
   left: 0;

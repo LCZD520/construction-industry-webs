@@ -14,8 +14,9 @@
                        :disabled="currentMechanismId === null">
               编辑
             </el-button>
-            <el-button style="padding: 6px" size="mini" type="danger" :disabled="currentMechanismId === null"
-                       @click="handleDeleteMechanism">删除
+            <el-button
+                style="padding: 6px" size="mini" type="danger" :disabled="currentMechanismId === null"
+                @click="handleDeleteMechanism">删除
             </el-button>
           </div>
           <div class="content-left-content">
@@ -30,15 +31,15 @@
       <el-col :span="20">
         <div class="content-right" style="height: 500px">
           <el-form
-              ref="formData"
+              ref="form"
               inline
               :model="form">
-            <el-form-item label="用户姓名" label-width="120px">
-              <el-input size="small" v-model="form.newPassword" placeholder="请输入用户中文姓名">
+            <el-form-item label="用户姓名" label-width="120px" prop="fullName">
+              <el-input size="small" v-model="form.fullName" placeholder="请输入用户姓名">
               </el-input>
             </el-form-item>
-            <el-form-item label="是否在职" label-width="120px">
-              <el-select size="small" v-model="form.oldPassword" placeholder="请选择是否在职">
+            <el-form-item label="是否在职" label-width="120px" prop="onJob">
+              <el-select size="small" v-model="form.onJob" placeholder="请选择是否在职">
                 <el-option
                     v-for="item in this.$store.state.bool_options"
                     :key="item.value"
@@ -48,8 +49,9 @@
               </el-select>
             </el-form-item>
             <el-form-item label=" " label-width="120px">
-              <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
-              <el-button size="small" icon="el-icon-refresh-right" v-throttle="getListUsers">重 置</el-button>
+              <el-button size="small" icon="el-icon-search" type="primary" @click="getListUsersByMechanismId(1)">搜 索
+              </el-button>
+              <el-button size="small" icon="el-icon-refresh-right" @click="reset">重 置</el-button>
             </el-form-item>
           </el-form>
           <div class="split-line">
@@ -61,16 +63,17 @@
             <div class="split-line-right">共查询到 <b style="color: #409EFF">{{ pageInfo.total }}</b> 条记录</div>
           </div>
           <el-table
-              :data="tableData"
+              height="500"
+              v-loading="loading"
+              :data="list"
               stripe
-              height="400"
               border
               :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
               :cell-style="{textAlign:'center'}"
               style="width: 100%">
             <el-table-column
                 min-width="180"
-                prop="username"
+                prop="fullName"
                 label="姓名">
             </el-table-column>
             <el-table-column
@@ -143,6 +146,7 @@
                 <el-button
                     size="mini"
                     type="danger"
+                    disabled
                     @click="handleDelete(scope.$index, scope.row)">删除
                 </el-button>
                 <el-button
@@ -162,7 +166,7 @@
                   :current-page.sync="pageInfo.currentPage"
                   @current-change="handleCurrentChange"
                   background
-                  layout="sizes, prev, pager, next, jumper"
+                  layout="total,sizes, prev, pager, next, jumper"
                   :total="pageInfo.total">
               </el-pagination>
             </div>
@@ -179,17 +183,17 @@ export default {
   components: {},
   data() {
     return {
+      loading: false,
       currentMechanismId: null,
-      tableData: [],
+      list: [],
       pageInfo: {
         pageSize: 10,
         total: 0,
         currentPage: 1,
       },
       form: {
-        oldPassword: '',
-        newPassword: '',
-        confirmPassword: '',
+        fullName: '',
+        onJob: null,
       },
       listRoles: [],
       defaultProps: {
@@ -203,22 +207,29 @@ export default {
     this.getListMechanisms()
   },
   methods: {
+    reset() {
+      this.$refs.form.resetFields()
+      this.pageInfo.currentPage = 1
+      this.getListUsers()
+    },
     async getListUsers(_pageSize) {
-      let url = ``
-      if (undefined !== _pageSize) {
-        url = `/user/list?currentPage=${this.pageInfo.currentPage}&pageSize=${_pageSize}`
-      } else {
-        url = `/user/list?currentPage=${this.pageInfo.currentPage}&pageSize=${this.pageInfo.pageSize}`
-      }
+      this.loading = true
+      const {currentPage, pageSize} = this.pageInfo
       try {
-        const res = await this.$http.get(url)
+        const res = await this.$http.get(`/user/list`, {
+          params: {
+            currentPage,
+            pageSize: _pageSize ? _pageSize : pageSize
+          }
+        })
         if (res.status) {
-          this.tableData = res.data.list
+          this.list = res.data.list
           this.pageInfo.total = res.data.total
         }
-        // eslint-disable-next-line no-empty
       } catch (e) {
-
+        console.log(e)
+      } finally {
+        this.loading = false
       }
     },
     async getListMechanisms() {
@@ -240,15 +251,26 @@ export default {
       await this.getListUsersByMechanismId(mechanismId)
     },
     async getListUsersByMechanismId(mechanismId) {
-      let url = `/user/list-condition?mechanismId=${mechanismId}&currentPage=${this.pageInfo.currentPage}&pageSize=${this.pageInfo.pageSize}`
+      this.loading = true
+      const {currentPage, pageSize} = this.pageInfo
       try {
-        const res = await this.$http.get(url)
+        const res = await this.$http.get('/user/list-condition', {
+          params: {
+            mechanismId,
+            currentPage,
+            pageSize,
+            fullName: this.form.fullName,
+            onJob: this.form.onJob
+          }
+        })
         if (res.status) {
-          this.tableData = res.data.list
+          this.list = res.data.list
           this.pageInfo.total = res.data.total
         }
-        // eslint-disable-next-line no-empty
       } catch (e) {
+        console.log(e)
+      } finally {
+        this.loading = false
       }
     },
     handleView(_index, _row) {
@@ -261,7 +283,7 @@ export default {
       this.$http.delete('/mechanism/delete/' + this.currentMechanismId).then(res => {
         if (res.status) {
           this.$message.success(res.message)
-          this.getList()
+          this.getListMechanisms()
           return
         }
         this.$message.error(res.message)
@@ -324,6 +346,7 @@ export default {
 @import "../../../assets/css/common-el-table-scrollbar";
 @import "../../../assets/css/split-line";
 @import "../../../assets/css/common-el-input-inner-width";
+@import "../../../assets/css/common-el-tree";
 
 .management-organization {
   margin: -10px;

@@ -5,80 +5,85 @@
 <template>
   <div class="achievement-education-promotion">
     <el-form
-        ref="formData"
+        size="small"
+        ref="form"
         inline
+        :rules="rules"
+        label-width="120px"
         :model="form">
-      <el-form-item label="客户类型" label-width="120px">
-        <el-select size="small" v-model="form.newPassword" placeholder="请选择客户类型">
+      <el-form-item label="客户类型" prop="customerType">
+        <el-select v-model="form.customerType" placeholder="请选择客户类型">
           <el-option
-              v-for="item in options"
+              v-for="item in $store.state.title_customer_type_options"
               :key="item.value"
               :label="item.label"
               :value="item.value">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="客户名称" label-width="120px">
-        <el-input size="small" v-model="form.newPassword" placeholder="请输入客户名称">
+      <el-form-item label="客户名称" prop="customerName">
+        <el-input v-model.trim="form.customerName" placeholder="请输入客户名称">
         </el-input>
       </el-form-item>
-      <el-form-item label="订单编号" label-width="120px">
-        <el-input size="small" v-model="form.newPassword" placeholder="请输入订单编号">
+      <el-form-item label="订单编号" prop="orderno">
+        <el-input v-model.trim="form.orderno" placeholder="请输入订单编号">
         </el-input>
       </el-form-item>
-      <el-form-item label="业绩状态" label-width="120px">
-        <el-select size="small" v-model="form.newPassword" placeholder="请选择审核状态">
+      <el-form-item label="业绩状态" prop="status">
+        <el-select v-model="form.status" placeholder="请选择审核状态">
           <el-option
-              v-for="item in options"
+              v-for="item in statusOptions"
+              :key="item.label"
+              :label="item.label"
+              :value="item.label">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="录入人" prop="creatorId">
+        <el-select v-model="form.creatorId" placeholder="请选择录入人">
+          <el-option
+              v-for="item in $store.state.user_options"
               :key="item.value"
               :label="item.label"
               :value="item.value">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="录入人" label-width="120px">
-        <el-select size="small" v-model="form.newPassword" placeholder="请选择录入人">
-          <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="生成日期" label-width="120px">
+      <el-form-item label="生成日期" prop="date">
         <el-date-picker
-            v-model="form.oldPassword"
-            size="small"
+            v-model="form.date"
             type="daterange"
             align="right"
             unlink-panels
+            value-format="yyyy-MM-dd"
+            format="yyyy-MM-dd"
             range-separator="-"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            :picker-options="pickerOptions">
+            :picker-options="$pickerOptions">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label=" " label-width="120px">
-        <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
-        <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
+      <el-form-item label=" ">
+        <el-button size="small" icon="el-icon-search" @click="search(this.pageInfo.pageSize,1)" :loading="loading"
+                   type="primary">搜 索
+        </el-button>
+        <el-button size="small" icon="el-icon-refresh-right" v-throttle="reset">重 置</el-button>
       </el-form-item>
     </el-form>
     <div class="split-line">
       <div class="split-line-left">
         <el-button icon="el-icon-download" size="small" type="primary" @click="handleExport">导出审核完成业绩</el-button>
       </div>
-      <div class="split-line-right">共查询到 <b style="color: #409EFF">4</b> 条记录</div>
+      <div class="split-line-right">共查询到 <b style="color: #409EFF">{{ pageInfo.total }}</b> 条记录</div>
     </div>
     <el-table
-        :data="tableData"
+        v-loading="loading"
+        :data="list"
         stripe
         border
-        highlight-current-row
         :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
         :cell-style="{textAlign:'center'}"
-        style="width: 100%"
-        :row-class-name="tableRowClassName">
+        style="width: 100%">
       <el-table-column
           min-width="180"
           v-for="item in columns"
@@ -98,7 +103,6 @@
       </el-table-column>
     </el-table>
     <div class="pagination">
-      <div class="pagination-total">共<span class="total"> {{ pageInfo.total }} </span>条</div>
       <div class="pagination-right">
         <el-pagination
             ref="pagination"
@@ -108,7 +112,7 @@
             @current-change="handleCurrentChange"
             @size-change="handleSizeChange"
             background
-            layout="sizes, prev, pager, next, jumper"
+            layout="total,sizes, prev, pager, next, jumper"
             :total="pageInfo.total">
         </el-pagination>
       </div>
@@ -122,155 +126,135 @@ export default {
   components: {},
   data() {
     return {
+      loading: false,
       columns: [
         {
           title: '订单编号',
           key: 'address'
         },
         {
-          title: '企业名称',
-          key: 'address'
+          title: '客户类型',
+          key: 'address1'
         },
         {
-          title: '人才名称',
-          key: 'address'
+          title: '客户名称',
+          key: 'address2'
         },
         {
-          title: '企业合同价',
-          key: 'address'
+          title: '人员数',
+          key: 'address3'
         },
         {
-          title: '人才价格',
-          key: 'address'
+          title: '代办金额',
+          key: 'address4'
         },
         {
-          title: '人才业绩',
-          key: 'address'
+          title: '提升费用',
+          key: 'address5'
         },
         {
-          title: '企业业绩',
-          key: 'address'
+          title: '学历提升业绩',
+          key: 'address6'
         },
         {
           title: '业绩生成时间',
-          key: 'address'
+          key: 'address7'
         },
         {
           title: '业绩状态',
-          key: 'address'
+          key: 'address8'
         },
         {
-          title: '人才录入人',
-          key: 'address'
+          title: '录入人',
+          key: 'address9'
         },
         {
-          title: '企业录入人',
-          key: 'address'
+          title: '审核员',
+          key: 'address10'
         },
       ],
-      tableData: [
+      statusOptions: [
         {
-          date: '2016-05-02',
-          username: '王小虎',
-          address: '上海市普陀区',
-        },],
+          label: '已申请待审批',
+        },
+        {
+          label: '财务审批通过',
+        },
+        {
+          label: '财务审批不通过',
+        },
+      ],
+      list: [],
       pageInfo: {
         pageSize: 10,
         total: 0,
         currentPage: 1,
       },
       form: {
-        oldPassword: '',
-        newPassword: '',
-        confirmPassword: '',
+        customerType: '',
+        customerName: '',
+        orderno: '',
+        status: '',
+        creatorId: null,
+        date: [],
       },
-      pickerOptions: {
-        shortcuts: [
-          {
-            text: '今天',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '一周内',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '一个月内',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '三个月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit('pick', [start, end]);
-            }
-          }
-        ]
+      rules: {
+        customerType: [{required: false, trigger: 'blur'}],
+        customerName: [{required: false, trigger: 'blur'}],
+        orderno: [{required: false, trigger: 'blur'}],
+        status: [{required: false, trigger: 'blur'}],
+        creatorId: [{required: false, trigger: 'blur'}],
+        date: [{required: false, trigger: 'blur'}],
       },
     }
   },
+  created() {
+    // this.search()
+  },
   methods: {
-    tableRowClassName({rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row';
-      } else if (rowIndex === 3) {
-        return 'success-row';
+    @throttle()
+    async search(size, page) {
+      let newForm = {}
+      newForm.pageSize = size ? size : this.pageInfo.pageSize
+      newForm.currentPage = page ? page : this.pageInfo.currentPage
+      newForm = Object.assign(newForm, this.form)
+      if (this.form.date && this.form.date.length > 0) {
+        newForm.startDate = this.form.date[0]
+        newForm.endDate = this.form.date[1]
       }
-      return '';
-    },
-    handleExport(){
-      this.$message.success('导出')
-    },
-    handleView(_index,_row){
-      console.log(_index,_row)
-      this.$router.push('/achievement-education-promotion-view')
-    },
-    handleChange(file, fileList) {
-      this.fileList = [fileList[fileList.length - 1]]; // 只能上传一个Excel，重复上传会覆盖之前的
-      this.file = file.raw;
-      let reader = new FileReader()
-      let _this = this
-      console.log(_this)
-      reader.readAsArrayBuffer(this.file)
-      reader.onload = function () {
-        let buffer = reader.result
-        let bytes = new Uint8Array(buffer)
-        let length = bytes.byteLength
-        let binary = ''
-        for (let i = 0; i < length; i++) {
-          binary += String.fromCharCode(bytes[i])
+      this.loading = true
+      try {
+        const res = await this.$http.post('/achievement-education-promotion/list', newForm)
+        if (res.status) {
+          this.list = res.data.list
+          this.pageInfo.total = res.data.total
+          return
         }
-        let XLSX = require('xlsx')
-        let wb = XLSX.read(binary, {
-          type: 'binary'
-        })
-        let outdata = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
-        outdata.forEach(item => {
-          let newObj = {}
-          for (const itemKey in _this.mapObj) {
-            newObj[_this.mapObj[itemKey]] = item[itemKey]
-          }
-          _this.list.push(newObj)
-          console.log(_this.list)
-        })
+        this.$message.error(res.message)
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.loading = false
       }
-    }
+    },
+    reset() {
+      this.$refs.form.resetFields()
+      this.pageInfo.currentPage = 1
+      this.search()
+    },
+    handleCurrentChange() {
+      this.search()
+    },
+    handleSizeChange(size) {
+      this.search(size)
+    },
+    handleView(id) {
+      this.$router.push(`/achievement-education-promotion-view/${id}`)
+    },
+    @throttle(1000)
+    handleExport() {
+      this.$message.warning('暂未开放')
+    },
   }
 }
 </script>

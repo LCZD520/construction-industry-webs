@@ -13,14 +13,20 @@
       <div class="split-line-right">共查询到 <b style="color: #409EFF">{{ pageInfo.total }}</b> 条记录</div>
     </div>
     <el-table
+        v-loading="loading"
         :data="list"
         stripe
         border
-        highlight-current-row
         :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
         :cell-style="{textAlign:'center'}"
-        style="width: 100%"
-        :row-class-name="tableRowClassName">
+        style="width: 100%">
+      <el-table-column
+          min-width="180"
+          label="银行名称">
+        <template #default="{row}">
+          {{ $valueToLabel(row.bankName, $store.state.bank_options) }}
+        </template>
+      </el-table-column>
       <el-table-column
           min-width="180"
           v-for="item in columns"
@@ -49,7 +55,6 @@
       </el-table-column>
     </el-table>
     <div class="pagination">
-      <div class="pagination-total">共<span class="total"> {{ pageInfo.total }} </span>条</div>
       <div class="pagination-right">
         <el-pagination
             ref="pagination"
@@ -59,7 +64,7 @@
             @current-change="handleCurrentChange"
             @size-change="handleSizeChange"
             background
-            layout="sizes, prev, pager, next, jumper"
+            layout="total,sizes, prev, pager, next, jumper"
             :total="pageInfo.total">
         </el-pagination>
       </div>
@@ -73,11 +78,8 @@ export default {
   components: {},
   data() {
     return {
+      loading: false,
       columns: [
-        {
-          title: '银行名称',
-          key: 'bankName'
-        },
         {
           title: '开户行',
           key: 'openingBank'
@@ -112,16 +114,7 @@ export default {
     this.getList()
   },
   methods: {
-    tableRowClassName({rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row';
-      } else if (rowIndex === 3) {
-        return 'success-row';
-      }
-      return '';
-    },
     handleView(_index, _row) {
-      console.log(_index, _row)
       this.$router.push('/company-account-view/' + _row.enterpriseAccountId)
     },
     /**
@@ -142,19 +135,26 @@ export default {
      * @param _pageSize
      */
     getList(_pageSize) {
+      this.loading = true
       let url = ``
       if (undefined !== _pageSize) {
         url = `/enterprise-account/list?currentPage=${this.pageInfo.currentPage}&pageSize=${_pageSize}`
       } else {
         url = `/enterprise-account/list?currentPage=${this.pageInfo.currentPage}&pageSize=${this.pageInfo.pageSize}`
       }
-      this.$http.get(url).then(res => {
-        console.log(res)
-        if (null !== res.data) {
-          this.pageInfo.total = res.data.total
-          this.list = res.data.list
-        }
-      })
+      try {
+        this.$http.get(url).then(res => {
+          if (null !== res.data) {
+            this.pageInfo.total = res.data.total
+            this.list = res.data.list
+            this.$store.dispatch('initListCompanyAccounts', this.list)
+          }
+        })
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.loading = false
+      }
     },
     handleEdit(_index, _row) {
       console.log(_index, _row)

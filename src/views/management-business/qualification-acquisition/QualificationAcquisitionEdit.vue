@@ -8,7 +8,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="转让意向客户" prop="transferCustomers">
-            <el-input placeholder="请输入转让意向客户" v-model="form.transferCustomers"/>
+            <el-input show-word-limit maxlength="50" placeholder="请输入转让意向客户" v-model.trim="form.transferCustomers"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -94,10 +94,9 @@
           <el-form-item label="收购金额" prop="acquisitionAmount">
             <el-input-number
                 placeholder="请输入收购金额"
-                :precision="2"
+                :min="0" :max="99999999.99" :precision="2"
                 class="width-full"
                 controls-position="right"
-                :min="0"
                 v-model="form.acquisitionAmount"/>
             <p style="height: 20px">
               <span v-if="formatAmount === 0"></span>
@@ -123,7 +122,7 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="备注" prop="remark">
-            <el-input v-model="form.remark" placeholder="请输入备注..." :rows="5" type="textarea">
+            <el-input show-word-limit maxlength="100" v-model.trim="form.remark" placeholder="请输入备注..." :rows="5" type="textarea">
 
             </el-input>
           </el-form-item>
@@ -204,9 +203,51 @@ export default {
     }
   },
   created() {
-
+    const id = this.$route.params.id / 1
+    if (id != null) {
+      this.getDetailById(id)
+    }
+  },
+  computed: {
+    listQualificationCategory() {
+      return this.treeToArr(this.$store.state.list_qualification_category)
+    }
   },
   methods: {
+    treeToArr(tree) {
+      return tree.reduce((prev, current) => {
+        let {
+          // eslint-disable-next-line no-unused-vars
+          listQualificationCategory,
+          ...arrs
+        } = current
+        prev.push({
+          ...arrs
+        })
+        if (current.listQualificationCategory) {
+          prev = [...prev, ...this.treeToArr(current.listQualificationCategory)]
+        }
+        return prev
+      }, [])
+    },
+    async getDetailById(_id) {
+      try {
+        const res = await this.$http.get('/qualification-acquisition/detail/' + _id)
+        if (res.status) {
+          res.data.categoryAndGrade = JSON.parse(res.data.categoryAndGrade)
+          this.form = res.data
+          let arr = []
+          res.data.categoryAndGrade.forEach(i => {
+            arr = arr.concat(this.listQualificationCategory.filter(item => item.categoryName === i))
+          })
+          this.$nextTick(() => {
+            this.$refs.tree.setCheckedNodes(arr)
+          })
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    },
     handleNodeClick() {
       let datalist = this.$refs.tree.getCheckedNodes()
       this.selectedList = []
@@ -218,7 +259,6 @@ export default {
         }
       })
     },
-
     /**
      * 提交
      */
@@ -272,7 +312,19 @@ export default {
   },
   watch: {
     'form.acquisitionAmount': function (newValue) {
-      gsap.to(this.$data, {duration: 0.5, formatAmount: newValue});
+      if (newValue) {
+        gsap.to(this.$data, {duration: 0.5, formatAmount: newValue})
+      } else {
+        gsap.to(this.$data, {duration: 0.5, formatAmount: ''})
+      }
+    },
+    'form.categoryAndGrade'(value) {
+      value.forEach(item => {
+        if (Array.isArray(item)) {
+          let index = value.findIndex(i => i === item)
+          value.splice(index, 1)
+        }
+      })
     }
   },
 }
@@ -283,7 +335,16 @@ export default {
   margin: 0 200px;
 }
 
-.width-full {
-  width: 100%;
+.el-select-dropdown.is-multiple .el-select-dropdown__item {
+  height: auto;
+  padding: 0;
+}
+
+/deep/ .el-tree .el-tree-node .is-leaf + .el-checkbox .el-checkbox__inner {
+  display: inline-block;
+}
+
+/deep/ .el-tree .el-tree-node .el-checkbox .el-checkbox__inner {
+  display: none;
 }
 </style>

@@ -5,79 +5,94 @@
 <template>
   <div class="StatisticsCertificate">
     <el-form
-        ref="formData"
+        ref="form"
         inline
+        label-width="120px"
         :model="form">
-      <el-form-item label="级别专业" label-width="100px">
-        <el-select size="small" v-model="form.oldPassword" placeholder="请选择级别专业">
-          <el-option-group
-              v-for="group in options"
-              :key="group.label"
-              :label="group.label">
-            <el-option
-                v-for="item in group.options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-            </el-option>
-          </el-option-group>
-        </el-select>
+      <el-form-item label="级别专业" prop="levelMajor">
+        <el-cascader
+            size="small"
+            clearable
+            ref="cascaderLevelMajor"
+            @expand-change="cascaderClick('levelMajor')"
+            @visible-change="cascaderClick('levelMajor')"
+            :props="{ expandTrigger: 'hover'
+                    ,value:'categoryName'
+                    ,label:'categoryName'
+                    ,checkStrictly:true
+                    ,emitPath:false
+                    ,children:'listCertificateCategory'}"
+            placeholder="请选择级别专业"
+            :options="this.$store.state.list_certificate_category"
+            v-model="form.levelMajor">
+        </el-cascader>
       </el-form-item>
-      <el-form-item label="初始转注" label-width="100px">
-        <el-select size="small" v-model="form.newPassword" placeholder="请选择初始转注">
+      <el-form-item label="初始转注" prop="initialConversion">
+        <el-select clearable size="small" v-model="form.initialConversion" placeholder="请选择初始转注">
           <el-option
-              v-for="item in options2"
+              v-for="item in this.$store.state.initial_conversion_options"
               :key="item.value"
               :label="item.label"
               :value="item.value">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label=" " label-width="120px">
-        <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
-        <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
+      <el-form-item label=" ">
+        <el-button size="small" icon="el-icon-search" v-throttle="search" type="primary">搜 索</el-button>
+        <el-button size="small" icon="el-icon-refresh-right" v-throttle="reset">重 置</el-button>
       </el-form-item>
-<!--      <el-form-item>-->
-<!--        <el-button-group>-->
-<!--          <el-button size="small" plain type="primary" icon="el-icon-s-grid"></el-button>-->
-<!--          <el-button size="small" plain type="primary" icon="el-icon-pie-chart"></el-button>-->
-<!--          <el-button size="small" plain type="primary" icon="el-icon-s-data"></el-button>-->
-<!--        </el-button-group>-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item>-->
+      <!--        <el-button-group>-->
+      <!--          <el-button size="small" plain type="primary" icon="el-icon-s-grid"></el-button>-->
+      <!--          <el-button size="small" plain type="primary" icon="el-icon-pie-chart"></el-button>-->
+      <!--          <el-button size="small" plain type="primary" icon="el-icon-s-data"></el-button>-->
+      <!--        </el-button-group>-->
+      <!--      </el-form-item>-->
     </el-form>
     <el-table
-        :data="tableData"
-        stripe
+        :data="list"
         border
+        :span-method="objectSpanMethod"
+        height="600"
         highlight-current-row
         :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
-        :cell-style="{textAlign:'center'}"
-        style="width: 100%"
-        :row-class-name="tableRowClassName">
+        style="width: 100%">
       <el-table-column
           min-width="180"
-          v-for="item in columns"
-          :key="item.key"
-          :prop="item.key"
-          :label="item.title">
+          align="center"
+          prop="level"
+          label="级别">
       </el-table-column>
+      <el-table-column
+          min-width="180"
+          align="center"
+          prop="major"
+          label="专业">
+      </el-table-column>
+      <el-table-column
+          label="初始转注"
+          align="center"
+          min-width="180">
+        <template #default="{row}">
+          {{ $valueToLabel(row.initialConversion, $store.state.initial_conversion_options) }}
+        </template>
+      </el-table-column>
+      <el-table-column
+          label="三类人员"
+          align="center"
+          min-width="180">
+        <template #default="{row}">
+          {{ $valueToLabel(row.classThreePersonnel, $store.state.class_three_personnel_options) }}
+        </template>
+      </el-table-column>
+      <el-table-column
+          label="数量"
+          prop="count"
+          align="right"
+          min-width="180">
+      </el-table-column>
+
     </el-table>
-    <div class="pagination">
-      <div class="pagination-total">共<span class="total"> {{ pageInfo.total }} </span>条</div>
-      <div class="pagination-right">
-        <el-pagination
-            ref="pagination"
-            :page-sizes="[10, 20, 30, 50]"
-            :page-size="pageInfo.pageSize"
-            :current-page.sync="pageInfo.currentPage"
-            @current-change="handleCurrentChange"
-            @size-change="handleSizeChange"
-            background
-            layout="sizes, prev, pager, next, jumper"
-            :total="pageInfo.total">
-        </el-pagination>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -87,121 +102,135 @@ export default {
   components: {},
   data() {
     return {
-      columns: [
-        {
-          title: '级别',
-          key: 'level'
-        },
-        {
-          title: '专业',
-          key: 'major'
-        },
-        {
-          title: '初始转注',
-          key: 'initialConversion'
-        },
-        {
-          title: '三类人员',
-          key: 'classThreePersonnel'
-        },
-        {
-          title: '数量',
-          key: 'quantity'
-        },
-      ],
-      options: [
-        {
-          label: '热门城市',
-          options: [{
-            value: 'Shanghai',
-            label: '上海'
-          }, {
-            value: 'Beijing',
-            label: '北京'
-          }]
-        }, {
-          label: '城市名',
-          options: [{
-            value: 'Chengdu',
-            label: '成都'
-          }, {
-            value: 'Shenzhen',
-            label: '深圳'
-          }, {
-            value: 'Guangzhou',
-            label: '广州'
-          }, {
-            value: 'Dalian',
-            label: '大连'
-          }]
-        }],
-      options2: [
-        {
-          value: '选项1',
-          label: '初始'
-        },
-        {
-          value: '选项2',
-          label: '转注'
-        },
-        {
-          value: '选项3',
-          label: '其他'
-        },
-      ],
-      tableData: [
-        {
-          date: '2016-05-02',
-          username: '王小虎',
-          address: '上海市普陀区',
-        }, {
-          date: '2016-05-04',
-          username: '王小虎',
-          address: '上海市普陀区'
-        }, {
-          date: '2016-05-01',
-          username: '王小虎',
-          address: '上海市普陀区',
-        }, {
-          date: '2016-05-03',
-          username: '王小虎',
-          address: '上海市普陀区'
-        }],
+      list: [],
+      searchList: [],
       pageInfo: {
         pageSize: 10,
         total: 0,
         currentPage: 1,
       },
       form: {
-        oldPassword: '',
-        newPassword: '',
-        confirmPassword: '',
+        levelMajor: '',
+        initialConversion: null,
       },
     }
   },
-  mounted() {
-    console.log(this.$route)
+  created() {
+    this.getList()
   },
   methods: {
-    tableRowClassName({rowIndex}) {
-      if (rowIndex === 1) {
-        return 'warning-row';
-      } else if (rowIndex === 3) {
-        return 'success-row';
+    async getList() {
+      try {
+        const res = await this.$http.get('/talent-certificate/list')
+        if (res && res.status) {
+          console.log(res)
+          let newList = res.data.map(item => {
+            item.levelMajor = JSON.parse(item.levelMajor)
+            return {
+              level: item.levelMajor[0],
+              major: item.levelMajor[1],
+              initialConversion: item.initialConversion,
+              classThreePersonnel: item.classThreePersonnel,
+            }
+          })
+          console.log(newList, "newList")
+          let list = []
+          let set = new Set(newList.map(item => item.level))
+          set.forEach(item => {
+            list = list.concat(newList.filter(i => i.level === item))
+          })
+          console.log(set, "set")
+          console.log(list, "list")
+          let copyList = JSON.parse(JSON.stringify(list))
+          for (let i = 0; i < copyList.length; i++) {
+            copyList[i] = JSON.stringify(copyList[i])
+          }
+          let strList = new Set()
+          newList.forEach(item => strList.add(JSON.stringify(item)))
+          this.list = [...strList]
+          for (let i = 0; i < this.list.length; i++) {
+            this.list[i] = JSON.parse(this.list[i])
+            this.list[i].count = copyList.filter(item => item === JSON.stringify(this.list[i])).length
+          }
+          this.list.sort((a, b) => {
+            if (a.level < b.level) {
+              return -1
+            }
+          })
+          console.log(this.list, "this.list")
+          this.searchList = JSON.parse(JSON.stringify(this.list))
+        }
+      } catch (e) {
+        console.log(e)
       }
-      return '';
     },
-    /**
-     * 表格翻页
-     */
-    handleCurrentChange() {
-
+    // eslint-disable-next-line no-unused-vars
+    objectSpanMethod({row, column, rowIndex, columnIndex}) {
+      let data = this.list; //拿到当前table中数据
+      let cellValue = row[column.property]; //当前位置的值
+      let noSortArr = ["count"]; //不需要合并的字段（不进行合并行的prop）
+      if (cellValue && !noSortArr.includes(column.property)) {
+        let prevRow = data[rowIndex - 1]; //获取到上一条数据
+        let nextRow = data[rowIndex + 1]; //下一条数据
+        if (prevRow && prevRow[column.property] === cellValue) { //当有上一条数据，并且和当前值相等时
+          return {rowspan: 0, colspan: 0};
+        } else {
+          let countRowspan = 1;
+          while (nextRow && nextRow[column.property] === cellValue) { //当有下一条数据并且和当前值相等时,获取新的下一条
+            nextRow = data[++countRowspan + rowIndex];
+          }
+          if (countRowspan > 1) {
+            return {rowspan: countRowspan, colspan: 1};
+          }
+        }
+      }
     },
-    /**
-     * 改变页数
-     */
-    handleSizeChange(_pageSize) {
-      console.log(_pageSize)
+    cascaderClick(_type) {
+      let self = this
+      setTimeout(() => {
+        document.querySelectorAll('.el-cascader-node__label').forEach(el => {
+          el.onclick = function () {
+            this.previousElementSibling.click()
+            if (_type === 'levelMajor') {
+              self.$refs.cascaderLevelMajor.dropDownVisible = false
+            }
+          }
+        })
+        document
+            .querySelectorAll('.el-cascader-panel .el-radio')
+            .forEach(el => {
+              el.onclick = function () {
+                if (_type === 'levelMajor') {
+                  self.$refs.cascaderLevelMajor.dropDownVisible = false
+                }
+              }
+            })
+      }, 1)
+    },
+    search() {
+      const {initialConversion, levelMajor} = this.form
+      console.log(levelMajor, initialConversion)
+      if (!initialConversion && (levelMajor === '' || !levelMajor)) {
+        this.getList()
+        return
+      }
+      let results = []
+      console.log(typeof initialConversion)
+      if (initialConversion) {
+        results = this.searchList.filter(item => item.initialConversion === initialConversion)
+      } else {
+        results = this.searchList.slice(0, this.searchList.length)
+      }
+      if (levelMajor && levelMajor !== '') {
+        results = results.filter(item => [item.level, item.major].includes(levelMajor))
+      }
+      console.log(results, "results")
+      this.list = results
+    },
+    reset() {
+      this.form.initialConversion = null
+      this.form.levelMajor = ''
+      this.getList()
     }
   }
 }

@@ -15,6 +15,7 @@
       <el-tree
           :data="listPermissions"
           show-checkbox
+          :default-checked-keys="listCheckedKeys"
           check-on-click-node
           :expand-on-click-node="false"
           default-expand-all
@@ -46,9 +47,11 @@ export default {
   components: {CommonLoading},
   data() {
     return {
+      roleId: this.$route.query.id || null,
       checkAll: false,
       loading: false,
       listPermissions: [],
+      listCheckedKeys: [],
       defaultProps: {
         children: 'subListPermissions',
         label: 'permissionName'
@@ -57,6 +60,7 @@ export default {
   },
   created() {
     this.getListPermissions()
+    this.getListPermissionsByRoleId()
   },
   methods: {
     handleCheckAllChange(val) {
@@ -66,25 +70,48 @@ export default {
       }
       this.$refs.tree.setCheckedKeys([])
     },
-    handleSubmit() {
-      this.$http.post('/role-permission/insert-batch', {
-        list: this.$refs.tree.getCheckedKeys(),
-        roleId: this.$route.query.id / 1
-      }).then(res => {
-        console.log(res)
-      })
+    async handleSubmit() {
+      try {
+        this.loading = true
+        const res = await this.$http.post('/role-permission/insert-batch', {
+          list: this.$refs.tree.getCheckedKeys(),
+          roleId: this.roleId
+        })
+        if (res.status) {
+          this.$message.success(res.message)
+          await this.getListPermissionsByRoleId()
+          return
+        }
+        this.$message.error(res.message)
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.loading = false
+      }
     },
     getListPermissions() {
       this.loading = true
-      this.$http.get('/permission/get-list-permissions').then(res => {
-        if (res.status) {
-          if (res.data.listPermissions !== null) {
-            this.listPermissions = res.data.listPermissions
-          }
+      this.$http.get('/permission/list').then(res => {
+        if (res.status && res.data) {
+          this.listPermissions = res.data
         }
         this.loading = false
       })
 
+    },
+    async getListPermissionsByRoleId() {
+      this.loading = true
+      try {
+        const res = await this.$http.get(`/permission/list/${this.roleId}`)
+        if (res.status && res.data) {
+          this.listCheckedKeys = res.data
+        }
+      } catch (e) {
+        console.log(e)
+        this.$message.error('服务器异常')
+      } finally {
+        this.loading = false
+      }
     },
   },
 }

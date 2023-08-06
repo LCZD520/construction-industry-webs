@@ -14,7 +14,7 @@ const entryRoutes = [
         component: () => import('../../../views/management-entry/entry-registration/EntryRegistration'),
     },
     {
-        path: '/entry-registration-view',
+        path: '/entry-registration-view/:id',
         name: 'entry-registration-view',
         meta: {
             title: '入账登记查看',
@@ -68,7 +68,7 @@ const entryRoutes = [
         component: () => import('../../../views/management-entry/entry-qualification-transfer/EntryQualificationTransfer'),
     },
     {
-        path: '/entry-qualification-transfer-view',
+        path: '/entry-qualification-transfer-view/:id',
         name: 'entry-qualification-transfer-view',
         meta: {
             title: '资质转让入账查看',
@@ -86,7 +86,7 @@ const entryRoutes = [
         component: () => import('../../../views/management-entry/entry-qualification-agency/EntryQualificationAgency'),
     },
     {
-        path: '/entry-qualification-agency-view',
+        path: '/entry-qualification-agency-view/:id',
         name: 'entry-qualification-agency-view',
         meta: {
             title: '资质代办入账查看',
@@ -104,7 +104,16 @@ const entryRoutes = [
         component: () => import('../../../views/management-entry/entry-title-evaluation/EntryTitleEvaluation'),
     },
     {
-        path: '/entry-title-evaluation-view',
+        path: '/entry-title-evaluation-approval/:id',
+        name: 'entry-title-evaluation-approval',
+        meta: {
+            title: '职称评审入账审核',
+            activeMenuPath: '/entry-title-evaluation',
+        },
+        component: () => import('../../../views/management-entry/entry-title-evaluation/EntryTitleEvaluationApproval'),
+    },
+    {
+        path: '/entry-class-three-personnel-view/:id',
         name: 'entry-title-evaluation-view',
         meta: {
             title: '职称评审入账查看',
@@ -122,7 +131,7 @@ const entryRoutes = [
         component: () => import('../../../views/management-entry/entry-class-three-personnel/EntryClassThreePersonnel'),
     },
     {
-        path: '/entry-class-three-personnel-view',
+        path: '/entry-class-three-personnel-view/:id',
         name: 'entry-class-three-personnel-view',
         meta: {
             title: '三类人员入账查看',
@@ -140,7 +149,7 @@ const entryRoutes = [
         component: () => import('../../../views/management-entry/entry-education-promotion/EntryEducationPromotion'),
     },
     {
-        path: '/entry-education-promotion-view',
+        path: '/entry-education-promotion-view/:id',
         name: 'entry-education-promotion-view',
         meta: {
             title: '学历提升入账查看',

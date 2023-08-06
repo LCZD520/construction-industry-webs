@@ -108,3 +108,13 @@ ul, ol {
 .v-modal {
     background: rgba(0, 0, 0, 0.5) !important;
 }
+
+.el-statistic .con {
+    align-items: unset !important;
+    justify-content: unset !important;
+    flex-direction: row-reverse;
+}
+
+.el-statistic .con .number {
+    font-size: 16px !important;
+}

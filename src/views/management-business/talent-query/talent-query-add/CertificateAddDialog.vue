@@ -21,10 +21,14 @@
               <el-cascader
                   class="width-full"
                   clearable
-                  :props="{ expandTrigger: 'hover'
-                    ,value:'categoryName'
-                    ,label:'categoryName'
-                    ,children:'listCertificateCategory'}"
+                  ref="cascaderLevelMajor"
+                  @expand-change="cascaderClick('levelMajor')"
+                  @visible-change="cascaderClick('levelMajor')"
+                  :props="{ expandTrigger: 'hover',
+                      checkStrictly: true,
+                      value:'categoryName',
+                      label:'categoryName',
+                      children:'listCertificateCategory'}"
                   placeholder="请选择级别专业"
                   :options="this.$store.state.list_certificate_category"
                   v-model="certificateForm.levelMajor">
@@ -118,6 +122,32 @@ export default {
   methods: {
     beforeClose() {
       this.$emit('closeDialog')
+    },
+    cascaderClick(_type) {
+      let that = this
+      setTimeout(() => {
+        document.querySelectorAll('.el-cascader-node__label').forEach(el => {
+          el.onclick = function () {
+            this.previousElementSibling.click()
+            if (_type === 'area') {
+              that.$refs.cascaderArea.dropDownVisible = false
+              return
+            }
+            that.$refs.cascaderLevelMajor.dropDownVisible = false
+          }
+        })
+        document
+            .querySelectorAll('.el-cascader-panel .el-radio')
+            .forEach(el => {
+              el.onclick = function () {
+                if (_type === 'area') {
+                  that.$refs.cascaderArea.dropDownVisible = false
+                  return
+                }
+                that.$refs.cascaderLevelMajor.dropDownVisible = false
+              }
+            })
+      }, 1)
     },
   }
 }

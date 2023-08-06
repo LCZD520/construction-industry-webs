@@ -8,12 +8,12 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="代办公司" prop="agencyCompany">
-            <el-input placeholder="请输入代办公司" v-model="form.agencyCompany"/>
+            <el-input show-word-limit maxlength="50" placeholder="请输入代办公司" v-model.trim="form.agencyCompany"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="付款方式" prop="paymentWay">
-            <el-input placeholder="请输入付款方式" v-model="form.paymentWay"/>
+            <el-input show-word-limit maxlength="50" placeholder="请输入付款方式" v-model.trim="form.paymentWay"/>
           </el-form-item>
         </el-col>
       </el-row>
@@ -43,9 +43,9 @@
         <el-col :span="12">
           <el-form-item label="代办金额" prop="agencyAmount">
             <el-input-number
-                :precision="2"
+                :min="0" :max="99999999.99" :precision="2"
                 class="width-full" controls-position="right"
-                :min="0" v-model="form.agencyAmount"/>
+                v-model="form.agencyAmount"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -344,18 +344,45 @@ export default {
   },
   created() {
     if (this.qualificationMode === 'edit'
-        && this.$route.params.i !== null) {
+        && this.$route.params.id !== null) {
       this.getQualificationAgencyById(this.$route.params.id / 1)
     }
   },
+  computed: {
+    listQualificationCategory() {
+      return this.treeToArr(this.$store.state.list_qualification_category)
+    }
+  },
   methods: {
+    treeToArr(tree) {
+      return tree.reduce((prev, current) => {
+        let {
+          // eslint-disable-next-line no-unused-vars
+          listQualificationCategory,
+          ...arrs
+        } = current
+        prev.push({
+          ...arrs
+        })
+        if (current.listQualificationCategory) {
+          prev = [...prev, ...this.treeToArr(current.listQualificationCategory)]
+        }
+        return prev
+      }, [])
+    },
     getQualificationAgencyById(_id) {
       this.$http.get('/qualification-agency/detail/' + _id).then(res => {
         console.log(res)
         if (res.status && res.data !== null) {
+          res.data.agencyQualification = JSON.parse(res.data.agencyQualification)
           this.form = res.data
-          this.form.agencyQualification =
-              JSON.parse(this.form.agencyQualification)
+          let arr = []
+          res.data.agencyQualification.forEach(i => {
+            arr = arr.concat(this.listQualificationCategory.filter(item => item.categoryName === i))
+          })
+          this.$nextTick(() => {
+            this.$refs.tree.setCheckedNodes(arr)
+          })
           this.form.listConstructors.forEach(item => {
             if (typeof item.levelMajorInitialConversion === 'string') {
               item.levelMajorInitialConversion

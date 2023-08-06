@@ -16,81 +16,82 @@
             <el-form label-width="120px" disabled>
               <el-form-item label="审批详情">
                 <el-card>
-                  <el-steps direction="vertical" :active="6" align-center>
-                    <el-step
-                        v-for="(item,index) in 5"
-                        style="line-height: 28px;"
-                        :key="index"
-                        icon="el-icon-s-help">
-                      <el-card slot="title" shadow="hover">
-                <span style="color: #409EFF" class="description-item">
-                  <i class="el-icon-user-solid"></i>
-                  <span>
-                    审批人【】
-                  </span>
-                </span>
-                        <span style="color: #67C23A" class="description-item">
-                    <i class="el-icon-info"></i>
-                    <span>
-                      审批意见【】
-                    </span>
-                  </span>
-                        <span style="color: #E6A23C" class="description-item">
-                    <i class="el-icon-date"></i>
-                      2022-06-20
-                  </span>
-                      </el-card>
-                    </el-step>
-                  </el-steps>
+                  <el-tag size="mini" type="primary">暂无审批流水
+                  </el-tag>
+<!--                  <el-tag size="mini" type="primary"-->
+<!--                          v-if="formData-->
+<!--                          && formData.listAuditRecords-->
+<!--                           && formData.listAuditRecords.length === 0">暂无审批流水-->
+<!--                  </el-tag>-->
+<!--                  <el-steps v-else direction="vertical" :active="6" align-center>-->
+<!--                    <el-step-->
+<!--                        v-for="(item,index) in formData.listAuditRecords"-->
+<!--                        style="line-height: 28px;"-->
+<!--                        :key="index"-->
+<!--                        icon="el-icon-s-help">-->
+<!--                      <el-card slot="title" shadow="hover">-->
+<!--                        <span style="color: #409EFF" class="description-item">-->
+<!--                  <i class="el-icon-user-solid"></i>-->
+<!--                  <span>-->
+<!--                    审批人【】-->
+<!--                  </span>-->
+<!--                </span>-->
+<!--                        <span style="color: #67C23A" class="description-item">-->
+<!--                    <i class="el-icon-info"></i>-->
+<!--                    <span>-->
+<!--                      审批意见【】-->
+<!--                    </span>-->
+<!--                  </span>-->
+<!--                        <span style="color: #E6A23C" class="description-item">-->
+<!--                    <i class="el-icon-date"></i>-->
+<!--                      2022-06-20-->
+<!--                  </span>-->
+<!--                      </el-card>-->
+<!--                    </el-step>-->
+<!--                  </el-steps>-->
                 </el-card>
               </el-form-item>
               <el-row :gutter="10">
                 <el-col :span="8">
                   <el-form-item label="申请转账金额">
-                    <el-input size="small" v-model="formData.name"/>
+                    <el-input size="small" v-model="formData.transferAmount"/>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="申请人">
-                    <el-input size="small" v-model="formData.name"/>
+                    <el-input size="small"
+                              :value="this.$valueToLabel(formData.creatorId,this.$store.state.user_options)"/>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="账户户名">
-                    <el-input size="small" v-model="formData.name"/>
+                    <el-input size="small" v-model="formData.accountName"/>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row :gutter="10">
                 <el-col :span="8">
                   <el-form-item label="银行">
-                    <el-select size="small" v-model="formData.name">
-                      <el-option
-                          v-for="item in []"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                      </el-option>
-                    </el-select>
+                    <el-input size="small" v-model="formData.bankName"/>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="开户行">
-                    <el-input size="small" v-model="formData.name"/>
+                    <el-input size="small" v-model="formData.openBank"/>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="账户卡号">
-                    <el-input size="small" v-model="formData.name"/>
+                    <el-input size="small" v-model="formData.bankCardNo"/>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row :gutter="10">
                 <el-col :span="8">
                   <el-form-item label="款项用途">
-                    <el-select size="small" v-model="formData.name">
+                    <el-select size="small" v-model="formData.fundsPurpose">
                       <el-option
-                          v-for="item in []"
+                          v-for="item in $store.state.title_evaluation_transfer_funds_purpose_options"
                           :key="item.value"
                           :label="item.label"
                           :value="item.value">
@@ -100,19 +101,12 @@
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="申请状态">
-                    <el-select size="small" v-model="formData.name">
-                      <el-option
-                          v-for="item in []"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                      </el-option>
-                    </el-select>
+                    <el-input size="small" v-model="formData.applicationStatus"/>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-form-item label="备注">
-                <el-input style="width: 100%" size="small" type="textarea" :rows="3" v-model="formData.name"/>
+                <el-input style="width: 100%" size="small" type="textarea" :rows="3" v-model="formData.remark"/>
               </el-form-item>
             </el-form>
           </div>

@@ -41,9 +41,7 @@
           min-width="120"
           label="申请状态">
         <template slot-scope="scope">
-          <el-tag size="mini"
-                  :type="scope.row.auditStatus === 0 ? 'info'
-                    : scope.row.auditStatus === 1 ?'success' : 'danger'">
+          <el-tag size="mini">
             {{ scope.row.applicationStatus }}
           </el-tag>
         </template>
@@ -56,6 +54,7 @@
       <el-table-column fixed="right" label="操作" width="180">
         <template slot-scope="scope">
           <el-button
+              disabled
               size="mini"
               type="primary"
               @click="handleEdit(scope.$index, scope.row)">取消申请
@@ -92,9 +91,10 @@
                       <span style="white-space:pre-line"
                             v-for="(subItem,index) in scope.row.levelMajorInitialConversion"
                             :key="index">
-                        {{ subItem.levelMajor[0] }}&nbsp;/&nbsp;
-                        {{ subItem.levelMajor[1] }}&nbsp;-&nbsp;
-                        {{ $valueToLabel(subItem.initialConversion, $store.state.initial_conversion_options) + '\n' }}
+                        {{ subItem.levelMajor | levelMajor }}&nbsp;-&nbsp;
+                        {{
+                          subItem.initialConversion ? $valueToLabel(subItem.initialConversion, $store.state.initial_conversion_options) + '\n' : '无\n'
+                        }}
                       </span>
                 </template>
               </el-table-column>
@@ -216,11 +216,9 @@
                       <span style="white-space:pre-line"
                             v-for="(subItem,index) in scope.row.levelMajorInitialConversion"
                             :key="index">
-                        {{ subItem.levelMajor[0] }}&nbsp;/&nbsp;{{ subItem.levelMajor[1] }}
-                        &nbsp;-&nbsp;
+                        {{ subItem.levelMajor | levelMajor }}&nbsp;-&nbsp;
                         {{
-                          $valueToLabel(subItem.initialConversion
-                              , $store.state.initial_conversion_options) + '\n'
+                          subItem.initialConversion ? $valueToLabel(subItem.initialConversion, $store.state.initial_conversion_options) + '\n' : '无\n'
                         }}
                       </span>
                     </template>
@@ -288,7 +286,7 @@
                     <el-card shadow="always">
                       <el-steps direction="vertical" :active="6" align-center>
                         <el-step
-                            v-for="(item,index) in 10"
+                            v-for="(item,index) in detail.listAuditRecords"
                             style="line-height: 24px;"
                             :key="index"
                             icon="el-icon-s-help">
@@ -296,26 +294,24 @@
                         <span style="color: #45c0f6" class="description-item">
                           <i class="el-icon-date"></i>
                           <span>
-                            申请状态
+                            状态【{{item.auditStatus}}】
                           </span>
                         </span>
                             <span style="color: #409EFF" class="description-item">
                           <i class="el-icon-user-solid"></i>
                           <span>
-                            审批人【】
+                            审批人【{{ $valueToLabel(item.creatorId, $store.state.user_options) }}】
                           </span>
                         </span>
                             <span style="color: #67C23A" class="description-item">
                           <i class="el-icon-info"></i>
                           <span>
-                            审批意见【】
+                            审批意见【{{ item.approvalOpinion }}】
                           </span>
                         </span>
                             <span style="color: #E6A23C" class="description-item">
                           <i class="el-icon-date"></i>
-                          <span>
-                            2022-06-20
-                          </span>
+                          {{ item.gmtCreate }}
                         </span>
                           </div>
                         </el-step>
@@ -670,6 +666,7 @@ export default {
             const res = await this.$http.post('/enterprise-transfer/insert', newObj)
             if (res.status) {
               this.$message.success(res.message)
+              this.getList()
               this.$refs.form.resetFields()
               this.visible = false
               return
@@ -677,7 +674,6 @@ export default {
             this.$message.error(res.message + JSON.stringify(res.data))
           } catch (e) {
             console.log(e)
-            this.$message.error("网络错误")
           }
         }
       })

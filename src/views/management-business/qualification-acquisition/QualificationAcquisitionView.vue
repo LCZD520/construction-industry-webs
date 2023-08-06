@@ -4,30 +4,30 @@
 */
 <template>
   <div class="qualification-acquisition-view">
-    <el-form v-show="isShowDetail" label-position="right" label-width="100px">
+    <el-form size="small" disabled v-show="isShowDetail" label-position="right" label-width="100px">
       <el-row>
         <el-col :span="8">
           <el-form-item label="收购意向客户">
-            <el-input disabled size="small" v-model="form.name"/>
+            <el-input size="small" v-model="form.transferCustomers"/>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="所在地区">
             <el-cascader
-                disabled
                 class="width-full"
-                size="small"
-                placeholder="请选择地区"
+                clearable
+                :props="{ expandTrigger: 'hover' ,checkStrictly:true ,emitPath:false}"
+                placeholder=""
                 :options="this.$provinceAndCityData"
-                v-model="form.newPassword">
+                v-model="form.area">
             </el-cascader>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="在建工程">
-            <el-select class="width-full" size="small" disabled v-model="form.name">
+            <el-select class="width-full" v-model="form.constructionProgress" placeholder="">
               <el-option
-                  v-for="item in []"
+                  v-for="item in this.$store.state.bool3_options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -39,9 +39,9 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label="资质人员">
-            <el-select class="width-full" size="small" disabled v-model="form.name">
+            <el-select class="width-full" v-model="form.qualifiedPersonnel" placeholder="">
               <el-option
-                  v-for="item in []"
+                  v-for="item in this.$store.state.bool3_options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -51,9 +51,9 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="安全许可证">
-            <el-select class="width-full" size="small" disabled v-model="form.name">
+            <el-select class="width-full" v-model="form.safetyPermit" placeholder="">
               <el-option
-                  v-for="item in []"
+                  v-for="item in this.$store.state.bool3_options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -63,7 +63,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="收购金额">
-            <el-input disabled size="small" v-model="form.name"/>
+            <el-input size="small" v-model="form.acquisitionAmount"/>
           </el-form-item>
         </el-col>
       </el-row>
@@ -72,19 +72,20 @@
         <el-col :span="8">
           <el-form-item label="收购日期">
             <el-date-picker
+                placeholder=""
                 class="width-full"
-                disabled
-                size="small"
-                v-model="form.name"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd"
+                v-model="form.acquisitionDate"
                 type="date">
             </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="状态">
-            <el-select class="width-full" disabled size="small" v-model="form.name" placeholder="请选择">
+            <el-select class="width-full" size="small" v-model="form.status" placeholder="">
               <el-option
-                  v-for="item in []"
+                  v-for="item in $store.state.qualification_status_options"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -94,7 +95,14 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="录入人">
-            <el-input disabled size="small" v-model="form.name"/>
+            <el-select class="width-full" disabled v-model="form.creatorId">
+              <el-option
+                  v-for="item in this.$store.state.user_options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -104,9 +112,9 @@
             <el-date-picker
                 class="width-full"
                 disabled
-                size="small"
-                v-model="form.name"
-                type="date">
+                v-model="form.gmtCreate"
+                type="datetime"
+                placeholder="">
             </el-date-picker>
           </el-form-item>
         </el-col>
@@ -114,14 +122,8 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="资质需求">
-            <el-cascader
-                disabled
-                class="width-full"
-                size="small"
-                placeholder="请选择地区"
-                :options="this.$provinceAndCityData"
-                v-model="form.newPassword">
-            </el-cascader>
+            <el-select multiple class="width-full" v-model="form.categoryAndGrade" placeholder="">
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -169,75 +171,42 @@
       <el-col :span="24">
         <el-form label-width="100px">
           <el-form-item label="备注">
-            <el-input disabled placeholder="备注......" :rows="5" type="textarea">
+            <el-input disabled placeholder="" :rows="5" type="textarea">
 
             </el-input>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
-    <el-tabs v-model="activeName" @tab-click="handleClick">
+    <el-tabs v-model="activeName">
       <el-tab-pane label="申请转账" name="first">
-        <el-button type="primary" size="small">
-          申请转账
-        </el-button>
-        <br><br>
-        <el-table
-            size="mini"
-            :data="tableData"
-            stripe
-            border
-            :header-cell-style="{textAlign:'center',background:'#f8f8f9',color:'#515a6e',fontSize:'14px',fontWeight:'800' }"
-            :cell-style="{textAlign:'center'}"
-            style="width: 100%">
-          <el-table-column
-              min-width="180"
-              prop="address"
-              label="申请时间">
-          </el-table-column>
-          <el-table-column
-              min-width="180"
-              prop="address"
-              label="申请转账金额">
-          </el-table-column>
-          <el-table-column
-              min-width="120"
-              prop="address"
-              label="款项用途">
-          </el-table-column>
-          <el-table-column
-              min-width="120"
-              prop="address"
-              label="转账账户">
-          </el-table-column>
-          <el-table-column
-              min-width="400"
-              prop="address"
-              label="申请备注">
-          </el-table-column>
-          <el-table-column
-              min-width="120"
-              prop="address"
-              label="审批状态">
-          </el-table-column>
-          <el-table-column fixed="right" label="操作" width="180">
-            <template slot-scope="scope">
-              <el-button
-                  size="mini"
-                  type="primary"
-                  @click="handleEdit(scope.$index, scope.row)">取消申请
-              </el-button>
-              <el-button
-                  size="mini"
-                  type="primary"
-                  @click="handleEdit(scope.$index, scope.row)">详情
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+        <transition appear name="public">
+          <TransferApplication
+              v-show="activeName === 'first'"/>
+        </transition>
       </el-tab-pane>
       <el-tab-pane label="图片上传" name="second">
-        11111
+        <transition appear name="public">
+          <div v-show="activeName === 'second'">
+            <el-button type="primary" size="small" v-throttle="handleDownLoadBatch">下载图片</el-button>
+            <el-button type="primary" size="small" v-throttle="handleDeleteBatch">删除图片</el-button>
+            <el-divider content-position="left">合同</el-divider>
+            <ImagesUpload
+                ref="upload1"
+                @getCheckedList="(_list)=>{this.checkedList1 = _list}"
+                namespace="qualification-acquisition" type="contract"/>
+            <el-divider content-position="left">证件</el-divider>
+            <ImagesUpload
+                ref="upload2"
+                @getCheckedList="(_list)=>{this.checkedList2 = _list}"
+                namespace="qualification-acquisition" type="certificates"/>
+            <el-divider content-position="left">其他</el-divider>
+            <ImagesUpload
+                ref="upload3"
+                @getCheckedList="(_list)=>{this.checkedList3 = _list}"
+                namespace="qualification-acquisition" type="other"/>
+          </div>
+        </transition>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -245,14 +214,21 @@
 
 <script>
 
+import JSzip from 'jszip'
+import {saveAs} from 'file-saver'
+import ImagesUpload from "../../../components/image-upload/ImagesUpload";
+import TransferApplication from "./transfer-application/TransferApplication";
+
 export default {
   name: 'QualificationAcquisitionView',
-  components: {},
+  components: {TransferApplication, ImagesUpload},
   data() {
     return {
-      activeName: 'first',
-      // activeName: 'second',
+      activeName: this.$route.query.activeTab || 'first',
       isShowDetail: false,
+      checkedList1: [],
+      checkedList2: [],
+      checkedList3: [],
       form: {
         name: ''
       },
@@ -283,16 +259,124 @@ export default {
       ],
     }
   },
+  created() {
+    const id = this.$route.query.id / 1
+    if (id != null) {
+      this.getDetailById(id)
+    }
+  },
   methods: {
-    handleClick() {
-
+    /**
+     * 获取已选图片id
+     */
+    getCheckedList() {
+      return this.checkedList1
+          .concat(this.checkedList2)
+          .concat(this.checkedList3);
     },
+    /**
+     * 批量下载文件
+     */
+    async handleDownLoadBatch() {
+      const arr = this.getCheckedList()
+      if (arr.length > 0) {
+        try {
+          const res = await this.$http.post('/file/download', {
+            listIds: arr
+          })
+          if (res && res.status) {
+            const zip = new JSzip();
+            let typeSets = new Set();
+            res.data.forEach(item => typeSets.add(item.type))
+            let rootFolder = zip.folder(`资质收购-${this.form.transferCustomers}`)
+            if (typeSets.has('contract')) {
+              rootFolder.folder('合同')
+            }
+            if (typeSets.has('certificates')) {
+              rootFolder.folder('证件')
+            }
+            if (typeSets.has('other')) {
+              rootFolder.folder('其他')
+            }
+            res.data.forEach(item => {
+              const base64Str = item.base64Str
+              if (item.type === 'contract') {
+                rootFolder.folder('合同').file(item.name, base64Str, {base64: true})
+              }
+              if (item.type === 'certificates') {
+                rootFolder.folder('证件').file(item.name, base64Str, {base64: true})
+              }
+              if (item.type === 'other') {
+                rootFolder.folder('其他').file(item.name, base64Str, {base64: true})
+              }
+            })
+            // 生成zip文件并下载
+            zip.generateAsync({
+              type: 'blob',// 压缩类型
+              compression: "DEFLATE", // STORE：默认不压缩 DEFLATE：需要压缩
+              compressionOptions: {
+                level: 9 // 压缩等级1~9 1压缩速度最快，9最优压缩方式
+              }
+            }).then(res => {
+              // 下载的文件名
+              let filename = `资质收购-${this.form.transferCustomers}.zip`;
+              saveAs(res, filename)
+            })
+            return
+          }
+          this.$message.error(res.message)
+        } catch (e) {
+          console.log(e)
+        }
+        return
+      }
+      this.$message.warning('至少选择一张图片！')
+    },
+    /**
+     * 批量删除文件
+     */
+    async handleDeleteBatch() {
+      const arr = await this.getCheckedList()
+      if (arr.length > 0) {
+        try {
+          const res = await this.$http.post('/picture/talent/delete-batch', {
+            listIds: arr
+          })
+          if (res && res.status) {
+            this.$nextTick(() => {
+              this.$refs.upload1.handleRemoveBatch(this.checkedList1)
+              this.$refs.upload2.handleRemoveBatch(this.checkedList2)
+              this.$refs.upload3.handleRemoveBatch(this.checkedList3)
+            })
+            this.$message.success(res.message)
+            return
+          }
+          this.$message.success(res.message)
+        } catch (e) {
+          console.log(e)
+        }
+        return
+      }
+      this.$message.warning('至少选择一张图片！')
+    },
+    async getDetailById(_id) {
+      try {
+        const res = await this.$http.get('/qualification-acquisition/detail/' + _id)
+        if (res.status) {
+          this.form = res.data
+          this.form.categoryAndGrade = JSON.parse(this.form.categoryAndGrade)
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    }
   }
 }
 </script>
 
 <style scoped lang="less">
 @import "../../../assets/css/common-el-table-scrollbar";
+
 .qualification-acquisition-view {
   margin: 0 100px;
 }

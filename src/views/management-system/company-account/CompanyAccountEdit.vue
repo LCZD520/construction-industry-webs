@@ -8,7 +8,7 @@
       <el-form-item label="银行名称" prop="bankName">
         <el-select style="width: 100%" size="small" v-model="form.bankName" placeholder="请选择银行名称">
           <el-option
-              v-for="item in options"
+              v-for="item in $store.state.bank_options"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -74,12 +74,6 @@ export default {
           {required: false}
         ],
       },
-      options: [
-        {
-          value: 1,
-          label: '中国银行',
-        }
-      ]
     }
   },
   created() {

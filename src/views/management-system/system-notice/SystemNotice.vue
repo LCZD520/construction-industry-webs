@@ -5,15 +5,17 @@
 <template>
   <div class="system-notice">
     <el-form
-        ref="formData"
+        ref="form"
+        :rules="rules"
         inline
+        label-width="120px"
         :model="form">
-      <el-form-item label="标题" label-width="120px">
-        <el-input size="small" v-model="form.newPassword" placeholder="请输入标题">
+      <el-form-item label="标题" prop="title">
+        <el-input size="small" v-model.trim="form.title" placeholder="请输入标题">
         </el-input>
       </el-form-item>
-      <el-form-item label="状态" label-width="120px">
-        <el-select size="small" v-model="form.oldPassword" placeholder="请选择状态">
+      <el-form-item label="状态" prop="enabled">
+        <el-select size="small" v-model="form.enabled" placeholder="请选择状态">
           <el-option
               v-for="item in options"
               :key="item.value"
@@ -22,9 +24,9 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label=" " label-width="120px">
-        <el-button size="small" icon="el-icon-search" type="primary">搜 索</el-button>
-        <el-button size="small" icon="el-icon-refresh-right">重 置</el-button>
+      <el-form-item label=" ">
+        <el-button size="small" icon="el-icon-search" v-throttle="search" type="primary">搜 索</el-button>
+        <el-button size="small" v-throttle="reset" icon="el-icon-refresh-right">重 置</el-button>
       </el-form-item>
     </el-form>
     <div class="split-line">
@@ -36,7 +38,8 @@
       <div class="split-line-right">共查询到 <b style="color: #409EFF">{{ pageInfo.total }}</b> 条记录</div>
     </div>
     <el-table
-        :data="listNotices"
+        v-loading="loading"
+        :data="list"
         height="460"
         stripe
         border
@@ -85,13 +88,13 @@
           <el-button
               size="mini"
               type="danger"
+              disabled
               @click.stop="handleDelete(scope.$index, scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
     </el-table>
     <div class="pagination">
-      <div class="pagination-total">共<span class="total"> {{ pageInfo.total }} </span>条</div>
       <div class="pagination-right">
         <el-pagination
             ref="pagination"
@@ -101,7 +104,7 @@
             @current-change="handleCurrentChange"
             @size-change="handleSizeChange"
             background
-            layout="sizes, prev, pager, next, jumper"
+            layout="total,sizes, prev, pager, next, jumper"
             :total="pageInfo.total">
         </el-pagination>
       </div>
@@ -115,64 +118,68 @@ export default {
   components: {},
   data() {
     return {
-      listNotices: [],
+      loading: false,
+      list: [],
       pageInfo: {
         pageSize: 10,
         total: 0,
         currentPage: 1,
       },
-      options: [],
+      options: [
+        {value: 1, label: '启用'},
+        {value: 0, label: '禁用'}
+      ],
       form: {
-        oldPassword: '',
-        newPassword: '',
-        confirmPassword: '',
+        title: '',
+        enabled: null,
+      },
+      rules: {
+        title: [{required: false, trigger: 'blur'}],
+        enabled: [{required: false, trigger: 'blur'}],
       },
     }
   },
   mounted() {
-    this.getListNotices()
+    this.search()
   },
   methods: {
-    /**
-     * 表格翻页
-     */
-    handleCurrentChange() {
-      this.getListNotices()
-    },
-    /**
-     * 改变页数
-     * @param _pageSize
-     */
-    handleSizeChange(_pageSize) {
-      this.getListNotices(_pageSize)
-    },
-    /**
-     * 获取公告列表
-     * @param _pageSize
-     */
-    getListNotices(_pageSize) {
-      let url = ``
-      if (undefined !== _pageSize) {
-        url = `/notice/get-list-notices?currentPage=${this.pageInfo.currentPage}&pageSize=${_pageSize}`
-      } else {
-        url = `/notice/get-list-notices?currentPage=${this.pageInfo.currentPage}&pageSize=${this.pageInfo.pageSize}`
+    async search(pageSize) {
+      let newForm = {}
+      newForm.pageSize = pageSize ? pageSize : this.pageInfo.pageSize
+      newForm.currentPage = this.pageInfo.currentPage
+      newForm.enabled = this.form.enabled
+      newForm.title = this.form.title
+      console.log(newForm)
+      this.loading = true
+      try {
+        const res = await this.$http.get('/notice/get-list-notices', {
+          params: newForm
+        })
+        if (res) {
+          this.list = res.data.list
+          this.pageInfo.total = res.data.total
+          return
+        }
+        this.$message.error(res.message)
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.loading = false
       }
-      this.$http.get(url)
-          .then(res => {
-            console.log(res)
-            if (null !== res.data) {
-              this.pageInfo.total = res.data.total
-              this.listNotices = res.data.listNotices
-            }
-          })
+    },
+    reset() {
+      this.$refs.form.resetFields()
+      this.pageInfo.currentPage = 1
+      this.search()
+    },
+    handleCurrentChange() {
+      this.search()
+    },
+    handleSizeChange(size) {
+      this.search(size)
     },
     handleView(_index, _row) {
-      this.$router.push({
-        path: '/system-notice-view',
-        query: {
-          id: _row.id
-        }
-      })
+      this.$router.push('/system-notice-view/' + _row.id)
     },
     handleEdit(_index, _row) {
       this.$router.push({
@@ -189,10 +196,10 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$axios.delete('/api/notice/delete/' + _row.id).then(res => {
-          if (res.status) {
+        this.$http.delete('/notice/delete/' + _row.id).then(res => {
+          if (res.enabled) {
             this.$message.success(res.data.message)
-            this.getListNotices()
+            this.search()
           }
         }).catch(err => {
           console.log(err)

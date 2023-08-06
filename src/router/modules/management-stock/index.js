@@ -14,7 +14,7 @@ const stockRoutes = [
         component: () => import('../../../views/management-stock/lib-certificate/LibCertificate'),
     },
     {
-        path: '/lib-certificate-view',
+        path: '/lib-certificate-view/:id',
         name: 'lib-certificate-view',
         meta: {
             title: '证件库查看',
